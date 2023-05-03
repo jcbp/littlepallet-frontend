@@ -1,11 +1,12 @@
 import { useContext, useState, useEffect } from "react";
 import useAxios from "./use-axios";
 import { AuthContext } from "../context/auth-context";
+import { CurrentUser } from "../types/current-user";
 
 const useCurrentUser = () => {
   const { authData } = useContext(AuthContext);
   const axios = useAxios();
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 

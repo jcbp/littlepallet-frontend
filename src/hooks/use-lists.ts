@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
 import useAxios from "./use-axios";
-
-type List = {
-  _id: number;
-  name: string;
-};
+import { ListSummary } from "../types/list-summary";
 
 const useLists = () => {
-  const [lists, setLists] = useState<List[]>([]);
+  const [lists, setLists] = useState<ListSummary[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
@@ -17,7 +13,7 @@ const useLists = () => {
     const fetchLists = async () => {
       try {
         setIsLoading(true);
-        const response = await get<List[]>("/list");
+        const response = await get<ListSummary[]>("/list");
         setLists(response);
         setIsLoading(false);
       } catch (error: any) {
