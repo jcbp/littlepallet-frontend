@@ -3,8 +3,10 @@ import useLists from "../hooks/use-lists";
 import useCurrentUser from "../hooks/use-current-user";
 import ListsGrid from "../components/lists-grid";
 import { ListSummary } from "../types/list-summary";
+import { useNavigate } from "react-router-dom";
 
-const Lists = () => {
+const ListsIndex = () => {
+  const navigate = useNavigate();
   const { lists, isLoading, error } = useLists();
   const { currentUser, isLoading: isUserLoading } = useCurrentUser();
 
@@ -37,27 +39,27 @@ const Lists = () => {
     }
   });
 
+  const handleClick = (list: ListSummary) => {
+    navigate(`/lists/${list._id}`);
+  };
+
   return (
     <div>
       <div className="flex flex-col">
-        <ListsGrid
-          lists={myLists}
-          title="Mis listas"
-          onItemClick={(list) => console.log(`Clic en la lista "${list.name}"`)}
-        />
+        <ListsGrid lists={myLists} title="Mis listas" onClick={handleClick} />
         <ListsGrid
           lists={sharedByMe}
           title="Listas compartidas por mí"
-          onItemClick={(list) => console.log(`Clic en la lista "${list.name}"`)}
+          onClick={handleClick}
         />
         <ListsGrid
           lists={sharedWithMe}
           title="Listas compartidas conmigo"
-          onItemClick={(list) => console.log(`Clic en la lista "${list.name}"`)}
+          onClick={handleClick}
         />
       </div>
     </div>
   );
 };
 
-export default Lists;
+export default ListsIndex;

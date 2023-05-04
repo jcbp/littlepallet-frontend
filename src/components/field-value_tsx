@@ -1,0 +1,102 @@
+import * as React from 'react';
+import ItemValue from './field-types/FieldValue';
+import CheckboxValue from './field-types/Checkbox';
+import TextValue from './field-types/Text';
+import MultilineText from './field-types/MultilineText';
+import LongTextValue from './field-types/LongText';
+import DateValue from './field-types/Date';
+import LabelOptions from './field-types/LabelOptions';
+import ComboList from './field-types/ComboList';
+import TimeValue from './field-types/Time';
+import ColorValue from './field-types/Color';
+import ColorPickerValue from './field-types/ColorPicker';
+import TrafficLightValue from './field-types/TrafficLight';
+import NumberValue from './field-types/Number';
+import RatingValue from './field-types/Rating';
+import UserValue from './field-types/User';
+import ChipsValue from './field-types/Chips';
+import OptionsList from './field-types/OptionsList';
+
+type Props = {
+  field: {
+    type: string;
+    options?: any;
+  };
+  itemValue: any;
+  name: string;
+  className?: string;
+  onChange?: (event: any) => void;
+  onSelect?: (field: any) => void;
+  onInput?: (event: any) => void;
+};
+
+const FieldValue: React.FC<Props> = ({
+  field,
+  itemValue,
+  name,
+  className,
+  onChange,
+  onSelect,
+  onInput,
+}) => {
+  const getValueComponent = (type: string) => {
+    switch (type) {
+      case 'boolean':
+        return CheckboxValue;
+      case 'text':
+        return TextValue;
+      case 'multiline-text':
+        return MultilineText;
+      case 'long-text':
+        return LongTextValue;
+      case 'date':
+        return DateValue;
+      case 'options':
+        return LabelOptions;
+      case 'combo-list':
+        return ComboList;
+      case 'time':
+        return TimeValue;
+      case 'color':
+        return ColorValue;
+      case 'color-picker':
+        return ColorPickerValue;
+      case 'traffic-light':
+        return TrafficLightValue;
+      case 'number':
+        return NumberValue;
+      case 'rating':
+        return RatingValue;
+      case 'user':
+        return UserValue;
+      case 'chips':
+        return ChipsValue;
+      case 'options-list':
+        return OptionsList;
+      default:
+        return null;
+    }
+  };
+
+  const Component = getValueComponent(field.type);
+
+  return (
+    <div>
+      {Component ? (
+        <Component
+          itemOptions={field.options}
+          itemValue={itemValue}
+          fieldName={name}
+          className={`${field.type} ${className ?? ''}`}
+          onChange={onChange}
+          onClick={() => onSelect && onSelect(field)}
+          onInput={onInput}
+        />
+      ) : (
+        <span className="disabled-value">{itemValue}</span>
+      )}
+    </div>
+  );
+};
+
+export default FieldValue;

@@ -5,17 +5,17 @@ import { ListSummary } from "../types/list-summary";
 type Props = {
   lists: ListSummary[];
   title: string;
-  onItemClick: (list: ListSummary) => void;
+  onClick: (list: ListSummary) => void;
 };
 
-const ListsGrid: React.FC<Props> = ({ lists, title, onItemClick }) => {
+const ListsGrid: React.FC<Props> = ({ lists, title, onClick }) => {
   return (
     <div>
       <h1 className="text-xl font-medium text-blue-900 mb-3 mt-2">{title}</h1>
       <div className="flex flex-wrap">
         {lists.map((list) => (
           <div className="w-64 mr-4 mb-4" key={list._id}>
-            <ListCard list={list} onClick={() => onItemClick(list)} />
+            <ListCard list={list} onClick={() => onClick(list)} />
           </div>
         ))}
       </div>
