@@ -1,6 +1,8 @@
 import React from "react";
-import { ListCard } from "./list-card";
+import ListCard from "./list-card";
 import { ListSummary } from "../types/list-summary";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 
 type Props = {
   lists: ListSummary[];
@@ -10,15 +12,15 @@ type Props = {
 
 const ListsGrid: React.FC<Props> = ({ lists, title, onClick }) => {
   return (
-    <div>
-      <h1 className="text-xl font-medium text-blue-900 mb-3 mt-2">{title}</h1>
-      <div className="flex flex-wrap">
+    <div className="my-3">
+      <h1 className="fs-4 mb-3 mt-2">{title}</h1>
+      <Row>
         {lists.map((list) => (
-          <div className="w-64 mr-4 mb-4" key={list._id}>
+          <Col key={list._id} className="mb-4">
             <ListCard list={list} onClick={() => onClick(list)} />
-          </div>
+          </Col>
         ))}
-      </div>
+      </Row>
     </div>
   );
 };

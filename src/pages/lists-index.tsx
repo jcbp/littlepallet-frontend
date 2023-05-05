@@ -4,6 +4,9 @@ import useCurrentUser from "../hooks/use-current-user";
 import ListsGrid from "../components/lists-grid";
 import { ListSummary } from "../types/list-summary";
 import { useNavigate } from "react-router-dom";
+import Card from "react-bootstrap/Card";
+import Spinner from "react-bootstrap/Spinner";
+import Alert from "react-bootstrap/Alert";
 
 const ListsIndex = () => {
   const navigate = useNavigate();
@@ -11,11 +14,21 @@ const ListsIndex = () => {
   const { currentUser, isLoading: isUserLoading } = useCurrentUser();
 
   if (isLoading || isUserLoading) {
-    return <p>Cargando listas...</p>;
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Cargando listas...</span>
+        </Spinner>
+      </div>
+    );
   }
 
   if (error) {
-    return <p>Ha ocurrido un error: {error}</p>;
+    return (
+      <Alert variant="danger" className="mt-3">
+        Ha ocurrido un error: {error}
+      </Alert>
+    );
   }
 
   const myLists: ListSummary[] = [];
@@ -45,19 +58,17 @@ const ListsIndex = () => {
 
   return (
     <div>
-      <div className="flex flex-col">
-        <ListsGrid lists={myLists} title="Mis listas" onClick={handleClick} />
-        <ListsGrid
-          lists={sharedByMe}
-          title="Listas compartidas por mí"
-          onClick={handleClick}
-        />
-        <ListsGrid
-          lists={sharedWithMe}
-          title="Listas compartidas conmigo"
-          onClick={handleClick}
-        />
-      </div>
+      <ListsGrid title="Mis listas" lists={myLists} onClick={handleClick} />
+      <ListsGrid
+        title="Listas compartidas por mí"
+        lists={sharedByMe}
+        onClick={handleClick}
+      />
+      <ListsGrid
+        title="Listas compartidas conmigo"
+        lists={sharedWithMe}
+        onClick={handleClick}
+      />
     </div>
   );
 };

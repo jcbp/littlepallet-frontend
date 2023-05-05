@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/auth-context";
+import { Card, Form, Button } from "react-bootstrap";
 
 function LoginPage() {
   const { login } = useContext(AuthContext);
@@ -29,101 +30,53 @@ function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+    <div className="min-h-screen d-flex align-items-center justify-content-center py-12 px-4 sm:px-6 lg:px-8">
+      <Card style={{ width: "32rem" }} className="p-4">
+        <Card.Body>
+          <Card.Title className="text-center text-3xl fw-bolder text-black text-opacity-75">
             Iniciar sesión
-          </h2>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="email-address" className="sr-only">
-                Correo electrónico
-              </label>
-              <input
-                id="email-address"
-                name="email"
+          </Card.Title>
+          <Form className="mt-8 py-5" onSubmit={handleSubmit}>
+            <Form.Group controlId="formBasicEmail" className="pb-3">
+              <Form.Label>Correo electrónico</Form.Label>
+              <Form.Control
                 type="email"
-                autoComplete="email"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
                 placeholder="Correo electrónico"
                 value={email}
                 onChange={handleEmailChange}
               />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Contraseña
-              </label>
-              <input
-                id="password"
-                name="password"
+            </Form.Group>
+
+            <Form.Group controlId="formBasicPassword" className="pb-3">
+              <Form.Label>Contraseña</Form.Label>
+              <Form.Control
                 type="password"
-                autoComplete="current-password"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
                 placeholder="Contraseña"
                 value={password}
                 onChange={handlePasswordChange}
               />
-            </div>
-            {error && <p className="text-red-500">{error}</p>}
-          </div>
+            </Form.Group>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label
-                htmlFor="remember-me"
-                className="ml-2 block text-sm text-gray-900"
-              >
-                Recordarme
-              </label>
-            </div>
+            {error && <p className="text-danger">{error}</p>}
 
-            <div className="text-sm">
-              <a
-                href="#"
-                className="font-medium text-blue-600 hover:text-blue-500"
-              >
-                ¿Olvidaste tu contraseña?
-              </a>
-            </div>
-          </div>
+            <Form.Group controlId="formBasicCheckbox">
+              <Form.Check type="checkbox" label="Recordarme" />
+            </Form.Group>
 
-          <div>
-            <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                <svg
-                  className="h-5 w-5 text-blue-500 group-hover:text-blue-400"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M14.707 7.293a1 1 0 010 1.414L11.414 12l3.293 3.293a1 1 0 01-1.414 1.414L10 13.414l-3.293 3.293a1 1 0 01-1.414-1.414L8.586 12 5.293 8.707a1 1 0 011.414-1.414L10 10.586l3.293-3.293a1 1 0 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </span>
-              Iniciar sesión
-            </button>
-          </div>
-        </form>
-      </div>
+            <div className="d-flex justify-content-between align-items-center">
+              <div className="d-flex align-items-center">
+                <a href="#" className="ml-2 block text-sm text-gray-900">
+                  ¿Olvidaste tu contraseña?
+                </a>
+              </div>
+
+              <Button variant="primary" type="submit">
+                Iniciar sesión
+              </Button>
+            </div>
+          </Form>
+        </Card.Body>
+      </Card>
     </div>
   );
 }

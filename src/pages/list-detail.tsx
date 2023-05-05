@@ -2,9 +2,10 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import useList from "../hooks/use-list";
 import { Field } from "../types/field";
+import { List } from "../types/list";
 
 function getColumnWidth(field: Field): string {
-  if (field.width) {
+  if (field.width && parseInt(field.width) > 0) {
     return field.width;
   }
 
@@ -19,11 +20,19 @@ function getColumnWidth(field: Field): string {
       return "100px";
     case "options":
     case "user":
-      return "160px";
+      return "80px";
     default:
-      return "200px";
+      return "260px";
   }
 }
+
+const getFieldConfig = (list: List, field: Field) => {
+  const defaultConfig = { hidden: false };
+  if (!list.views || !list.views.tableView) {
+    return defaultConfig;
+  }
+  return list.views.tableView[field._id] || defaultConfig;
+};
 
 const ListDetail = () => {
   const { id = "" } = useParams();
@@ -39,11 +48,16 @@ const ListDetail = () => {
 
   const { fields = [], items = [] } = list!;
 
+  // Obtener solo los campos visibles
+  const visibleFields = fields.filter(
+    (field) => getFieldConfig(list, field).hidden !== true
+  );
+
   return (
     <table>
       <thead>
         <tr>
-          {fields.map((field) => (
+          {visibleFields.map((field) => (
             <th key={field._id} style={{ width: getColumnWidth(field) }}>
               {field.name}
             </th>
@@ -53,8 +67,8 @@ const ListDetail = () => {
       <tbody>
         {items.map((item) => (
           <tr key={item._id}>
-            {fields.map((field, index) => (
-              <td key={index}>{item[index + 1]}</td>
+            {visibleFields.map((field) => (
+              <td key={field._id}>{item[field._id]}</td>
             ))}
           </tr>
         ))}

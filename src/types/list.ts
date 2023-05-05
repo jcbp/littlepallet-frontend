@@ -54,7 +54,7 @@ export interface List {
   filters: Filter[];
   fields: Field[];
   items: Item[];
-  views: Views;
+  views?: Views;
   category: string;
   commentsEnabled: boolean;
   users: User[];
