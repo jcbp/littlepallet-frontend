@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useGetList } from "../hooks/list";
+import { useGetList } from "../hooks/api/list";
 import { Field } from "../types/field";
 import { List } from "../types/list";
 
@@ -38,7 +38,7 @@ const ListDetail = () => {
   const { id = "" } = useParams();
   const { data: list, isLoading, error } = useGetList(id);
 
-  if (isLoading || !list) {
+  if (isLoading) {
     return <div>cargando...</div>;
   }
 
@@ -46,9 +46,12 @@ const ListDetail = () => {
     return <div>{error}</div>;
   }
 
+  if (!list) {
+    return null;
+  }
+
   const { fields = [], items = [] } = list!;
 
-  // Obtener solo los campos visibles
   const visibleFields = fields.filter(
     (field) => getFieldConfig(list, field).hidden !== true
   );

@@ -16,7 +16,7 @@ const ListsGrid: React.FC<Props> = ({ lists, title, onClick }) => {
       <h1 className="fs-4 mb-3 mt-2">{title}</h1>
       <Row>
         {lists.map((list) => (
-          <Col key={list._id} className="mb-4">
+          <Col key={list._id} className="mb-4 col-3">
             <ListCard list={list} onClick={() => onClick(list)} />
           </Col>
         ))}

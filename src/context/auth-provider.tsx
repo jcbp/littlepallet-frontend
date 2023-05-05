@@ -1,6 +1,5 @@
 import { useState } from "react";
 import axios from "axios";
-import useAxios from "../hooks/use-axios";
 import { AuthContext, initialAuthData } from "./auth-context";
 import { Endpoints } from "../endpoints";
 
@@ -14,15 +13,10 @@ interface Props {
 }
 
 const AuthProvider: React.FC<Props> = ({ children }) => {
-  const {
-    setAuthToken: setAxiosAuthToken,
-    removeAuthToken: removeAxiosAuthToken,
-  } = useAxios();
 
   const [authData, setAuthData] = useState(() => {
     const token = localStorage.getItem("access_token");
     if (token) {
-      setAxiosAuthToken(token);
       return { isAuthenticated: true, token };
     }
     return initialAuthData;
@@ -37,7 +31,6 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
         token: token,
       });
       localStorage.setItem("access_token", token);
-      setAxiosAuthToken(token);
     } catch (error: any) {
       throw new Error(error);
     }
@@ -46,7 +39,6 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
   const logout = () => {
     setAuthData(initialAuthData);
     localStorage.removeItem("access_token");
-    removeAxiosAuthToken();
   };
 
   return (

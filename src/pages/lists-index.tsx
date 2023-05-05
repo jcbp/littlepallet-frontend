@@ -1,17 +1,16 @@
 import React from "react";
-import useLists from "../hooks/use-lists";
-import useCurrentUser from "../hooks/use-current-user";
+import { useGetLists } from "../hooks/api/list";
+import { useCurrentUser } from "../hooks/api/user";
 import ListsGrid from "../components/lists-grid";
 import { ListSummary } from "../types/list-summary";
 import { useNavigate } from "react-router-dom";
-import Card from "react-bootstrap/Card";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
 
 const ListsIndex = () => {
   const navigate = useNavigate();
-  const { lists, isLoading, error } = useLists();
-  const { currentUser, isLoading: isUserLoading } = useCurrentUser();
+  const { data: lists, isLoading, error } = useGetLists();
+  const { data: currentUser, isLoading: isUserLoading } = useCurrentUser();
 
   if (isLoading || isUserLoading) {
     return (
@@ -29,6 +28,10 @@ const ListsIndex = () => {
         Ha ocurrido un error: {error}
       </Alert>
     );
+  }
+
+  if (!lists) {
+    return null;
   }
 
   const myLists: ListSummary[] = [];

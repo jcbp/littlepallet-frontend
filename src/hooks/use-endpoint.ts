@@ -1,43 +1,60 @@
-import { useEffect, useState } from "react";
-import useAxios from "./use-axios";
+import { useState, useEffect, useContext } from "react";
+import axios, { AxiosError, RawAxiosRequestHeaders } from "axios";
+import { AuthContext } from "../context/auth-context";
 
-type HttpMethod = "get" | "post" | "put" | "patch" | "delete";
+type UseEndpointOptions = {
+  requiresAuth?: boolean;
+};
 
 export const useEndpoint = <T>(
-  endpointName: string,
-  httpMethod: HttpMethod,
-  params?: Record<string, string>
+  url: string,
+  method: "GET" | "POST" | "PUT" | "DELETE",
+  options?: UseEndpointOptions
 ) => {
+  const { authData } = useContext(AuthContext);
   const [data, setData] = useState<T | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
-
-  const { get, post, put, patch, delete: del } = useAxios();
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchEndpoint = async () => {
+    const request = async () => {
+      setIsLoading(true);
+      setError(null);
+
       try {
-        setIsLoading(true);
-        const response = await (httpMethod === "get"
-          ? get<T>(endpointName, params)
-          : httpMethod === "post"
-          ? post<T>(endpointName, params)
-          : httpMethod === "put"
-          ? put<T>(endpointName, params)
-          : httpMethod === "patch"
-          ? patch<T>(endpointName, params)
-          : del<T>(endpointName, params));
-        setData(response);
-        setIsLoading(false);
+        const headers: RawAxiosRequestHeaders = {};
+        if (options?.requiresAuth && authData.token) {
+          headers["Authorization"] = authData.token;
+        }
+
+        const response = await axios.request<T>({
+          url,
+          method,
+          headers,
+        });
+
+        setData(response.data);
       } catch (error: any) {
-        setError(error.message);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError;
+          if (axiosError.response?.status === 401) {
+            setError("Unauthorized");
+          } else {
+            setError(axiosError.message);
+          }
+        } else {
+          setError(error.message);
+        }
+      } finally {
         setIsLoading(false);
       }
     };
 
-    fetchEndpoint();
+    request();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [url, method, options?.requiresAuth, authData.token]);
 
-  return { data, isLoading, error };
+  return { isLoading, data, error };
 };
+
+export default useEndpoint;
