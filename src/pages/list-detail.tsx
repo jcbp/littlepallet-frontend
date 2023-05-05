@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import useList from "../hooks/use-list";
+import { useGetList } from "../hooks/list";
 import { Field } from "../types/field";
 import { List } from "../types/list";
 
@@ -36,7 +36,7 @@ const getFieldConfig = (list: List, field: Field) => {
 
 const ListDetail = () => {
   const { id = "" } = useParams();
-  const { list, isLoading, error } = useList(id);
+  const { data: list, isLoading, error } = useGetList(id);
 
   if (isLoading || !list) {
     return <div>cargando...</div>;

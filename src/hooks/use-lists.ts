@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import useAxios from "./use-axios";
 import { ListSummary } from "../types/list-summary";
+import { Endpoints } from "../endpoints";
 
 const useLists = () => {
   const [lists, setLists] = useState<ListSummary[]>([]);
@@ -13,7 +14,7 @@ const useLists = () => {
     const fetchLists = async () => {
       try {
         setIsLoading(true);
-        const response = await get<ListSummary[]>("/list");
+        const response = await get<ListSummary[]>(Endpoints.getLists());
         setLists(response);
         setIsLoading(false);
       } catch (error: any) {

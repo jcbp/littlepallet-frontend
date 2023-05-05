@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import useAxios from "../hooks/use-axios";
 import { AuthContext, initialAuthData } from "./auth-context";
+import { Endpoints } from "../endpoints";
 
 type LoginCredentials = {
   email: string;
@@ -29,7 +30,7 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
 
   const login = async (credentials: LoginCredentials) => {
     try {
-      const response = await axios.post("/user/login", credentials);
+      const response = await axios.post(Endpoints.login(), credentials);
       const token = response.data.access_token;
       setAuthData({
         isAuthenticated: true,

@@ -2,6 +2,7 @@ import { useContext, useState, useEffect } from "react";
 import useAxios from "./use-axios";
 import { AuthContext } from "../context/auth-context";
 import { CurrentUser } from "../types/current-user";
+import { Endpoints } from "../endpoints";
 
 const useCurrentUser = () => {
   const { authData } = useContext(AuthContext);
@@ -16,7 +17,7 @@ const useCurrentUser = () => {
       setError(null);
 
       try {
-        const response = await axios.get<any>("/user/current");
+        const response = await axios.get<any>(Endpoints.getCurrentUser());
         setCurrentUser(response);
       } catch (error: any) {
         setError(error.message);

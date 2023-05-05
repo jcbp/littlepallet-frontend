@@ -2,9 +2,6 @@ import { useContext } from "react";
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { AuthContext } from "../context/auth-context";
 
-const API_URL = "http://localhost:3001/api";
-axios.defaults.baseURL = API_URL;
-
 const useAxios = () => {
   const { authData } = useContext(AuthContext);
 
@@ -44,6 +41,12 @@ const useAxios = () => {
     config?: AxiosRequestConfig
   ) => request<T>({ method: "POST", url, data, ...config });
 
+  const patch = async <T>(
+    url: string,
+    data?: any,
+    config?: AxiosRequestConfig
+  ) => request<T>({ method: "PATCH", url, data, ...config });
+
   const put = async <T>(url: string, data?: any, config?: AxiosRequestConfig) =>
     request<T>({ method: "PUT", url, data, ...config });
 
@@ -58,7 +61,7 @@ const useAxios = () => {
     delete axios.defaults.headers.common["Authorization"];
   };
 
-  return { get, post, put, delete: del, setAuthToken, removeAuthToken };
+  return { get, post, patch, put, delete: del, setAuthToken, removeAuthToken };
 };
 
 export default useAxios;
