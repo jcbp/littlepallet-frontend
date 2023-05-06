@@ -22,3 +22,33 @@ code {
 .shadow-hover:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
+.form-control:focus,
+.form-select:focus {
+  box-shadow: 0 0 3px rgb(106, 170, 243);
+}
+
+.light-default,
+.light-green,
+.light-yellow,
+.light-red {
+  width: 16px;
+  height: 16px;
+  border-radius: 15px;
+  display: inline-block;
+}
+.light-default {
+  background-color: #b6b6b62f;
+  border: 1px solid #3030301a;
+}
+.light-green {
+  background-color: #5bdd83;
+  border: 1px solid #2bd457;
+}
+.light-yellow {
+  background-color: #fded35;
+  border: 1px solid #ecd900;
+}
+.light-red {
+  background-color: #ff7070;
+  border: 1px solid #ff3e3e;
+}

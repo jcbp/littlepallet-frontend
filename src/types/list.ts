@@ -1,5 +1,6 @@
 import { User } from "./user";
 import { Field } from "./field";
+import { Item } from "./item";
 
 interface Filter {
   name: string;
@@ -8,18 +9,6 @@ interface Filter {
   field: string;
   when: string;
   value: string;
-}
-
-interface Item {
-  _id: string;
-  [key: string]: string | number | boolean;
-  // [key: string]: string | number | Comment[] | boolean;
-}
-
-interface Comment {
-  text: string;
-  date: number;
-  user: User;
 }
 
 interface ViewSection {

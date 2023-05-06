@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import axios, { AxiosError, RawAxiosRequestHeaders } from "axios";
+import axios, { AxiosError, AxiosRequestConfig, RawAxiosRequestHeaders } from "axios";
 import { AuthContext } from "../context/auth-context";
 
 type UseEndpointOptions = {
@@ -8,11 +8,12 @@ type UseEndpointOptions = {
 
 export const useEndpoint = <T>(
   url: string,
-  method: "GET" | "POST" | "PUT" | "DELETE",
-  options?: UseEndpointOptions
+  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
+  options?: UseEndpointOptions,
+  data?: any
 ) => {
   const { authData } = useContext(AuthContext);
-  const [data, setData] = useState<T | null>(null);
+  const [responseData, setResponseData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,13 +28,16 @@ export const useEndpoint = <T>(
           headers["Authorization"] = authData.token;
         }
 
-        const response = await axios.request<T>({
+        const config: AxiosRequestConfig = {
           url,
           method,
           headers,
-        });
+          data: data ?? undefined,
+        };
 
-        setData(response.data);
+        const response = await axios.request<T>(config);
+
+        setResponseData(response.data);
       } catch (error: any) {
         if (axios.isAxiosError(error)) {
           const axiosError = error as AxiosError;
@@ -51,10 +55,9 @@ export const useEndpoint = <T>(
     };
 
     request();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url, method, options?.requiresAuth, authData.token]);
+  }, [url, method, options?.requiresAuth, authData.token, data]);
 
-  return { isLoading, data, error };
+  return { isLoading, responseData, error };
 };
 
 export default useEndpoint;

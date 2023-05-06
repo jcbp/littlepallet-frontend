@@ -9,8 +9,8 @@ import Alert from "react-bootstrap/Alert";
 
 const ListsIndex = () => {
   const navigate = useNavigate();
-  const { data: lists, isLoading, error } = useGetLists();
-  const { data: currentUser, isLoading: isUserLoading } = useCurrentUser();
+  const { responseData: lists, isLoading, error } = useGetLists();
+  const { responseData: currentUser, isLoading: isUserLoading } = useCurrentUser();
 
   if (isLoading || isUserLoading) {
     return (
