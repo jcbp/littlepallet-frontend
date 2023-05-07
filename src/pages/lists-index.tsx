@@ -4,39 +4,36 @@ import { useCurrentUser } from "../hooks/api/user";
 import ListsGrid from "../components/lists-grid";
 import { ListSummary } from "../types/list-summary";
 import { useNavigate } from "react-router-dom";
-import Spinner from "react-bootstrap/Spinner";
-import Alert from "react-bootstrap/Alert";
+import ListsEmptyState from "../components/empty-states/lists-empty-state";
+import Loader from "../components/loader";
 
 const ListsIndex = () => {
   const navigate = useNavigate();
   const { responseData: lists, isLoading, error } = useGetLists();
-  const { responseData: currentUser, isLoading: isUserLoading } = useCurrentUser();
-
-  if (isLoading || isUserLoading) {
-    return (
-      <div className="d-flex justify-content-center align-items-center vh-100">
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Cargando listas...</span>
-        </Spinner>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <Alert variant="danger" className="mt-3">
-        Ha ocurrido un error: {error}
-      </Alert>
-    );
-  }
-
-  if (!lists) {
-    return null;
-  }
-
+  const { responseData: currentUser, isLoading: isUserLoading } =
+    useCurrentUser();
   const myLists: ListSummary[] = [];
   const sharedByMe: ListSummary[] = [];
   const sharedWithMe: ListSummary[] = [];
+
+  const handleCreateList = () => {
+    // create list
+  };
+
+  const handleClick = (list: ListSummary) => {
+    navigate(`/lists/${list._id}`);
+  };
+
+  if (!lists || isLoading || isUserLoading || error) {
+    return (
+      <Loader
+        loading={isLoading || isUserLoading}
+        error={error}
+        isEmpty={!lists}
+        emptyState={<ListsEmptyState onCreateList={handleCreateList} />}
+      />
+    );
+  }
 
   lists.forEach((list) => {
     if (
@@ -55,12 +52,8 @@ const ListsIndex = () => {
     }
   });
 
-  const handleClick = (list: ListSummary) => {
-    navigate(`/lists/${list._id}`);
-  };
-
   return (
-    <div>
+    <>
       <ListsGrid title="Mis listas" lists={myLists} onClick={handleClick} />
       <ListsGrid
         title="Listas compartidas por mí"
@@ -72,7 +65,7 @@ const ListsIndex = () => {
         lists={sharedWithMe}
         onClick={handleClick}
       />
-    </div>
+    </>
   );
 };
 

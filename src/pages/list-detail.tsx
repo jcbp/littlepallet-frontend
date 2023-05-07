@@ -6,6 +6,8 @@ import { Field } from "../types/field";
 import { List } from "../types/list";
 import TableList from "../components/table-list";
 import debounce from "lodash/debounce";
+import Loader from "../components/loader";
+import ListEmptyState from "../components/empty-states/list-empty-state";
 
 const getFieldConfig = (list: List, field: Field) => {
   const defaultConfig = { hidden: false };
@@ -24,19 +26,18 @@ const ListDetail = () => {
     error: errorSavingItemField,
   } = useUpdateItemField();
 
-  if (isLoading) {
-    return <div>cargando...</div>;
+  if (!list || isLoading || error) {
+    return (
+      <Loader
+        loading={isLoading}
+        error={error}
+        isEmpty={!list}
+        emptyState={<ListEmptyState />}
+      />
+    );
   }
 
-  if (error) {
-    return <div>{error}</div>;
-  }
-
-  if (!list) {
-    return null;
-  }
-
-  const { fields = [], items = [] } = list!;
+  const { fields = [], items = [] } = list;
 
   const visibleFields = fields.filter(
     (field) => getFieldConfig(list, field).hidden !== true
