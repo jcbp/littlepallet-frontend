@@ -47,4 +47,5 @@ export interface List {
   category: string;
   commentsEnabled: boolean;
   users: User[];
+  updatedAt?: string;
 }

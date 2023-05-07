@@ -4,13 +4,21 @@ import { List } from "../../types/list";
 import { Endpoints } from "../../endpoints";
 
 export const useGetLists = () => {
-  return useEndpoint<ListSummary[]>(Endpoints.getLists(), "GET", {
-    requiresAuth: true,
-  });
+  return useEndpoint<ListSummary[]>(
+    "GET",
+    {
+      requiresAuth: true,
+    },
+    Endpoints.getLists()
+  );
 };
 
 export const useGetList = (id: string) => {
-  return useEndpoint<List>(Endpoints.getList(id), "GET", {
-    requiresAuth: true,
-  });
+  return useEndpoint<List>(
+    "GET",
+    {
+      requiresAuth: true,
+    },
+    Endpoints.getList(id)
+  );
 };

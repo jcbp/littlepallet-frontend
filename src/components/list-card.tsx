@@ -1,3 +1,4 @@
+import { formatDate } from "../helpers/date";
 import { ListSummary } from "../types/list-summary";
 import { Badge, Card } from "react-bootstrap";
 
@@ -21,13 +22,20 @@ const ListCard: React.FC<ListCardProps> = ({ list, onClick }) => {
       onClick={onClick}
     >
       <Card.Header className="bg-transparent">{list.name}</Card.Header>
-      <Card.Body>
-        <Badge bg="light" text="dark">
-          Creado por: {ownerName}
-        </Badge>
-        {list.users && list.users.length > 0 && (
+      <Card.Body className="d-flex flex-column justify-content-between">
+        <div>
           <Badge bg="light" text="dark">
-            Usuarios compartidos: {list.users.length}
+            Creado por: {ownerName}
+          </Badge>
+          {list.users && list.users.length > 0 && (
+            <Badge bg="light" text="dark">
+              Usuarios compartidos: {list.users.length}
+            </Badge>
+          )}
+        </div>
+        {list.updatedAt && (
+          <Badge bg="light" text="dark" className="fw-normal">
+            Actualizada el {formatDate(list.updatedAt)}
           </Badge>
         )}
       </Card.Body>

@@ -6,4 +6,5 @@ export interface ListSummary {
   description: string;
   owner: string;
   users?: User[];
+  updatedAt?: string;
 }

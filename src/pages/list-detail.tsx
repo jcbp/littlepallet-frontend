@@ -5,6 +5,7 @@ import { useUpdateItemField } from "../hooks/api/item";
 import { Field } from "../types/field";
 import { List } from "../types/list";
 import TableList from "../components/table-list";
+import debounce from "lodash/debounce";
 
 const getFieldConfig = (list: List, field: Field) => {
   const defaultConfig = { hidden: false };
@@ -17,6 +18,11 @@ const getFieldConfig = (list: List, field: Field) => {
 const ListDetail = () => {
   const { id = "" } = useParams();
   const { responseData: list, isLoading, error } = useGetList(id);
+  const {
+    updateItemField,
+    isLoading: savingItemField,
+    error: errorSavingItemField,
+  } = useUpdateItemField();
 
   if (isLoading) {
     return <div>cargando...</div>;
@@ -36,15 +42,29 @@ const ListDetail = () => {
     (field) => getFieldConfig(list, field).hidden !== true
   );
 
-  const handleUpdateItemField = (itemId: string, fieldId: string, value: string) => {
-  // const { responseData, isLoading} = useUpdateItemField()
+  const debouncedUpdateItemField = debounce(
+    (itemId: string, fieldId: string, value: string) => {
+      updateItemField(list._id, itemId, fieldId, value);
+    },
+    700
+  );
 
-  }
+  const handleUpdateItemField = (
+    itemId: string,
+    fieldId: string,
+    value: string
+  ) => {
+    debouncedUpdateItemField(itemId, fieldId, value);
+  };
 
   return (
     <>
       <h1 className="fs-3 text-center mb-5">{list.name}</h1>
-      <TableList fields={visibleFields} items={items} onUpdateItemField={handleUpdateItemField} />
+      <TableList
+        fields={visibleFields}
+        items={items}
+        onUpdateItemField={handleUpdateItemField}
+      />
     </>
   );
 };
