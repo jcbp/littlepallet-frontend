@@ -10,15 +10,13 @@ interface Props {
 
 const TextField: FC<Props> = ({ value, field, onChange }) => {
   return (
-    <div>
-      <Form.Control
-        type="text"
-        className="border-0 ps-0"
-        defaultValue={value}
-        placeholder={`- ${field.name} -`}
-        onChange={(e) => onChange(e.target.value)}
-      />
-    </div>
+    <Form.Control
+      type="text"
+      className="border-0 ps-0 bg-transparent"
+      defaultValue={value}
+      placeholder={`- ${field.name} -`}
+      onChange={(e) => onChange(e.target.value)}
+    />
   );
 };
 

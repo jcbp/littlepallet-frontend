@@ -6,27 +6,27 @@ import axios, {
 } from "axios";
 import { AuthContext } from "../context/auth-context";
 
-type UseEndpointOptions = {
+type RequestOptions = {
   requiresAuth?: boolean;
 };
 
-export const useEndpoint = <T>(
+export const useRequest = <T>(
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
-  options?: UseEndpointOptions,
+  options: RequestOptions = { requiresAuth: true },
   url?: string
 ) => {
   const { authData } = useContext(AuthContext);
   const [responseData, setResponseData] = useState<T | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const request = async (url: string, data?: any) => {
-    setIsLoading(true);
+    setLoading(true);
     setError(null);
 
     try {
       const headers: RawAxiosRequestHeaders = {};
-      if (options?.requiresAuth && authData.token) {
+      if (options.requiresAuth && authData.token) {
         headers["Authorization"] = authData.token;
       }
 
@@ -40,6 +40,7 @@ export const useEndpoint = <T>(
       const response = await axios.request<T>(config);
 
       setResponseData(response.data);
+      return response.data;
     } catch (error: any) {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError;
@@ -52,7 +53,7 @@ export const useEndpoint = <T>(
         setError(error.message);
       }
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
@@ -62,7 +63,7 @@ export const useEndpoint = <T>(
     }
   }, [url]);
 
-  return { isLoading, responseData, error, request };
+  return { loading, responseData, error, request };
 };
 
-export default useEndpoint;
+export default useRequest;

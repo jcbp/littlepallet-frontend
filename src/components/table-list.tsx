@@ -1,3 +1,4 @@
+import { Table } from "react-bootstrap";
 import { Field } from "../types/field";
 import { Item } from "../types/item";
 import FieldView from "./field-view";
@@ -15,7 +16,7 @@ function getColumnWidth(field: Field): string {
       return "70px";
     case "date":
     case "time":
-      return "100px";
+      return "150px";
     case "options":
     case "user":
       return "180px";
@@ -36,11 +37,11 @@ const TableList: React.FC<ListCardProps> = ({
   onUpdateItemField,
 }) => {
   return (
-    <table>
+    <Table striped bordered>
       <thead>
         <tr>
           {fields.map((field) => (
-            <th key={field._id} style={{ width: getColumnWidth(field) }}>
+            <th key={field._id}>
               {field.name}
             </th>
           ))}
@@ -51,19 +52,21 @@ const TableList: React.FC<ListCardProps> = ({
           <tr key={item._id}>
             {fields.map((field) => (
               <td key={field._id}>
-                <FieldView
-                  field={field}
-                  value={item[field._id]}
-                  onChange={(value) =>
-                    onUpdateItemField(item._id, field._id, value)
-                  }
-                />
+                <div className="d-flex align-items-center h-100">
+                  <FieldView
+                    field={field}
+                    value={item[field._id]}
+                    onChange={(value) =>
+                      onUpdateItemField(item._id, field._id, value)
+                    }
+                  />
+                </div>
               </td>
             ))}
           </tr>
         ))}
       </tbody>
-    </table>
+    </Table>
   );
 };
 

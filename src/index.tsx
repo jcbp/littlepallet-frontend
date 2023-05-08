@@ -8,25 +8,28 @@ import ListsIndex from "./pages/lists-index";
 import ListDetail from "./pages/list-detail";
 import AuthProvider from "./context/auth-provider";
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import "./index.css";
+import ListProvider from "./context/list-context-provider";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <AuthProvider>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<App />} />
-          <Route path="login" element={<LoginPage />} />
-          <Route path="lists" element={<ListsIndex />} />
-          <Route path="lists/:id" element={<ListDetail />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <ListProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<App />} />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="lists" element={<ListsIndex />} />
+            <Route path="lists/:id" element={<ListDetail />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </ListProvider>
   </AuthProvider>
 );

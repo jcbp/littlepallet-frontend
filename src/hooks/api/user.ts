@@ -1,13 +1,13 @@
-import { useEndpoint } from "../use-endpoint";
+import { useRequest } from "../use-request";
 import { CurrentUser } from "../../types/current-user";
-import { Endpoints } from "../../endpoints";
+import { apiEndpoints } from "../../api-endpoints";
 
 export const useCurrentUser = () => {
-  return useEndpoint<CurrentUser>(
+  return useRequest<CurrentUser>(
     "GET",
     {
       requiresAuth: true,
     },
-    Endpoints.getCurrentUser()
+    apiEndpoints.getCurrentUser()
   );
 };

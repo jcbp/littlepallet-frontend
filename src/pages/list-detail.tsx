@@ -1,13 +1,13 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useGetList } from "../hooks/api/list";
-import { useUpdateItemField } from "../hooks/api/item";
+import { useList } from "../hooks/api/list";
 import { Field } from "../types/field";
 import { List } from "../types/list";
 import TableList from "../components/table-list";
 import debounce from "lodash/debounce";
 import Loader from "../components/loader";
 import ListEmptyState from "../components/empty-states/list-empty-state";
+import { Button } from "react-bootstrap";
 
 const getFieldConfig = (list: List, field: Field) => {
   const defaultConfig = { hidden: false };
@@ -19,17 +19,12 @@ const getFieldConfig = (list: List, field: Field) => {
 
 const ListDetail = () => {
   const { id = "" } = useParams();
-  const { responseData: list, isLoading, error } = useGetList(id);
-  const {
-    updateItemField,
-    isLoading: savingItemField,
-    error: errorSavingItemField,
-  } = useUpdateItemField();
+  const { list, loading, error, updateItemField, addItem } = useList(id);
 
-  if (!list || isLoading || error) {
+  if (!list || loading || error) {
     return (
       <Loader
-        loading={isLoading}
+        loading={loading}
         error={error}
         isEmpty={!list}
         emptyState={<ListEmptyState />}
@@ -45,7 +40,7 @@ const ListDetail = () => {
 
   const debouncedUpdateItemField = debounce(
     (itemId: string, fieldId: string, value: string) => {
-      updateItemField(list._id, itemId, fieldId, value);
+      updateItemField(itemId, fieldId, value);
     },
     700
   );
@@ -58,9 +53,16 @@ const ListDetail = () => {
     debouncedUpdateItemField(itemId, fieldId, value);
   };
 
+  const handleAddItem = () => {
+    addItem();
+  };
+
   return (
     <>
       <h1 className="fs-3 text-center mb-5">{list.name}</h1>
+      <Button onClick={handleAddItem} className="ms-auto d-block mb-2">
+        Nuevo item
+      </Button>
       <TableList
         fields={visibleFields}
         items={items}

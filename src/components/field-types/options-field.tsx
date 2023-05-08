@@ -16,7 +16,7 @@ const OptionsField: FC<Props> = ({ value, field, onChange }) => {
   return (
     <div>
       <Form.Select
-        className="border-0"
+        className="border-0 bg-transparent"
         defaultValue={value || getDefaultValue(field)}
         onChange={(e) => onChange(e.target.value)}
       >

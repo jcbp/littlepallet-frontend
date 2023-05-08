@@ -9,8 +9,8 @@ import Loader from "../components/loader";
 
 const ListsIndex = () => {
   const navigate = useNavigate();
-  const { responseData: lists, isLoading, error } = useGetLists();
-  const { responseData: currentUser, isLoading: isUserLoading } =
+  const { responseData: lists, loading: isLoading, error } = useGetLists();
+  const { responseData: currentUser, loading: isUserLoading } =
     useCurrentUser();
   const myLists: ListSummary[] = [];
   const sharedByMe: ListSummary[] = [];

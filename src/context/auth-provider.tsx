@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { AuthContext, initialAuthData } from "./auth-context";
-import { Endpoints } from "../endpoints";
+import { apiEndpoints } from "../api-endpoints";
 
 type LoginCredentials = {
   email: string;
@@ -24,7 +24,7 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
 
   const login = async (credentials: LoginCredentials) => {
     try {
-      const response = await axios.post(Endpoints.login(), credentials);
+      const response = await axios.post(apiEndpoints.login(), credentials);
       const token = response.data.access_token;
       setAuthData({
         isAuthenticated: true,

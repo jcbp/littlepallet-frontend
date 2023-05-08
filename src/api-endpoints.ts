@@ -1,6 +1,6 @@
 const API_URL = "http://localhost:3001/api";
 
-export const Endpoints = {
+export const apiEndpoints = {
   login: () => `${API_URL}/user/login`,
   getCurrentUser: () => `${API_URL}/user/current`,
   getList: (id: string) => `${API_URL}/list/${id}`,
@@ -26,7 +26,7 @@ export const Endpoints = {
   updateListViewById: (id: string) => `${API_URL}/list/${id}/view`,
   createTemplate: (listId: string) => `${API_URL}/template/from/${listId}`,
   getTemplates: (lang: string) => `${API_URL}/template/${lang}`,
-  createItem: (id: string) => `${API_URL}/list/${id}/item`,
+  createItem: (listId: string) => `${API_URL}/list/${listId}/item`,
   createItemAtPosition: (id: string, position: string) =>
     `${API_URL}/list/${id}/item/at/${position}`,
   moveItemAtPosition: (listId: string, itemId: string, position: string) =>

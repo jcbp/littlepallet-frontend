@@ -16,6 +16,10 @@ code {
   cursor: pointer;
 }
 
+td {
+  height: 46px;
+}
+
 .shadow-hover {
   transition: box-shadow 0.3s ease;
 }

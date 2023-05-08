@@ -32,7 +32,7 @@ const TrafficLightField: FC<Props> = ({ value, field, onChange }) => {
   };
 
   return (
-    <div>
+    <div className="d-flex justify-content-center w-100">
       <Dropdown as={ButtonGroup}>
         <Dropdown.Toggle variant="light">
           <div className={`${getCircleClass(selectedValue)} me-2`} />
