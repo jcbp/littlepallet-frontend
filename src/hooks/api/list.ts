@@ -48,6 +48,12 @@ export const useList = (listId: string) => {
     request: requestAddItem,
   } = useRequest<Item>("POST");
 
+  const {
+    loading: deletingItem,
+    error: errorDeletingItem,
+    request: requestDeleteItem,
+  } = useRequest<Item>("DELETE");
+
   const updateItemField = (itemId: string, fieldId: string, value: any) => {
     requestUpdateItemField(
       apiEndpoints.updateItemField(listId, itemId, fieldId),
@@ -68,7 +74,21 @@ export const useList = (listId: string) => {
     }
   };
 
-  const removeItem = (id: string) => {};
+  const removeItem = async (itemId: string) => {
+    const deletedItem = await requestDeleteItem(
+      apiEndpoints.deleteItem(listId, itemId)
+    );
+    if (list && deletedItem) {
+      const updatedItems = list.items.filter(
+        (item) => item._id !== deletedItem._id
+      );
+      const updatedList = {
+        ...list,
+        items: updatedItems,
+      };
+      updateList(listId, updatedList);
+    }
+  };
 
   return {
     list,

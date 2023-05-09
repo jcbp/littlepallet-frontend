@@ -1,50 +1,29 @@
-import { Table } from "react-bootstrap";
+import { Table, DropdownButton, Dropdown, Button } from "react-bootstrap";
 import { Field } from "../types/field";
 import { Item } from "../types/item";
 import FieldView from "./field-view";
-
-function getColumnWidth(field: Field): string {
-  if (field.width && parseInt(field.width) > 0) {
-    return field.width;
-  }
-
-  switch (field.type) {
-    case "boolean":
-      return "70px";
-    case "traffic-light":
-    case "color":
-      return "70px";
-    case "date":
-    case "time":
-      return "150px";
-    case "options":
-    case "user":
-      return "180px";
-    default:
-      return "260px";
-  }
-}
 
 interface ListCardProps {
   fields: Field[];
   items: Item[];
   onUpdateItemField: (itemId: string, fieldId: string, value: string) => void;
+  onRemoveItem: (itemId: string) => void;
 }
 
 const TableList: React.FC<ListCardProps> = ({
   fields,
   items,
   onUpdateItemField,
+  onRemoveItem,
 }) => {
   return (
-    <Table striped bordered>
+    <Table>
       <thead>
         <tr>
           {fields.map((field) => (
-            <th key={field._id}>
-              {field.name}
-            </th>
+            <th key={field._id}>{field.name}</th>
           ))}
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -63,6 +42,30 @@ const TableList: React.FC<ListCardProps> = ({
                 </div>
               </td>
             ))}
+            <td>
+              <div className="d-flex align-items-center justify-content-end h-100 ms-3">
+                <Button variant="light" className="me-1">
+                  <i className="bi bi-search text-secondary" />
+                </Button>
+                <DropdownButton
+                  className="hide-dropdown-icon p-0"
+                  id="dropdown-basic-button"
+                  title={
+                    <i className="bi bi-three-dots-vertical text-secondary" />
+                  }
+                  variant="light"
+                >
+                  <Dropdown.Item href="#">Mover hacia arriba</Dropdown.Item>
+                  <Dropdown.Item href="#">Mover hacia abajo</Dropdown.Item>
+                  <Dropdown.Item
+                    href="#"
+                    onClick={() => onRemoveItem(item._id)}
+                  >
+                    Eliminar
+                  </Dropdown.Item>
+                </DropdownButton>
+              </div>
+            </td>
           </tr>
         ))}
       </tbody>

@@ -19,7 +19,8 @@ const getFieldConfig = (list: List, field: Field) => {
 
 const ListDetail = () => {
   const { id = "" } = useParams();
-  const { list, loading, error, updateItemField, addItem } = useList(id);
+  const { list, loading, error, updateItemField, addItem, removeItem } =
+    useList(id);
 
   if (!list || loading || error) {
     return (
@@ -57,6 +58,10 @@ const ListDetail = () => {
     addItem();
   };
 
+  const handleRemoveItem = (itemId: string) => {
+    removeItem(itemId);
+  };
+
   return (
     <>
       <h1 className="fs-3 text-center mb-5">{list.name}</h1>
@@ -67,6 +72,7 @@ const ListDetail = () => {
         fields={visibleFields}
         items={items}
         onUpdateItemField={handleUpdateItemField}
+        onRemoveItem={handleRemoveItem}
       />
     </>
   );

@@ -19,6 +19,9 @@ code {
 td {
   height: 46px;
 }
+.hide-dropdown-icon .dropdown-toggle::after {
+  display: none !important;
+}
 
 .shadow-hover {
   transition: box-shadow 0.3s ease;
