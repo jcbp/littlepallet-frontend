@@ -15,7 +15,7 @@ export const useRequest = <T>(
   options: RequestOptions = { requiresAuth: true },
   url?: string
 ) => {
-  const { authData } = useContext(AuthContext);
+  const { authData, logout } = useContext(AuthContext);
   const [responseData, setResponseData] = useState<T | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -46,6 +46,7 @@ export const useRequest = <T>(
         const axiosError = error as AxiosError;
         if (axiosError.response?.status === 401) {
           setError("Unauthorized");
+          logout();
         } else {
           setError(axiosError.message);
         }
