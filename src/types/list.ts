@@ -11,41 +11,39 @@ interface Filter {
   value: string;
 }
 
-interface ViewSection {
-  section: string;
-  hidden?: boolean;
-  width?: string;
-}
+type ViewSection = "none" | "title" | "summary" | "body";
 
-interface Views {
-  boardView: {
-    [key: string]: ViewSection;
+type View = {
+  [key: string]: {
+    section?: ViewSection;
+    hidden?: boolean;
+    breakdown?: boolean;
+    showTotal?: boolean;
   };
-  cardView: {
-    [key: string]: ViewSection;
-  };
-  tableView: {
-    [key: string]: ViewSection;
-  };
-  itemView: {
-    [key: string]: ViewSection;
-  };
-}
+};
+
+type Views = {
+  itemView?: View;
+  tableView?: View;
+  cardView?: View;
+  boardView?: View;
+  overview?: View;
+};
 
 export interface List {
   _id: string;
   name: string;
   owner: string;
-  isTemplate: boolean;
-  fieldLastIndex: number;
-  filterLastIndex: number;
-  conditions: unknown[]; // No se especifica el tipo de datos en la respuesta
-  filters: Filter[];
   fields: Field[];
   items: Item[];
+  isTemplate?: boolean;
+  fieldLastIndex?: number;
+  filterLastIndex?: number;
+  conditions?: unknown[]; // No se especifica el tipo de datos en la respuesta
+  filters?: Filter[];
   views?: Views;
-  category: string;
-  commentsEnabled: boolean;
-  users: User[];
+  category?: string;
+  commentsEnabled?: boolean;
+  users?: User[];
   updatedAt?: string;
 }

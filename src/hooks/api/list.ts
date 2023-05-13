@@ -22,14 +22,6 @@ export const useList = (listId: string) => {
   const { getList, updateList } = useContext(ListContext);
   const list = getList(listId);
 
-  useEffect(() => {
-    fetchList(apiEndpoints.getList(listId)).then((responseData) => {
-      if (responseData) {
-        updateList(listId, responseData);
-      }
-    });
-  }, [listId]);
-
   const {
     loading,
     error: errorFetchingList,
@@ -53,6 +45,14 @@ export const useList = (listId: string) => {
     error: errorDeletingItem,
     request: requestDeleteItem,
   } = useRequest<Item>("DELETE");
+
+  useEffect(() => {
+    fetchList(apiEndpoints.getList(listId)).then((responseData) => {
+      if (responseData) {
+        updateList(listId, responseData);
+      }
+    });
+  }, [listId]);
 
   const updateItemField = (itemId: string, fieldId: string, value: any) => {
     requestUpdateItemField(
@@ -94,7 +94,7 @@ export const useList = (listId: string) => {
     list,
     loading,
     saving: savingItemField,
-    deleting: false,
+    deleting: deletingItem,
     error: errorFetchingList || errorSavingItemField,
     updateItemField,
     addItem,

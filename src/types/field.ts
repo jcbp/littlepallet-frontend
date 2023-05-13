@@ -1,5 +1,4 @@
 interface Option {
-  _id: string;
   [key: string]: string;
 }
 
@@ -23,10 +22,10 @@ export interface Field {
     | "user"
     | "chips"
     | "options-list";
-  visible: string;
-  section: string;
+  // visible: string;
+  // section: string;
   options?: Option[]; // Puede ser undefined
-  defaultValue: string | number | boolean | null;
+  defaultValue?: string | number | boolean | null;
   help?: string; // Puede ser undefined
   importance?: string; // Puede ser undefined
   width?: string; // Puede ser undefined

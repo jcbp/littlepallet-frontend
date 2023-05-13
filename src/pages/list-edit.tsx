@@ -8,6 +8,9 @@ import debounce from "lodash/debounce";
 import Loader from "../components/loader";
 import ListEmptyState from "../components/empty-states/list-empty-state";
 import { Button } from "react-bootstrap";
+import { builInListFields } from "../built-in-tables/list-fields";
+import { useListConfig } from "../hooks/api/list-config";
+import { Item } from "../types/item";
 
 const getFieldConfig = (list: List, field: Field) => {
   const defaultConfig = { hidden: false };
@@ -17,10 +20,10 @@ const getFieldConfig = (list: List, field: Field) => {
   return list.views.tableView[field._id] || defaultConfig;
 };
 
-const ListDetail = () => {
+const ListEdit = () => {
   const { id = "" } = useParams();
-  const { list, loading, error, updateItemField, addItem, removeItem } =
-    useList(id);
+  const { list, loading, error, addField, removeField, updateField } =
+    useListConfig(id);
 
   if (!list || loading || error) {
     return (
@@ -33,49 +36,51 @@ const ListDetail = () => {
     );
   }
 
-  const { fields = [], items = [] } = list;
-
-  const visibleFields = fields.filter(
-    (field) => getFieldConfig(list, field).hidden !== true
-  );
-
-  const debouncedUpdateItemField = debounce(
-    (itemId: string, fieldId: string, value: string) => {
-      updateItemField(itemId, fieldId, value);
+  const debouncedUpdateField = debounce(
+    (fieldId: string, fieldAttribute: string, value: string) => {
+      updateField(fieldId, fieldAttribute, value);
     },
     700
   );
 
   const handleUpdateItemField = (
-    itemId: string,
     fieldId: string,
+    fieldAttribute: string,
     value: string
   ) => {
-    debouncedUpdateItemField(itemId, fieldId, value);
+    debouncedUpdateField(fieldId, fieldAttribute, value);
   };
 
-  const handleAddItem = () => {
-    addItem();
+  const handleAddField = () => {
+    addField();
   };
 
-  const handleRemoveItem = (itemId: string) => {
-    removeItem(itemId);
+  const handleRemoveField = (fieldId: string) => {
+    removeField(fieldId);
   };
+
+  const visibleFields = builInListFields.fields.filter(
+    (field) => getFieldConfig(builInListFields, field).hidden !== true
+  );
 
   return (
     <>
-      <h1 className="fs-3 mb-5">{list.name}</h1>
-      <Button onClick={handleAddItem} className="ms-auto d-block mb-2">
-        Nuevo item
+      <h1 className="fs-3 mb-5">
+        {list.name} <span className="fs-4 text-secondary">| Editar</span>
+      </h1>
+
+      <Button onClick={handleAddField} className="ms-auto d-block mb-2">
+        Nuevo campo
       </Button>
+
       <TableList
         fields={visibleFields}
-        items={items}
+        items={list.fields as unknown as Item[]}
         onUpdateItemField={handleUpdateItemField}
-        onRemoveItem={handleRemoveItem}
+        onRemoveItem={handleRemoveField}
       />
     </>
   );
 };
 
-export default ListDetail;
+export default ListEdit;

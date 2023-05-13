@@ -13,6 +13,10 @@ const getDefaultValue = (field: Field): string => {
 };
 
 const OptionsField: FC<Props> = ({ value, field, onChange }) => {
+  const normalizedOptions = field.options?.map((item) =>
+    item && item.value ? item : { text: item[0], value: item[0] }
+  );
+
   return (
     <div>
       <Form.Select
@@ -23,9 +27,9 @@ const OptionsField: FC<Props> = ({ value, field, onChange }) => {
         <option value="" disabled>
           - {field.name} -
         </option>
-        {field.options?.map((option) => (
-          <option key={option._id} value={option[0]}>
-            {option[0]}
+        {normalizedOptions?.map((option, index) => (
+          <option key={index} value={option.value}>
+            {option.text}
           </option>
         ))}
       </Form.Select>

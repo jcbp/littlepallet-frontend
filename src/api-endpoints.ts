@@ -3,8 +3,9 @@ const API_URL = "http://localhost:3001/api";
 export const apiEndpoints = {
   login: () => `${API_URL}/user/login`,
   getCurrentUser: () => `${API_URL}/user/current`,
-  getList: (id: string) => `${API_URL}/list/${id}`,
   getLists: () => `${API_URL}/list`,
+  getList: (id: string) => `${API_URL}/list/${id}`,
+  getListConfig: (id: string) => `${API_URL}/list/${id}/config`,
   createUser: () => `${API_URL}/user`,
   updateUser: (id: string) => `${API_URL}/user/${id}`,
   addUserToList: (listId: string) => `${API_URL}/list/${listId}/user`,
@@ -16,9 +17,7 @@ export const apiEndpoints = {
     `${API_URL}/list/${listId}/item/${itemId}/comment`,
   createItemCommentWithImage: (listId: string, itemId: string) =>
     `${API_URL}/list/${listId}/item/${itemId}/comment/image`,
-  getListsAuthenticated: () => `${API_URL}/list`,
   getDeletedLists: () => `${API_URL}/list/trash`,
-  getListById: (id: string) => `${API_URL}/list/${id}`,
   createList: () => `${API_URL}/list`,
   createListFromAnother: (id: string) => `${API_URL}/list/from/${id}`,
   updateList: (id: string) => `${API_URL}/list/${id}`,
@@ -37,9 +36,9 @@ export const apiEndpoints = {
     `${API_URL}/list/${listId}/item/${itemId}`,
   updateItemField: (listId: string, itemId: string, fieldId: string) =>
     `${API_URL}/list/${listId}/item/${itemId}/field/${fieldId}`,
-  createField: (id: string) => `${API_URL}/list/${id}/field`,
-  createFieldAtPosition: (id: string, position: string) =>
-    `${API_URL}/list/${id}/field/at/${position}`,
+  createField: (listId: string) => `${API_URL}/list/${listId}/field`,
+  createFieldAtPosition: (listId: string, position: string) =>
+    `${API_URL}/list/${listId}/field/at/${position}`,
   moveFieldAtPosition: (listId: string, fieldId: string, position: string) =>
     `${API_URL}/list/${listId}/field/${fieldId}/move/${position}`,
   updateField: (listId: string, fieldId: string) =>
