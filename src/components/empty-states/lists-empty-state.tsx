@@ -1,5 +1,9 @@
 import React from "react";
-import { Card, Button } from "react-bootstrap";
+import {
+  DocumentMagnifyingGlassIcon,
+  PlusIcon,
+} from "@heroicons/react/24/outline";
+import Button from "../common/button";
 
 interface EmptyStateProps {
   onCreateList: () => void;
@@ -7,19 +11,21 @@ interface EmptyStateProps {
 
 const ListsEmptyState: React.FC<EmptyStateProps> = ({ onCreateList }) => {
   return (
-    <Card className="mt-4">
-      <Card.Body className="d-flex flex-column align-items-center justify-content-center">
-        <i className="bi bi-file-earmark-x fs-2 text-secondary" />
-        <Card.Title>No hay listas para mostrar</Card.Title>
-        <Card.Text className="text-secondary">
-          Agregá una nueva lista para comenzar
-        </Card.Text>
-        <Button onClick={onCreateList} className="d-flex align-items-center">
-          <i className="bi bi-plus me-1 fs-5" />
+    <div className="mt-4 bg-white rounded-lg shadow-lg p-6">
+      <div className="flex flex-col items-center justify-center">
+        <DocumentMagnifyingGlassIcon className="h-8 w-8 text-gray-600" />
+        <h3 className="text-lg font-medium text-gray-900 mt-4">
+          No hay listas para mostrar
+        </h3>
+        <p className="text-sm text-gray-500 mt-2">
+          Agrega una nueva lista para comenzar
+        </p>
+        <Button onClick={onCreateList}>
+          <PlusIcon className="h-5 w-5 mr-1" />
           Crear lista
         </Button>
-      </Card.Body>
-    </Card>
+      </div>
+    </div>
   );
 };
 

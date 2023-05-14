@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useList } from "../hooks/api/list";
 import { Field } from "../types/field";
 import { List } from "../types/list";
@@ -7,7 +7,8 @@ import TableList from "../components/table-list";
 import debounce from "lodash/debounce";
 import Loader from "../components/loader";
 import ListEmptyState from "../components/empty-states/list-empty-state";
-import { Button } from "react-bootstrap";
+import Button from "../components/common/button";
+import { PlusIcon, Cog8ToothIcon } from "@heroicons/react/24/outline";
 
 const getFieldConfig = (list: List, field: Field) => {
   const defaultConfig = { hidden: false };
@@ -18,6 +19,7 @@ const getFieldConfig = (list: List, field: Field) => {
 };
 
 const ListDetail = () => {
+  const navigate = useNavigate();
   const { id = "" } = useParams();
   const { list, loading, error, updateItemField, addItem, removeItem } =
     useList(id);
@@ -62,12 +64,27 @@ const ListDetail = () => {
     removeItem(itemId);
   };
 
+  const handleConfigList = () => {
+    navigate(`/lists/${id}/edit`);
+  };
+
   return (
     <>
-      <h1 className="fs-3 mb-5">{list.name}</h1>
-      <Button onClick={handleAddItem} className="ms-auto d-block mb-2">
-        Nuevo item
-      </Button>
+      <span className="flex my-8 justify-between">
+        <h1 className="text-2xl">{list.name}</h1>
+        <span className="flex items-center">
+          <button
+            className="bg-gray-0 hover:bg-gray-100 p-1.5 m-1 rounded-full mr-3"
+            onClick={handleConfigList}
+          >
+            <Cog8ToothIcon className="h-6 w-6 text-gray-800" />
+          </button>
+          <Button onClick={handleAddItem}>
+            <PlusIcon className="h-4 w-4 text-white" />
+            Nuevo item
+          </Button>
+        </span>
+      </span>
       <TableList
         fields={visibleFields}
         items={items}

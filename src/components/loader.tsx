@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { Spinner, Alert } from "react-bootstrap";
 
 interface Props {
   loading: boolean;
@@ -18,22 +17,21 @@ const Loader: React.FC<Props> = ({
 }) => {
   if (loading) {
     return (
-      <div
-        className="d-flex justify-content-center align-items-center vh-100"
-        style={{ marginTop: "-120px" }}
-      >
-        <Spinner animation="border" role="status" variant="primary">
-          <span className="visually-hidden">Cargando...</span>
-        </Spinner>
+      <div className="flex justify-center items-center h-screen mt-[-120px]">
+        <div className="animate-spin rounded-full border-blue-300 border-t-2 border-b-2 h-8 w-8 mr-2"></div>
+        <span className="text-primary">Cargando...</span>
       </div>
     );
   }
 
   if (error) {
     return (
-      <Alert variant="danger" className="mt-3">
-        Ha ocurrido un error: {error}
-      </Alert>
+      <div className="mt-3">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+          <strong className="font-bold">Ha ocurrido un error:</strong>
+          <span className="block sm:inline"> {error}</span>
+        </div>
+      </div>
     );
   }
 

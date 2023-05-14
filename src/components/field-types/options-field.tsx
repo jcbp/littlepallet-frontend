@@ -1,5 +1,4 @@
-import { Form } from "react-bootstrap";
-import React, { FC } from "react";
+import React, { FC, ChangeEvent } from "react";
 import { Field } from "../../types/field";
 
 interface Props {
@@ -17,23 +16,25 @@ const OptionsField: FC<Props> = ({ value, field, onChange }) => {
     item && item.value ? item : { text: item[0], value: item[0] }
   );
 
+  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    onChange(e.target.value);
+  };
+
   return (
-    <div>
-      <Form.Select
-        className="border-0 bg-transparent"
-        defaultValue={value || getDefaultValue(field)}
-        onChange={(e) => onChange(e.target.value)}
-      >
-        <option value="" disabled>
-          - {field.name} -
+    <select
+      className="bg-gray-50 hover:bg-gray-100 rounded-lg px-3 py-2 mr-5 outline-none shadow-focus w-full"
+      value={value || getDefaultValue(field)}
+      onChange={handleChange}
+    >
+      <option value="" disabled>
+        - {field.name} -
+      </option>
+      {normalizedOptions?.map((option, index) => (
+        <option key={index} value={option.value}>
+          {option.text}
         </option>
-        {normalizedOptions?.map((option, index) => (
-          <option key={index} value={option.value}>
-            {option.text}
-          </option>
-        ))}
-      </Form.Select>
-    </div>
+      ))}
+    </select>
   );
 };
 

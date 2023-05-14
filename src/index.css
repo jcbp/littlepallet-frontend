@@ -1,20 +1,6 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-}
-
-.cursor-pointer {
-  cursor: pointer;
-}
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 td {
   height: 46px;
@@ -29,9 +15,24 @@ td {
 .shadow-hover:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
-.form-control:focus,
-.form-select:focus {
+.shadow-focus:focus {
   box-shadow: 0 0 3px rgb(106, 170, 243);
+}
+
+input[type="checkbox"]:after {
+  content: " ";
+  position: relative;
+  left: 34%;
+  top: 17%;
+  width: 33%;
+  height: 54%;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(50deg);
+  display: none;
+}
+input[type="checkbox"]:checked:after {
+  display: block;
 }
 
 .light-default,
@@ -58,4 +59,17 @@ td {
 .light-red {
   background-color: #ff7070;
   border: 1px solid #ff3e3e;
+}
+
+.table-sticky-header-container {
+  max-height: calc(100vh - 250px);
+  overflow-y: scroll;
+}
+
+.table-sticky-header-container table thead th {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 1;
+  box-shadow: inset -1px -2px 0px -1px rgb(226, 232, 240);
 }

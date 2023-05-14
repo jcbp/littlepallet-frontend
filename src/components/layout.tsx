@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/auth-context";
-import { Button } from "react-bootstrap";
+import Button from "./common/button";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -14,23 +14,22 @@ const Layout = () => {
 
   return (
     <>
-      <nav className="navbar navbar-dark bg-dark px-4 py-3 mb-5">
-        <div className="container-fluid">
-          <ul className="navbar-nav me-auto">
-            <li className="nav-item">
-              <Link
-                to="/"
-                className="nav-link text-white"
-              >
+      <nav className="bg-gray-800 px-4 py-2.5 mb-5">
+        <div className="mx-auto flex items-center justify-between">
+          <ul className="flex space-x-4">
+            <li>
+              <Link to="/" className="text-white">
                 Home
               </Link>
             </li>
           </ul>
-          <Button variant="light" onClick={handleLogout}>Logout</Button>
+          <Button variant="light" onClick={handleLogout}>
+            Logout
+          </Button>
         </div>
       </nav>
 
-      <div className="container">
+      <div className="container mx-auto">
         <Outlet />
       </div>
     </>

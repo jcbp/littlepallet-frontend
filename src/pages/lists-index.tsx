@@ -63,6 +63,7 @@ const ListsIndex = () => {
       <ListsGrid
         title="Listas compartidas conmigo"
         lists={sharedWithMe}
+        showOwner={true}
         onClick={handleClick}
       />
     </>

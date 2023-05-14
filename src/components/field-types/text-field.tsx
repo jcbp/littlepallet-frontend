@@ -1,5 +1,4 @@
-import { Form } from "react-bootstrap";
-import React, { FC } from "react";
+import React, { FC, ChangeEvent } from "react";
 import { Field } from "../../types/field";
 
 interface Props {
@@ -9,13 +8,17 @@ interface Props {
 }
 
 const TextField: FC<Props> = ({ value, field, onChange }) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.value);
+  };
+
   return (
-    <Form.Control
+    <input
       type="text"
-      className="border-0 ps-0 bg-transparent"
-      defaultValue={value}
+      className="rounded-md px-2 py-1.5 mr-2 outline-none shadow-focus w-full"
+      value={value}
       placeholder={`- ${field.name} -`}
-      onChange={(e) => onChange(e.target.value)}
+      onChange={handleChange}
     />
   );
 };

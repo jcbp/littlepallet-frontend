@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/auth-context";
-import { Card, Form, Button } from "react-bootstrap";
+import Button from "../components/common/button";
 
 function LoginPage() {
   const { login } = useContext(AuthContext);
@@ -30,53 +30,71 @@ function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen d-flex align-items-center justify-content-center py-12 px-4 sm:px-6 lg:px-8">
-      <Card style={{ width: "32rem" }} className="p-4">
-        <Card.Body>
-          <Card.Title className="text-center text-3xl fw-bolder text-black text-opacity-75">
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="max-w-md w-full space-y-8 mt-[-200px] border border-gray-200 rounded-lg px-4 sm:px-6 lg:px-8 py-12">
+        <div>
+          <h1 className="text-3xl font-bold text-center text-black text-opacity-75">
             Iniciar sesión
-          </Card.Title>
-          <Form className="mt-8 py-5" onSubmit={handleSubmit}>
-            <Form.Group controlId="formBasicEmail" className="pb-3">
-              <Form.Label>Correo electrónico</Form.Label>
-              <Form.Control
+          </h1>
+        </div>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Correo electrónico
+            </label>
+            <div className="mt-1">
+              <input
+                id="email"
+                name="email"
                 type="email"
-                placeholder="Correo electrónico"
+                autoComplete="email"
+                required
+                className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                 value={email}
                 onChange={handleEmailChange}
               />
-            </Form.Group>
+            </div>
+          </div>
 
-            <Form.Group controlId="formBasicPassword" className="pb-3">
-              <Form.Label>Contraseña</Form.Label>
-              <Form.Control
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Contraseña
+            </label>
+            <div className="mt-1">
+              <input
+                id="password"
+                name="password"
                 type="password"
-                placeholder="Contraseña"
+                autoComplete="current-password"
+                required
+                className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                 value={password}
                 onChange={handlePasswordChange}
               />
-            </Form.Group>
-
-            {error && <p className="text-danger">{error}</p>}
-
-            <Form.Group controlId="formBasicCheckbox">
-              <Form.Check type="checkbox" label="Recordarme" />
-            </Form.Group>
-
-            <div className="d-flex justify-content-between align-items-center">
-              <div className="d-flex align-items-center">
-                <a href="#" className="ml-2 block text-sm text-gray-900">
-                  ¿Olvidaste tu contraseña?
-                </a>
-              </div>
-
-              <Button variant="primary" type="submit">
-                Iniciar sesión
-              </Button>
             </div>
-          </Form>
-        </Card.Body>
-      </Card>
+          </div>
+
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+
+          <div className="flex items-center justify-between">
+            <div className="text-sm">
+              <a href="#" className="font-medium text-gray-900">
+                ¿Olvidaste tu contraseña?
+              </a>
+            </div>
+
+            <Button type="submit" className="px-7">
+              Iniciar sesión
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

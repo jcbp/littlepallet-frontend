@@ -18,8 +18,6 @@ import ListEdit from "./pages/list-edit";
 import AuthProvider from "./context/auth-provider";
 import { AuthContext } from "./context/auth-context";
 
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap-icons/font/bootstrap-icons.css";
 import "./index.css";
 import ListProvider from "./context/list-context-provider";
 
