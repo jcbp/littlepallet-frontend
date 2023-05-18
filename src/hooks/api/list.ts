@@ -18,7 +18,7 @@ export const useGetLists = () => {
   );
 };
 
-export const useList = (listId: string) => {
+export const useGetList = (listId: string) => {
   const { getList, updateList } = useContext(ListContext);
   const list = getList(listId);
 
@@ -28,24 +28,6 @@ export const useList = (listId: string) => {
     request: fetchList,
   } = useRequest<List>("GET");
 
-  const {
-    loading: savingItemField,
-    error: errorSavingItemField,
-    request: requestUpdateItemField,
-  } = useRequest<Item>("PATCH");
-
-  const {
-    loading: addingItem,
-    error: errorAddingItem,
-    request: requestAddItem,
-  } = useRequest<Item>("POST");
-
-  const {
-    loading: deletingItem,
-    error: errorDeletingItem,
-    request: requestDeleteItem,
-  } = useRequest<Item>("DELETE");
-
   useEffect(() => {
     fetchList(apiEndpoints.getList(listId)).then((responseData) => {
       if (responseData) {
@@ -53,6 +35,20 @@ export const useList = (listId: string) => {
       }
     });
   }, [listId]);
+
+  return {
+    list,
+    loading,
+    error: errorFetchingList,
+  };
+};
+
+export const useUpdateItemField = (listId: string) => {
+  const {
+    loading: savingItemField,
+    error: errorSavingItemField,
+    request: requestUpdateItemField,
+  } = useRequest<Item>("PATCH");
 
   const updateItemField = (itemId: string, fieldId: string, value: any) => {
     requestUpdateItemField(
@@ -63,8 +59,26 @@ export const useList = (listId: string) => {
     );
   };
 
+  return {
+    savingItemField,
+    error: errorSavingItemField,
+    updateItemField,
+  };
+};
+
+export const useAddItem = (listId: string) => {
+  const { getList, updateList } = useContext(ListContext);
+
+  const {
+    loading: addingItem,
+    error: errorAddingItem,
+    request: requestAddItem,
+  } = useRequest<Item>("POST");
+
   const addItem = async (item: ItemWithoutId = {}) => {
     const newItem = await requestAddItem(apiEndpoints.createItem(listId), item);
+    const list = getList(listId);
+
     if (list && newItem) {
       const updatedList = {
         ...list,
@@ -74,10 +88,28 @@ export const useList = (listId: string) => {
     }
   };
 
+  return {
+    addingItem,
+    error: errorAddingItem,
+    addItem,
+  };
+};
+
+export const useRemoveItem = (listId: string) => {
+  const { getList, updateList } = useContext(ListContext);
+
+  const {
+    loading: deletingItem,
+    error: errorDeletingItem,
+    request: requestDeleteItem,
+  } = useRequest<Item>("DELETE");
+
   const removeItem = async (itemId: string) => {
     const deletedItem = await requestDeleteItem(
       apiEndpoints.deleteItem(listId, itemId)
     );
+    const list = getList(listId);
+
     if (list && deletedItem) {
       const updatedItems = list.items.filter(
         (item) => item._id !== deletedItem._id
@@ -91,14 +123,8 @@ export const useList = (listId: string) => {
   };
 
   return {
-    list,
-    loading,
-    addingItem,
-    savingItemField,
     deletingItem,
-    error: errorFetchingList || errorSavingItemField || errorAddingItem,
-    updateItemField,
-    addItem,
+    error: errorDeletingItem,
     removeItem,
   };
 };

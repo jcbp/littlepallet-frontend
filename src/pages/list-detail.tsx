@@ -1,6 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useList } from "../hooks/api/list";
+import {
+  useGetList,
+  useAddItem,
+  useRemoveItem,
+  useUpdateItemField,
+} from "../hooks/api/list";
 import { Field } from "../types/field";
 import { List } from "../types/list";
 import TableList from "../components/table-list";
@@ -24,8 +29,10 @@ const ListDetail = () => {
   const navigate = useNavigate();
   const { highlightedItemId, setHighlightedItem } = useHighlightItem();
   const { id = "" } = useParams();
-  const { list, loading, error, updateItemField, addItem, removeItem, addingItem } =
-    useList(id);
+  const { list, loading, error } = useGetList(id);
+  const { addItem, addingItem } = useAddItem(id);
+  const { removeItem } = useRemoveItem(id);
+  const { updateItemField } = useUpdateItemField(id);
   const { subscribeNewItemEvent } = useNewItemEvent(list);
 
   subscribeNewItemEvent((newItem) => {
@@ -50,20 +57,12 @@ const ListDetail = () => {
     (field) => getFieldConfig(list, field).hidden !== true
   );
 
-  const debouncedUpdateItemField = debounce(
+  const handleUpdateItemField = debounce(
     (itemId: string, fieldId: string, value: string) => {
       updateItemField(itemId, fieldId, value);
     },
     700
   );
-
-  const handleUpdateItemField = (
-    itemId: string,
-    fieldId: string,
-    value: string
-  ) => {
-    debouncedUpdateItemField(itemId, fieldId, value);
-  };
 
   const handleAddItem = () => {
     addItem();
