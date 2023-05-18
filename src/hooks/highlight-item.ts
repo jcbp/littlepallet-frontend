@@ -5,16 +5,22 @@ export const useHighlightItem = () => {
     null
   );
 
-  const setHighlightedItem = (itemId: string) => {
+  const highlightItem = (
+    itemId: string,
+    onHighlightEndCallback?: (itemId: string) => void
+  ) => {
     setHighlightedItemId(itemId);
 
     setTimeout(() => {
       setHighlightedItemId(null);
-    }, 2000);
+      if (onHighlightEndCallback) {
+        onHighlightEndCallback(itemId);
+      }
+    }, 1500);
   };
 
   return {
     highlightedItemId,
-    setHighlightedItem,
+    highlightItem,
   };
 };

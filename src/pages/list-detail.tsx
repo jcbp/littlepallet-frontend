@@ -27,7 +27,7 @@ const getFieldConfig = (list: List, field: Field) => {
 
 const ListDetail = () => {
   const navigate = useNavigate();
-  const { highlightedItemId, setHighlightedItem } = useHighlightItem();
+  const { highlightedItemId, highlightItem } = useHighlightItem();
   const { id = "" } = useParams();
   const { list, loading, error } = useGetList(id);
   const { addItem, addingItem } = useAddItem(id);
@@ -37,7 +37,7 @@ const ListDetail = () => {
 
   subscribeNewItemEvent((newItem) => {
     window.scrollTo(0, document.body.scrollHeight);
-    setHighlightedItem(newItem._id);
+    highlightItem(newItem._id);
   });
 
   if (!list || loading || error) {
@@ -69,7 +69,7 @@ const ListDetail = () => {
   };
 
   const handleRemoveItem = (itemId: string) => {
-    removeItem(itemId);
+    highlightItem(itemId, removeItem);
   };
 
   const handleConfigList = () => {

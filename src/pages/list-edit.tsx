@@ -37,20 +37,12 @@ const ListEdit = () => {
     );
   }
 
-  const debouncedUpdateField = debounce(
+  const handleUpdateItemField = debounce(
     (fieldId: string, fieldAttribute: string, value: string) => {
       updateField(fieldId, fieldAttribute, value);
     },
     700
   );
-
-  const handleUpdateItemField = (
-    fieldId: string,
-    fieldAttribute: string,
-    value: string
-  ) => {
-    debouncedUpdateField(fieldId, fieldAttribute, value);
-  };
 
   const handleAddField = () => {
     addField();
