@@ -14,7 +14,7 @@ const Layout = () => {
 
   return (
     <>
-      <nav className="bg-gray-800 px-4 py-2.5 mb-5">
+      <nav className="bg-gray-800 px-4 py-2.5 mb-5 sticky top-0 z-20">
         <div className="mx-auto flex items-center justify-between">
           <ul className="flex space-x-4">
             <li>

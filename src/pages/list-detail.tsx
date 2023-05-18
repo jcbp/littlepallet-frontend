@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useList } from "../hooks/api/list";
 import { Field } from "../types/field";
@@ -9,6 +9,8 @@ import Loader from "../components/loader";
 import ListEmptyState from "../components/empty-states/list-empty-state";
 import Button from "../components/common/button";
 import { PlusIcon, Cog8ToothIcon } from "@heroicons/react/24/outline";
+import { useHighlightItem } from "../hooks/highlight-item";
+import { useNewItemEvent } from "../hooks/new-item-event";
 
 const getFieldConfig = (list: List, field: Field) => {
   const defaultConfig = { hidden: false };
@@ -20,9 +22,16 @@ const getFieldConfig = (list: List, field: Field) => {
 
 const ListDetail = () => {
   const navigate = useNavigate();
+  const { highlightedItemId, setHighlightedItem } = useHighlightItem();
   const { id = "" } = useParams();
-  const { list, loading, error, updateItemField, addItem, removeItem } =
+  const { list, loading, error, updateItemField, addItem, removeItem, addingItem } =
     useList(id);
+  const { subscribeNewItemEvent } = useNewItemEvent(list);
+
+  subscribeNewItemEvent((newItem) => {
+    window.scrollTo(0, document.body.scrollHeight);
+    setHighlightedItem(newItem._id);
+  });
 
   if (!list || loading || error) {
     return (
@@ -70,7 +79,7 @@ const ListDetail = () => {
 
   return (
     <>
-      <span className="flex my-8 justify-between">
+      <div className="flex my-4 pt-4 pb-2 justify-between sticky top-[56px] bg-white z-20">
         <h1 className="text-2xl">{list.name}</h1>
         <span className="flex items-center">
           <button
@@ -79,13 +88,18 @@ const ListDetail = () => {
           >
             <Cog8ToothIcon className="h-6 w-6 text-gray-800" />
           </button>
-          <Button onClick={handleAddItem}>
+          <Button
+            onClick={handleAddItem}
+            disabled={addingItem}
+            className={addingItem ? "cursor-progress" : ""}
+          >
             <PlusIcon className="h-4 w-4 text-white" />
             Nuevo item
           </Button>
         </span>
-      </span>
+      </div>
       <TableList
+        highlightItem={highlightedItemId}
         fields={visibleFields}
         items={items}
         onUpdateItemField={handleUpdateItemField}

@@ -35,8 +35,8 @@ export const useList = (listId: string) => {
   } = useRequest<Item>("PATCH");
 
   const {
-    loading: savingItem,
-    error: errorSavingItem,
+    loading: addingItem,
+    error: errorAddingItem,
     request: requestAddItem,
   } = useRequest<Item>("POST");
 
@@ -93,9 +93,10 @@ export const useList = (listId: string) => {
   return {
     list,
     loading,
-    saving: savingItemField,
-    deleting: deletingItem,
-    error: errorFetchingList || errorSavingItemField,
+    addingItem,
+    savingItemField,
+    deletingItem,
+    error: errorFetchingList || errorSavingItemField || errorAddingItem,
     updateItemField,
     addItem,
     removeItem,

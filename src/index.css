@@ -61,15 +61,29 @@ input[type="checkbox"]:checked:after {
   border: 1px solid #ff3e3e;
 }
 
-.table-sticky-header-container {
-  max-height: calc(100vh - 250px);
-  overflow-y: scroll;
-}
-
-.table-sticky-header-container table thead th {
+table thead th {
   position: sticky;
-  top: 0;
+  top: 124px;
   background-color: #fff;
   z-index: 1;
   box-shadow: inset -1px -2px 0px -1px rgb(226, 232, 240);
+}
+
+@keyframes highlightAnimation {
+  0% {
+    background-color: transparent;
+  }
+  20% {
+    background-color: transparent;
+  }
+  60% {
+    background-color: #45c4ff46;
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+.highlight {
+  animation-name: highlightAnimation;
+  animation-duration: 2s;
 }
