@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useCallback } from "react";
 import axios, {
   AxiosError,
   AxiosRequestConfig,
@@ -20,7 +20,7 @@ export const useRequest = <T>(
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const request = async (url: string, data?: any) => {
+  const request = useCallback(async (url: string, data?: any) => {
     setLoading(true);
     setError(null);
 
@@ -56,7 +56,7 @@ export const useRequest = <T>(
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (url) {

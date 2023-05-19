@@ -16,7 +16,7 @@ export const useHighlightItem = () => {
       if (onHighlightEndCallback) {
         onHighlightEndCallback(itemId);
       }
-    }, 1500);
+    }, 1200);
   };
 
   return {

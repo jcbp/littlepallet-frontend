@@ -1,20 +1,38 @@
 import { useRequest } from "../use-request";
-import { List } from "../../types/list";
 import { apiEndpoints } from "../../api-endpoints";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Field } from "../../types/field";
+import { ListConfig } from "../../types/list-config";
+import { ListConfigContext } from "../../context/list-config-context-provider";
 
-type ListWithoutItems = Omit<List, "items">;
 type FieldWithoutId = Omit<Field, "_id">;
 
-export const useListConfig = (listId: string) => {
-  const [list, setList] = useState<ListWithoutItems | null>(null);
+export const useGetListConfig = (listId: string) => {
+  const { listConfig, setListConfig } = useContext(ListConfigContext);
 
   const {
     loading,
     error: errorFetchingListConfig,
     request: fetchListConfig,
-  } = useRequest<ListWithoutItems>("GET");
+  } = useRequest<ListConfig>("GET");
+
+  useEffect(() => {
+    fetchListConfig(apiEndpoints.getListConfig(listId)).then((responseData) => {
+      if (responseData) {
+        setListConfig(responseData);
+      }
+    });
+  }, [listId]);
+
+  return {
+    listConfig,
+    loading,
+    error: errorFetchingListConfig,
+  };
+};
+
+export const useAddField = (listId: string) => {
+  const { listConfig, setListConfig } = useContext(ListConfigContext);
 
   const {
     loading: creatingField,
@@ -22,53 +40,63 @@ export const useListConfig = (listId: string) => {
     request: requestAddField,
   } = useRequest<Field>("POST");
 
+  const addField = async (field?: FieldWithoutId) => {
+    const newField = await requestAddField(
+      apiEndpoints.createField(listId),
+      field || {}
+    );
+    if (listConfig && newField) {
+      setListConfig({
+        ...listConfig,
+        fields: [...listConfig.fields, newField],
+      });
+    }
+  };
+
+  return {
+    creatingField,
+    error: errorCreatingField,
+    addField,
+  };
+};
+
+export const useRemoveField = (listId: string) => {
+  const { listConfig, setListConfig } = useContext(ListConfigContext);
+
   const {
     loading: deletingField,
     error: errorDeletingField,
     request: requestDeleteField,
   } = useRequest<Field>("DELETE");
 
+  const removeField = async (fieldId: string) => {
+    const deletedField = await requestDeleteField(
+      apiEndpoints.deleteField(listId, fieldId)
+    );
+    if (listConfig && deletedField) {
+      const updatedFields = listConfig.fields.filter(
+        (field) => field._id !== deletedField._id
+      );
+      setListConfig({
+        ...listConfig,
+        fields: updatedFields,
+      });
+    }
+  };
+
+  return {
+    deletingField,
+    error: errorDeletingField,
+    removeField,
+  };
+};
+
+export const useUpdateField = (listId: string) => {
   const {
     loading: savingField,
     error: errorSavingField,
     request: requestUpdateField,
   } = useRequest<Field>("PATCH");
-
-  useEffect(() => {
-    fetchListConfig(apiEndpoints.getListConfig(listId)).then((responseData) => {
-      if (responseData) {
-        setList(responseData);
-      }
-    });
-  }, [listId]);
-
-  const addField = async (field?: FieldWithoutId) => {
-    const newField = await requestAddField(
-      apiEndpoints.createField(listId),
-      field || {}
-    );
-    if (list && newField) {
-      setList({
-        ...list,
-        fields: [...list.fields, newField],
-      });
-    }
-  };
-
-  const removeField = async (fieldId: string) => {
-    const deletedField = await requestDeleteField(
-      apiEndpoints.deleteField(listId, fieldId)
-    );
-    if (list && deletedField) {
-      const updatedFields = list.fields.filter(
-        (field) => field._id !== deletedField._id
-      );
-      setList({
-        ...list,
-        fields: updatedFields,
-      });
-    }
-  };
 
   const updateField = (fieldId: string, attr: string, value: any) => {
     requestUpdateField(apiEndpoints.updateField(listId, fieldId), {
@@ -78,13 +106,8 @@ export const useListConfig = (listId: string) => {
   };
 
   return {
-    list,
-    loading,
-    saving: savingField,
-    deleting: deletingField,
-    error: errorFetchingListConfig,
-    addField,
-    removeField,
+    savingField,
+    error: errorSavingField,
     updateField,
   };
 };

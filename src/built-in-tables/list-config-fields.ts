@@ -1,8 +1,8 @@
-import { List } from "../types/list";
+import { ListConfig } from "../types/list-config";
 
-export const builInListFields: List = {
-  _id: "list-fields",
-  name: "Fields",
+export const builInListConfigFields: ListConfig = {
+  _id: "list-config-fields",
+  name: "Fields configuration",
   owner: "application",
   views: {
     itemView: {
@@ -117,5 +117,4 @@ export const builInListFields: List = {
       help: "Provides a description about the field (it supports HTML markup)",
     },
   ],
-  items: [],
 };

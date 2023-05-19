@@ -6,8 +6,6 @@ import {
   useRemoveItem,
   useUpdateItemField,
 } from "../hooks/api/list";
-import { Field } from "../types/field";
-import { List } from "../types/list";
 import TableList from "../components/table-list";
 import debounce from "lodash/debounce";
 import Loader from "../components/loader";
@@ -16,23 +14,16 @@ import Button from "../components/common/button";
 import { PlusIcon, Cog8ToothIcon } from "@heroicons/react/24/outline";
 import { useHighlightItem } from "../hooks/highlight-item";
 import { useNewItemEvent } from "../hooks/new-item-event";
-
-const getFieldConfig = (list: List, field: Field) => {
-  const defaultConfig = { hidden: false };
-  if (!list.views || !list.views.tableView) {
-    return defaultConfig;
-  }
-  return list.views.tableView[field._id] || defaultConfig;
-};
+import { getVisibleFields } from "../helpers/list-config";
 
 const ListDetail = () => {
   const navigate = useNavigate();
-  const { highlightedItemId, highlightItem } = useHighlightItem();
   const { id = "" } = useParams();
   const { list, loading, error } = useGetList(id);
   const { addItem, addingItem } = useAddItem(id);
   const { removeItem } = useRemoveItem(id);
   const { updateItemField } = useUpdateItemField(id);
+  const { highlightedItemId, highlightItem } = useHighlightItem();
   const { subscribeNewItemEvent } = useNewItemEvent(list);
 
   subscribeNewItemEvent((newItem) => {
@@ -51,11 +42,7 @@ const ListDetail = () => {
     );
   }
 
-  const { fields = [], items = [] } = list;
-
-  const visibleFields = fields.filter(
-    (field) => getFieldConfig(list, field).hidden !== true
-  );
+  const visibleFields = getVisibleFields(list)
 
   const handleUpdateItemField = debounce(
     (itemId: string, fieldId: string, value: string) => {
@@ -100,7 +87,7 @@ const ListDetail = () => {
       <TableList
         highlightItem={highlightedItemId}
         fields={visibleFields}
-        items={items}
+        items={list.items}
         onUpdateItemField={handleUpdateItemField}
         onRemoveItem={handleRemoveItem}
       />
