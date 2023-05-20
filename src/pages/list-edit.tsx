@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import TableList from "../components/table-list";
-import debounce from "lodash/debounce";
+import { debounce } from "lodash";
 import Loader from "../components/loader";
 import ListEmptyState from "../components/empty-states/list-empty-state";
 import { builInListConfigFields } from "../built-in-tables/list-config-fields";
@@ -10,12 +10,12 @@ import {
   useAddField,
   useRemoveField,
   useUpdateField,
+  useMoveField,
 } from "../hooks/api/list-config";
 import { Item } from "../types/item";
 import { PlusIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import Button from "../components/common/button";
 import { getVisibleFields } from "../helpers/list-config";
-import { useNewItemEvent } from "../hooks/new-item-event";
 import { useHighlightItem } from "../hooks/highlight-item";
 import { List } from "../types/list";
 
@@ -26,19 +26,14 @@ const ListEdit = () => {
   const { addField } = useAddField(id);
   const { removeField } = useRemoveField(id);
   const { updateField } = useUpdateField(id);
+  const { moveField } = useMoveField(id);
+  const { highlightedItemId, highlightColor, highlightItem } =
+    useHighlightItem();
 
   const listLike: List | null = listConfig && {
     ...listConfig,
     items: listConfig?.fields as unknown as Item[],
   };
-
-  const { subscribeNewItemEvent } = useNewItemEvent(listLike);
-  const { highlightedItemId, highlightItem } = useHighlightItem();
-
-  subscribeNewItemEvent((newItem) => {
-    window.scrollTo(0, document.body.scrollHeight);
-    highlightItem(newItem._id);
-  });
 
   if (!listConfig || loading || error) {
     return (
@@ -61,11 +56,22 @@ const ListEdit = () => {
   );
 
   const handleAddField = () => {
-    addField();
+    addField(null, (newField) => {
+      window.scrollTo(0, document.body.scrollHeight);
+      highlightItem(newField._id, "green");
+    });
   };
 
   const handleRemoveField = (fieldId: string) => {
-    highlightItem(fieldId, removeField);
+    highlightItem(fieldId, "red", removeField);
+  };
+
+  const handleMoveField = (fieldId: string, shift: number) => {
+    highlightItem(fieldId, "red", () => {
+      moveField(fieldId, shift, () => {
+        highlightItem(fieldId, "green");
+      });
+    });
   };
 
   const handleBackToList = () => {
@@ -95,10 +101,12 @@ const ListEdit = () => {
       <div className="pl-2">
         <TableList
           highlightItem={highlightedItemId}
+          highlightColor={highlightColor}
           fields={visibleFields}
           items={listLike!.items}
           onUpdateItemField={handleUpdateItemField}
           onRemoveItem={handleRemoveField}
+          onMoveItem={handleMoveField}
         />
       </div>
     </>

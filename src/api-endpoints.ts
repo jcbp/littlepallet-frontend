@@ -28,7 +28,7 @@ export const apiEndpoints = {
   createItem: (listId: string) => `${API_URL}/list/${listId}/item`,
   createItemAtPosition: (id: string, position: string) =>
     `${API_URL}/list/${id}/item/at/${position}`,
-  moveItemAtPosition: (listId: string, itemId: string, position: string) =>
+  moveItemAtPosition: (listId: string, itemId: string, position: number) =>
     `${API_URL}/list/${listId}/item/${itemId}/move/${position}`,
   updateItem: (listId: string, itemId: string) =>
     `${API_URL}/list/${listId}/item/${itemId}`,
@@ -39,7 +39,7 @@ export const apiEndpoints = {
   createField: (listId: string) => `${API_URL}/list/${listId}/field`,
   createFieldAtPosition: (listId: string, position: string) =>
     `${API_URL}/list/${listId}/field/at/${position}`,
-  moveFieldAtPosition: (listId: string, fieldId: string, position: string) =>
+  moveFieldAtPosition: (listId: string, fieldId: string, position: number) =>
     `${API_URL}/list/${listId}/field/${fieldId}/move/${position}`,
   updateField: (listId: string, fieldId: string) =>
     `${API_URL}/list/${listId}/field/${fieldId}`,

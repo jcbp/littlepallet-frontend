@@ -8,8 +8,10 @@ interface ListCardProps {
   fields: Field[];
   items: Item[];
   highlightItem?: string | null;
+  highlightColor?: "green" | "red";
   onUpdateItemField: (itemId: string, fieldId: string, value: string) => void;
   onRemoveItem: (itemId: string) => void;
+  onMoveItem: (itemId: string, shift: number) => void;
 }
 
 const TableList: React.FC<ListCardProps> = ({
@@ -17,7 +19,9 @@ const TableList: React.FC<ListCardProps> = ({
   items,
   onUpdateItemField,
   onRemoveItem,
+  onMoveItem,
   highlightItem,
+  highlightColor,
 }) => {
   const formatId = (id: string) => {
     const paddedNum = String(id).padStart(3, String.fromCharCode(160)); // 160 es el código decimal para "&nbsp;"
@@ -45,7 +49,9 @@ const TableList: React.FC<ListCardProps> = ({
         {items.map((item) => (
           <tr
             key={item._id}
-            className={highlightItem === item._id ? "highlight" : ""}
+            className={
+              highlightItem === item._id ? `highlight-${highlightColor}` : ""
+            }
           >
             <td className="font-mono text-sm text-gray-500 border-b border-slate-200">
               {formatId(item._id)}
@@ -71,10 +77,10 @@ const TableList: React.FC<ListCardProps> = ({
                 <ItemMenu
                   onRemoveItem={() => onRemoveItem(item._id)}
                   onMoveUp={() => {
-                    console.log("onMoveUp");
+                    onMoveItem(item._id, -1);
                   }}
                   onMoveDown={() => {
-                    console.log("onMoveDown");
+                    onMoveItem(item._id, 1);
                   }}
                 />
               </div>

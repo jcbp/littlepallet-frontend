@@ -5,6 +5,7 @@ import { apiEndpoints } from "../../api-endpoints";
 import { Item } from "../../types/item";
 import { useContext, useEffect } from "react";
 import { ListContext } from "../../context/list-context-provider";
+import { clamp } from "lodash";
 
 type ItemWithoutId = Omit<Item, "_id">;
 
@@ -75,7 +76,10 @@ export const useAddItem = (listId: string) => {
     request: requestAddItem,
   } = useRequest<Item>("POST");
 
-  const addItem = async (item: ItemWithoutId = {}) => {
+  const addItem = async (
+    item: ItemWithoutId = {},
+    callback?: (newItem: Item) => void
+  ) => {
     const newItem = await requestAddItem(apiEndpoints.createItem(listId), item);
     const list = getList(listId);
 
@@ -85,6 +89,9 @@ export const useAddItem = (listId: string) => {
         items: [...list.items, newItem],
       };
       updateList(listId, updatedList);
+      if (callback) {
+        callback(newItem);
+      }
     }
   };
 
@@ -126,5 +133,48 @@ export const useRemoveItem = (listId: string) => {
     deletingItem,
     error: errorDeletingItem,
     removeItem,
+  };
+};
+
+export const useMoveItem = (listId: string) => {
+  const { getList, updateList } = useContext(ListContext);
+
+  const {
+    loading,
+    error,
+    request: requestMoveItem,
+  } = useRequest<Item>("PATCH");
+
+  const moveItem = async (
+    itemId: string,
+    shift: number,
+    callback?: () => void
+  ) => {
+    const list = getList(listId);
+    if (list) {
+      const currentIndex = list.items.findIndex((item) => item._id == itemId);
+      const maxIndex = list.items.length - 1;
+      const position = clamp(currentIndex + shift, 0, maxIndex);
+
+      await requestMoveItem(
+        apiEndpoints.moveItemAtPosition(listId, itemId, position)
+      );
+
+      const updatedList = { ...list };
+      const item = updatedList.items.splice(currentIndex, 1).pop();
+      if (item) {
+        updatedList.items.splice(position, 0, item);
+        updateList(listId, updatedList);
+        if (callback) {
+          callback();
+        }
+      }
+    }
+  };
+
+  return {
+    loading,
+    error,
+    moveItem,
   };
 };

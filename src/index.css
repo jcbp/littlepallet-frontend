@@ -69,21 +69,36 @@ table thead th {
   box-shadow: inset -1px -2px 0px -1px rgb(226, 232, 240);
 }
 
-@keyframes highlightAnimation {
+@keyframes highlightAnimationGreen {
   0% {
     background-color: transparent;
   }
-  20% {
-    background-color: transparent;
-  }
   60% {
-    background-color: #45c4ff46;
+    background-color: #00e01e3a;
   }
   100% {
     background-color: transparent;
   }
 }
-.highlight {
-  animation-name: highlightAnimation;
-  animation-duration: 1.2s;
+
+@keyframes highlightAnimationRed {
+  0% {
+    background-color: transparent;
+  }
+  60% {
+    background-color: #e700003a;
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.highlight-green {
+  animation-name: highlightAnimationGreen;
+  animation-duration: 0.8s;
+}
+
+.highlight-red {
+  animation-name: highlightAnimationRed;
+  animation-duration: 0.8s;
 }

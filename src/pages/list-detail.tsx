@@ -5,15 +5,15 @@ import {
   useAddItem,
   useRemoveItem,
   useUpdateItemField,
+  useMoveItem,
 } from "../hooks/api/list";
 import TableList from "../components/table-list";
-import debounce from "lodash/debounce";
+import { debounce } from "lodash";
 import Loader from "../components/loader";
 import ListEmptyState from "../components/empty-states/list-empty-state";
 import Button from "../components/common/button";
 import { PlusIcon, Cog8ToothIcon } from "@heroicons/react/24/outline";
 import { useHighlightItem } from "../hooks/highlight-item";
-import { useNewItemEvent } from "../hooks/new-item-event";
 import { getVisibleFields } from "../helpers/list-config";
 
 const ListDetail = () => {
@@ -22,14 +22,10 @@ const ListDetail = () => {
   const { list, loading, error } = useGetList(id);
   const { addItem, addingItem } = useAddItem(id);
   const { removeItem } = useRemoveItem(id);
+  const { moveItem } = useMoveItem(id);
   const { updateItemField } = useUpdateItemField(id);
-  const { highlightedItemId, highlightItem } = useHighlightItem();
-  const { subscribeNewItemEvent } = useNewItemEvent(list);
-
-  subscribeNewItemEvent((newItem) => {
-    window.scrollTo(0, document.body.scrollHeight);
-    highlightItem(newItem._id);
-  });
+  const { highlightedItemId, highlightColor, highlightItem } =
+    useHighlightItem();
 
   if (!list || loading || error) {
     return (
@@ -42,7 +38,7 @@ const ListDetail = () => {
     );
   }
 
-  const visibleFields = getVisibleFields(list)
+  const visibleFields = getVisibleFields(list);
 
   const handleUpdateItemField = debounce(
     (itemId: string, fieldId: string, value: string) => {
@@ -52,15 +48,26 @@ const ListDetail = () => {
   );
 
   const handleAddItem = () => {
-    addItem();
+    addItem({}, (newItem) => {
+      window.scrollTo(0, document.body.scrollHeight);
+      highlightItem(newItem._id, "green");
+    });
   };
 
   const handleRemoveItem = (itemId: string) => {
-    highlightItem(itemId, removeItem);
+    highlightItem(itemId, "red", removeItem);
   };
 
   const handleConfigList = () => {
     navigate(`/lists/${id}/edit`);
+  };
+
+  const handleMoveItem = (itemId: string, shift: number) => {
+    highlightItem(itemId, "red", () => {
+      moveItem(itemId, shift, () => {
+        highlightItem(itemId, "green");
+      });
+    });
   };
 
   return (
@@ -86,10 +93,12 @@ const ListDetail = () => {
       </div>
       <TableList
         highlightItem={highlightedItemId}
+        highlightColor={highlightColor}
         fields={visibleFields}
         items={list.items}
         onUpdateItemField={handleUpdateItemField}
         onRemoveItem={handleRemoveItem}
+        onMoveItem={handleMoveItem}
       />
     </>
   );

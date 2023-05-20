@@ -1,9 +1,10 @@
 import { useRequest } from "../use-request";
 import { apiEndpoints } from "../../api-endpoints";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Field } from "../../types/field";
 import { ListConfig } from "../../types/list-config";
 import { ListConfigContext } from "../../context/list-config-context-provider";
+import { clamp } from "lodash";
 
 type FieldWithoutId = Omit<Field, "_id">;
 
@@ -40,7 +41,10 @@ export const useAddField = (listId: string) => {
     request: requestAddField,
   } = useRequest<Field>("POST");
 
-  const addField = async (field?: FieldWithoutId) => {
+  const addField = async (
+    field?: FieldWithoutId | null,
+    callback?: (newField: Field) => void
+  ) => {
     const newField = await requestAddField(
       apiEndpoints.createField(listId),
       field || {}
@@ -50,6 +54,9 @@ export const useAddField = (listId: string) => {
         ...listConfig,
         fields: [...listConfig.fields, newField],
       });
+      if (callback) {
+        callback(newField);
+      }
     }
   };
 
@@ -109,5 +116,49 @@ export const useUpdateField = (listId: string) => {
     savingField,
     error: errorSavingField,
     updateField,
+  };
+};
+
+export const useMoveField = (listId: string) => {
+  const { listConfig, setListConfig } = useContext(ListConfigContext);
+
+  const {
+    loading,
+    error,
+    request: requestMoveField,
+  } = useRequest<Field>("PATCH");
+
+  const moveField = async (
+    fieldId: string,
+    shift: number,
+    callback?: () => void
+  ) => {
+    if (listConfig) {
+      const currentIndex = listConfig.fields.findIndex(
+        (field) => field._id == fieldId
+      );
+      const maxIndex = listConfig.fields.length - 1;
+      const position = clamp(currentIndex + shift, 0, maxIndex);
+
+      await requestMoveField(
+        apiEndpoints.moveFieldAtPosition(listId, fieldId, position)
+      );
+
+      const updatedListConfig = { ...listConfig };
+      const field = updatedListConfig.fields.splice(currentIndex, 1).pop();
+      if (field) {
+        updatedListConfig.fields.splice(position, 0, field);
+        setListConfig(updatedListConfig);
+        if (callback) {
+          callback();
+        }
+      }
+    }
+  };
+
+  return {
+    loading,
+    error,
+    moveField,
   };
 };
