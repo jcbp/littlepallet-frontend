@@ -23,7 +23,7 @@ const OptionsField: FC<Props> = ({ value, field, onChange }) => {
   return (
     <select
       className="bg-gray-50 hover:bg-gray-100 rounded-lg px-3 py-2 mr-5 outline-none shadow-focus w-full"
-      value={value || getDefaultValue(field)}
+      defaultValue={value || getDefaultValue(field)}
       onChange={handleChange}
     >
       <option value="" disabled>

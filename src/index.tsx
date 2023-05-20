@@ -21,6 +21,7 @@ import { AuthContext } from "./context/auth-context";
 import "./index.css";
 import ListProvider from "./context/list-context-provider";
 import ListConfigProvider from "./context/list-config-context-provider";
+import ListsProvider from "./context/lists-context-provider";
 
 const CustomWrapper = ({ ...props }) => {
   const { authData } = useContext(AuthContext);
@@ -37,23 +38,25 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <AuthProvider>
-    <ListProvider>
-      <ListConfigProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<App />} />
-              <Route path="login" element={<LoginPage />} />
-              <Route path="lists" element={<CustomWrapper />}>
-                <Route index element={<ListsIndex />} />
-                <Route path=":id" element={<ListDetail />} />
-                <Route path=":id/edit" element={<ListEdit />} />
+    <ListsProvider>
+      <ListProvider>
+        <ListConfigProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<App />} />
+                <Route path="login" element={<LoginPage />} />
+                <Route path="lists" element={<CustomWrapper />}>
+                  <Route index element={<ListsIndex />} />
+                  <Route path=":id" element={<ListDetail />} />
+                  <Route path=":id/edit" element={<ListEdit />} />
+                </Route>
+                <Route path="*" element={<NotFound />} />
               </Route>
-              <Route path="*" element={<NotFound />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </ListConfigProvider>
-    </ListProvider>
+            </Routes>
+          </BrowserRouter>
+        </ListConfigProvider>
+      </ListProvider>
+    </ListsProvider>
   </AuthProvider>
 );

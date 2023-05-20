@@ -1,5 +1,4 @@
 import { useRequest } from "../use-request";
-import { ListSummary } from "../../types/list-summary";
 import { List } from "../../types/list";
 import { apiEndpoints } from "../../api-endpoints";
 import { Item } from "../../types/item";
@@ -8,16 +7,6 @@ import { ListContext } from "../../context/list-context-provider";
 import { clamp } from "lodash";
 
 type ItemWithoutId = Omit<Item, "_id">;
-
-export const useGetLists = () => {
-  return useRequest<ListSummary[]>(
-    "GET",
-    {
-      requiresAuth: true,
-    },
-    apiEndpoints.getLists()
-  );
-};
 
 export const useGetList = (listId: string) => {
   const { getList, updateList } = useContext(ListContext);

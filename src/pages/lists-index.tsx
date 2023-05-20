@@ -1,36 +1,49 @@
-import React from "react";
-import { useGetLists } from "../hooks/api/list";
+import React, { useState } from "react";
+import { useCreateList, useGetLists } from "../hooks/api/lists";
 import { useCurrentUser } from "../hooks/api/user";
 import ListsGrid from "../components/lists-grid";
 import { ListSummary } from "../types/list-summary";
 import { useNavigate } from "react-router-dom";
 import ListsEmptyState from "../components/empty-states/lists-empty-state";
 import Loader from "../components/loader";
+import Button from "../components/common/button";
+import { PlusIcon } from "@heroicons/react/24/outline";
+import ModalDialog from "../components/common/modal-dialog";
+import CreateListDialog from "../components/create-list-dialog";
 
 const ListsIndex = () => {
   const navigate = useNavigate();
-  const { responseData: lists, loading: isLoading, error } = useGetLists();
+  const { lists, loading, error } = useGetLists();
   const { responseData: currentUser, loading: isUserLoading } =
     useCurrentUser();
+  const { createList } = useCreateList();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const myLists: ListSummary[] = [];
   const sharedByMe: ListSummary[] = [];
   const sharedWithMe: ListSummary[] = [];
 
-  const handleCreateList = () => {
-    // create list
+  const handleCreateList = (name: string) => {
+    setIsModalOpen(false);
+    createList(name);
   };
 
   const handleClick = (list: ListSummary) => {
     navigate(`/lists/${list._id}`);
   };
 
-  if (!lists || isLoading || isUserLoading || error) {
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  if (loading || isUserLoading || !currentUser || error) {
     return (
       <Loader
-        loading={isLoading || isUserLoading}
+        loading={loading || isUserLoading}
         error={error}
         isEmpty={!lists}
-        emptyState={<ListsEmptyState onCreateList={handleCreateList} />}
+        emptyState={
+          <ListsEmptyState onCreateList={() => setIsModalOpen(true)} />
+        }
       />
     );
   }
@@ -54,18 +67,32 @@ const ListsIndex = () => {
 
   return (
     <>
-      <ListsGrid title="Mis listas" lists={myLists} onClick={handleClick} />
-      <ListsGrid
-        title="Listas compartidas por mí"
-        lists={sharedByMe}
-        onClick={handleClick}
-      />
-      <ListsGrid
-        title="Listas compartidas conmigo"
-        lists={sharedWithMe}
-        showOwner={true}
-        onClick={handleClick}
-      />
+      <div className="flex my-1 pt-4 pb-2 justify-between items-center">
+        <h1 className="text-xl font-semibold">Mis listas</h1>
+        <span className="flex items-center">
+          <Button
+            onClick={() => setIsModalOpen(true)}
+            disabled={false}
+            className={false ? "cursor-progress" : ""}
+          >
+            <PlusIcon className="h-4 w-4 text-white" />
+            Nueva lista
+          </Button>
+        </span>
+      </div>
+      <ListsGrid lists={myLists} onClick={handleClick} />
+      <h1 className="text-xl font-semibold my-5">Listas compartidas por mí</h1>
+      <ListsGrid lists={sharedByMe} onClick={handleClick} />
+      <h1 className="text-xl font-semibold my-5">Listas compartidas conmigo</h1>
+      <ListsGrid lists={sharedWithMe} showOwner={true} onClick={handleClick} />
+
+      <ModalDialog
+        title="Crear nueva lista"
+        isOpen={isModalOpen}
+        onClose={closeModal}
+      >
+        <CreateListDialog onCreateList={handleCreateList} />
+      </ModalDialog>
     </>
   );
 };
