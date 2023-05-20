@@ -59,3 +59,25 @@ export const useCreateList = () => {
     createList,
   };
 };
+
+export const useSoftDeleteList = () => {
+  const { lists, setLists } = useContext(ListsContext);
+
+  const {
+    loading,
+    error,
+    request: requestSoftDeleteList,
+  } = useRequest<void>("PATCH");
+
+  const softDeleteList = async (id: string) => {
+    await requestSoftDeleteList(apiEndpoints.softDeleteList(id));
+
+    setLists(lists.filter((list) => list._id !== id));
+  };
+
+  return {
+    loading,
+    error,
+    softDeleteList,
+  };
+};

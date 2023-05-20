@@ -5,25 +5,33 @@ import {
   UsersIcon,
   DocumentTextIcon,
 } from "@heroicons/react/24/solid";
+import ListMenu from "./list-menu";
 
 interface ListCardProps {
   list: ListSummary;
-  onClick: () => void;
+  onOpenList: () => void;
+  onRemoveList: () => void;
   showOwner: boolean;
 }
 
-const ListCard: React.FC<ListCardProps> = ({ list, onClick, showOwner }) => {
+const ListCard: React.FC<ListCardProps> = ({
+  list,
+  onOpenList,
+  onRemoveList,
+  showOwner,
+}) => {
   const ownerName = list.owner.split("@")[0];
 
   return (
     <div
       className="cursor-pointer border border-gray-200 rounded-lg shadow-md hover:shadow-lg hover:!border-gray-300 h-40"
-      onClick={onClick}
+      onClick={onOpenList}
     >
       <div className="bg-white rounded-t-lg py-2 px-3">
-        <h3 className="text-gray-900 font-medium text-base py-2 px-1 mb-3 border-b border-gray-200">
-          {list.name}
-        </h3>
+        <div className="flex items-center justify-between pb-1 ps-1 mb-3 border-b border-gray-200">
+          <h3 className="text-gray-900 font-medium text-base">{list.name}</h3>
+          <ListMenu onRemoveList={() => onRemoveList()} />
+        </div>
         <div className="flex flex-col px-1">
           {showOwner && (
             <span className="flex items-center mb-3">

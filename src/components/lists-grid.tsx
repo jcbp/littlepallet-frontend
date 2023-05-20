@@ -4,13 +4,15 @@ import { ListSummary } from "../types/list-summary";
 
 type Props = {
   lists: ListSummary[];
-  onClick: (list: ListSummary) => void;
+  onOpenList: (list: ListSummary) => void;
+  onRemoveList: (list: ListSummary) => void;
   showOwner?: boolean;
 };
 
 const ListsGrid: React.FC<Props> = ({
   lists,
-  onClick,
+  onOpenList,
+  onRemoveList,
   showOwner = false,
 }) => {
   return (
@@ -18,7 +20,12 @@ const ListsGrid: React.FC<Props> = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {lists.map((list) => (
           <div key={list._id} className="mb-4">
-            <ListCard list={list} showOwner={showOwner} onClick={() => onClick(list)} />
+            <ListCard
+              list={list}
+              showOwner={showOwner}
+              onOpenList={() => onOpenList(list)}
+              onRemoveList={() => onRemoveList(list)}
+            />
           </div>
         ))}
       </div>

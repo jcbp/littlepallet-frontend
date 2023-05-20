@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { useCreateList, useGetLists } from "../hooks/api/lists";
+import {
+  useCreateList,
+  useGetLists,
+  useSoftDeleteList,
+} from "../hooks/api/lists";
 import { useCurrentUser } from "../hooks/api/user";
 import ListsGrid from "../components/lists-grid";
 import { ListSummary } from "../types/list-summary";
@@ -17,6 +21,7 @@ const ListsIndex = () => {
   const { responseData: currentUser, loading: isUserLoading } =
     useCurrentUser();
   const { createList } = useCreateList();
+  const { softDeleteList } = useSoftDeleteList();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const myLists: ListSummary[] = [];
   const sharedByMe: ListSummary[] = [];
@@ -27,8 +32,12 @@ const ListsIndex = () => {
     createList(name);
   };
 
-  const handleClick = (list: ListSummary) => {
+  const handleOpenList = (list: ListSummary) => {
     navigate(`/lists/${list._id}`);
+  };
+
+  const handleRemoveList = (list: ListSummary) => {
+    softDeleteList(list._id);
   };
 
   const closeModal = () => {
@@ -80,11 +89,24 @@ const ListsIndex = () => {
           </Button>
         </span>
       </div>
-      <ListsGrid lists={myLists} onClick={handleClick} />
+      <ListsGrid
+        lists={myLists}
+        onOpenList={handleOpenList}
+        onRemoveList={handleRemoveList}
+      />
       <h1 className="text-xl font-semibold my-5">Listas compartidas por mí</h1>
-      <ListsGrid lists={sharedByMe} onClick={handleClick} />
+      <ListsGrid
+        lists={sharedByMe}
+        onOpenList={handleOpenList}
+        onRemoveList={handleRemoveList}
+      />
       <h1 className="text-xl font-semibold my-5">Listas compartidas conmigo</h1>
-      <ListsGrid lists={sharedWithMe} showOwner={true} onClick={handleClick} />
+      <ListsGrid
+        lists={sharedWithMe}
+        showOwner={true}
+        onOpenList={handleOpenList}
+        onRemoveList={handleRemoveList}
+      />
 
       <ModalDialog
         title="Crear nueva lista"
