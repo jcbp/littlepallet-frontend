@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   useGetList,
@@ -15,6 +15,9 @@ import Button from "../components/common/button";
 import { PlusIcon, Cog8ToothIcon } from "@heroicons/react/24/outline";
 import { useHighlightItem } from "../hooks/highlight-item";
 import { getVisibleFields } from "../helpers/list-config";
+import ModalDialog from "../components/common/modal-dialog";
+import { Item } from "../types/item";
+import ItemDetailDialog from "../components/item-detail-dialog";
 
 const ListDetail = () => {
   const navigate = useNavigate();
@@ -26,6 +29,7 @@ const ListDetail = () => {
   const { updateItemField } = useUpdateItemField(id);
   const { highlightedItemId, highlightColor, highlightItem } =
     useHighlightItem();
+  const [currentItem, setCurrentItem] = useState<Item | null>(null);
 
   if (!list || loading || error) {
     return (
@@ -70,6 +74,10 @@ const ListDetail = () => {
     });
   };
 
+  const handleViewItem = (item: Item) => {
+    setCurrentItem(item);
+  };
+
   return (
     <>
       <div className="flex my-4 pt-4 pb-2 justify-between sticky top-[56px] bg-white z-20">
@@ -99,7 +107,22 @@ const ListDetail = () => {
         onUpdateItemField={handleUpdateItemField}
         onRemoveItem={handleRemoveItem}
         onMoveItem={handleMoveItem}
+        onViewItem={handleViewItem}
       />
+
+      <ModalDialog
+        title={`Ver item #${currentItem?._id}`}
+        isOpen={!!currentItem}
+        onClose={() => setCurrentItem(null)}
+      >
+        {currentItem && (
+          <ItemDetailDialog
+            fields={list.fields}
+            item={currentItem}
+            onUpdateItemField={handleUpdateItemField}
+          />
+        )}
+      </ModalDialog>
     </>
   );
 };

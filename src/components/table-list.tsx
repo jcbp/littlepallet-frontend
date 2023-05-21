@@ -12,6 +12,7 @@ interface ListCardProps {
   onUpdateItemField: (itemId: string, fieldId: string, value: string) => void;
   onRemoveItem: (itemId: string) => void;
   onMoveItem: (itemId: string, shift: number) => void;
+  onViewItem: (item: Item) => void;
 }
 
 const TableList: React.FC<ListCardProps> = ({
@@ -20,6 +21,7 @@ const TableList: React.FC<ListCardProps> = ({
   onUpdateItemField,
   onRemoveItem,
   onMoveItem,
+  onViewItem,
   highlightItem,
   highlightColor,
 }) => {
@@ -57,7 +59,7 @@ const TableList: React.FC<ListCardProps> = ({
               {formatId(item._id)}
             </td>
             {fields.map((field) => (
-              <td key={field._id} className="border-b border-slate-200">
+              <td key={field._id.toString() + item[field._id]} className="border-b border-slate-200">
                 <div className="flex items-center h-full">
                   <FieldView
                     field={field}
@@ -71,7 +73,10 @@ const TableList: React.FC<ListCardProps> = ({
             ))}
             <td className="border-b border-slate-200">
               <div className="flex items-center justify-end h-100 me-1">
-                <button className="bg-gray-50 hover:bg-gray-100 p-1.5 m-1 rounded-full">
+                <button
+                  className="bg-gray-50 hover:bg-gray-100 p-1.5 m-1 rounded-full"
+                  onClick={() => onViewItem(item)}
+                >
                   <MagnifyingGlassIcon className="h-5 w-5 text-gray-500" />
                 </button>
                 <ItemMenu

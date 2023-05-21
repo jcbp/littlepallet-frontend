@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import TableList from "../components/table-list";
 import { debounce } from "lodash";
@@ -18,6 +18,8 @@ import Button from "../components/common/button";
 import { getVisibleFields } from "../helpers/list-config";
 import { useHighlightItem } from "../hooks/highlight-item";
 import { List } from "../types/list";
+import ModalDialog from "../components/common/modal-dialog";
+import ItemDetailDialog from "../components/item-detail-dialog";
 
 const ListEdit = () => {
   const navigate = useNavigate();
@@ -29,11 +31,7 @@ const ListEdit = () => {
   const { moveField } = useMoveField(id);
   const { highlightedItemId, highlightColor, highlightItem } =
     useHighlightItem();
-
-  const listLike: List | null = listConfig && {
-    ...listConfig,
-    items: listConfig?.fields as unknown as Item[],
-  };
+  const [currentItem, setCurrentItem] = useState<Item | null>(null);
 
   if (!listConfig || loading || error) {
     return (
@@ -46,7 +44,14 @@ const ListEdit = () => {
     );
   }
 
-  const visibleFields = getVisibleFields(builInListConfigFields);
+  const list: List = {
+    ...listConfig,
+    views: builInListConfigFields.views,
+    fields: builInListConfigFields.fields,
+    items: listConfig.fields as unknown as Item[],
+  };
+
+  const visibleFields = getVisibleFields(list);
 
   const handleUpdateItemField = debounce(
     (fieldId: string, fieldAttribute: string, value: string) => {
@@ -72,6 +77,10 @@ const ListEdit = () => {
         highlightItem(fieldId, "green");
       });
     });
+  };
+
+  const handleViewItem = (item: Item) => {
+    setCurrentItem(item);
   };
 
   const handleBackToList = () => {
@@ -103,12 +112,27 @@ const ListEdit = () => {
           highlightItem={highlightedItemId}
           highlightColor={highlightColor}
           fields={visibleFields}
-          items={listLike!.items}
+          items={list.items}
           onUpdateItemField={handleUpdateItemField}
           onRemoveItem={handleRemoveField}
           onMoveItem={handleMoveField}
+          onViewItem={handleViewItem}
         />
       </div>
+
+      <ModalDialog
+        title={`Ver item #${currentItem?._id}`}
+        isOpen={!!currentItem}
+        onClose={() => setCurrentItem(null)}
+      >
+        {currentItem && (
+          <ItemDetailDialog
+            fields={list.fields}
+            item={currentItem}
+            onUpdateItemField={handleUpdateItemField}
+          />
+        )}
+      </ModalDialog>
     </>
   );
 };

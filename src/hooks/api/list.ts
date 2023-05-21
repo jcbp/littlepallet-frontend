@@ -34,19 +34,34 @@ export const useGetList = (listId: string) => {
 };
 
 export const useUpdateItemField = (listId: string) => {
+  const { getList, updateList } = useContext(ListContext);
+
   const {
     loading: savingItemField,
     error: errorSavingItemField,
     request: requestUpdateItemField,
   } = useRequest<Item>("PATCH");
 
-  const updateItemField = (itemId: string, fieldId: string, value: any) => {
-    requestUpdateItemField(
+  const updateItemField = async (
+    itemId: string,
+    fieldId: string,
+    value: any
+  ) => {
+    const item = await requestUpdateItemField(
       apiEndpoints.updateItemField(listId, itemId, fieldId),
       {
         value,
       }
     );
+    if (item) {
+      const list = getList(listId);
+      const updatedList = { ...list! };
+      const itemIndex = updatedList.items.findIndex(
+        (item) => item._id === itemId
+      );
+      updatedList.items[itemIndex] = item;
+      updateList(listId, updatedList);
+    }
   };
 
   return {

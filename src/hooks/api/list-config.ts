@@ -99,17 +99,33 @@ export const useRemoveField = (listId: string) => {
 };
 
 export const useUpdateField = (listId: string) => {
+  const { listConfig, setListConfig } = useContext(ListConfigContext);
+
   const {
     loading: savingField,
     error: errorSavingField,
     request: requestUpdateField,
   } = useRequest<Field>("PATCH");
 
-  const updateField = (fieldId: string, attr: string, value: any) => {
-    requestUpdateField(apiEndpoints.updateField(listId, fieldId), {
-      attr,
-      value,
-    });
+  const updateField = async (fieldId: string, attr: string, value: any) => {
+    const field = await requestUpdateField(
+      apiEndpoints.updateField(listId, fieldId),
+      {
+        attr,
+        value,
+      }
+    );
+    if (listConfig && field) {
+      const updatedFields = { ...listConfig.fields };
+      const itemIndex = updatedFields.findIndex(
+        (field) => field._id === fieldId
+      );
+      updatedFields[itemIndex] = field;
+      setListConfig({
+        ...listConfig,
+        fields: updatedFields,
+      });
+    }
   };
 
   return {
