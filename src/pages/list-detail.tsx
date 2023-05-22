@@ -8,7 +8,6 @@ import {
   useMoveItem,
 } from "../hooks/api/list";
 import TableList from "../components/table-list";
-import { debounce } from "lodash";
 import Loader from "../components/loader";
 import ListEmptyState from "../components/empty-states/list-empty-state";
 import Button from "../components/common/button";
@@ -44,12 +43,17 @@ const ListDetail = () => {
 
   const visibleFields = getVisibleFields(list);
 
-  const handleUpdateItemField = debounce(
-    (itemId: string, fieldId: string, value: string) => {
-      updateItemField(itemId, fieldId, value);
-    },
-    700
-  );
+  const handleUpdateItemField = (
+    itemId: string,
+    fieldId: string,
+    value: string
+  ) => {
+    updateItemField(itemId, fieldId, value, (item) => {
+      if (currentItem) {
+        setCurrentItem(item);
+      }
+    });
+  };
 
   const handleAddItem = () => {
     addItem({}, (newItem) => {
@@ -99,16 +103,18 @@ const ListDetail = () => {
           </Button>
         </span>
       </div>
-      <TableList
-        highlightItem={highlightedItemId}
-        highlightColor={highlightColor}
-        fields={visibleFields}
-        items={list.items}
-        onUpdateItemField={handleUpdateItemField}
-        onRemoveItem={handleRemoveItem}
-        onMoveItem={handleMoveItem}
-        onViewItem={handleViewItem}
-      />
+      <div className="mb-48">
+        <TableList
+          highlightItem={highlightedItemId}
+          highlightColor={highlightColor}
+          fields={visibleFields}
+          items={list.items}
+          onUpdateItemField={handleUpdateItemField}
+          onRemoveItem={handleRemoveItem}
+          onMoveItem={handleMoveItem}
+          onViewItem={handleViewItem}
+        />
+      </div>
 
       <ModalDialog
         title={`Ver item #${currentItem?._id}`}

@@ -1,7 +1,7 @@
 import { ListConfig } from "../types/list-config";
 
-export const builInListConfigFields: ListConfig = {
-  _id: "list-config-fields",
+export const builtInListConfig: ListConfig = {
+  _id: "list-config",
   name: "Fields configuration",
   owner: "application",
   views: {

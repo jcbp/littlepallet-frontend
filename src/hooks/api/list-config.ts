@@ -1,10 +1,10 @@
 import { useRequest } from "../use-request";
 import { apiEndpoints } from "../../api-endpoints";
-import { useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { Field } from "../../types/field";
 import { ListConfig } from "../../types/list-config";
 import { ListConfigContext } from "../../context/list-config-context-provider";
-import { clamp } from "lodash";
+import { clamp, debounce } from "lodash";
 
 type FieldWithoutId = Omit<Field, "_id">;
 
@@ -107,25 +107,37 @@ export const useUpdateField = (listId: string) => {
     request: requestUpdateField,
   } = useRequest<Field>("PATCH");
 
-  const updateField = async (fieldId: string, attr: string, value: any) => {
-    const field = await requestUpdateField(
-      apiEndpoints.updateField(listId, fieldId),
-      {
+  const debouncedUpdateField = useCallback(
+    debounce(async (fieldId: string, attr: string, value: any) => {
+      await requestUpdateField(apiEndpoints.updateField(listId, fieldId), {
         attr,
         value,
+      });
+    }, 700),
+    [listId, requestUpdateField]
+  );
+
+  const updateField = async (
+    fieldId: string,
+    attr: string,
+    value: any,
+    callback?: (field: Field) => void
+  ) => {
+    if (listConfig) {
+      const fields = [...listConfig.fields];
+      const itemIndex = fields.findIndex((field) => field._id === fieldId);
+      const field = { ...fields[itemIndex] };
+      field[attr as keyof Field] = value;
+      fields[itemIndex] = field;
+      if (callback) {
+        callback(field);
       }
-    );
-    if (listConfig && field) {
-      const updatedFields = { ...listConfig.fields };
-      const itemIndex = updatedFields.findIndex(
-        (field) => field._id === fieldId
-      );
-      updatedFields[itemIndex] = field;
       setListConfig({
         ...listConfig,
-        fields: updatedFields,
+        fields: fields,
       });
     }
+    debouncedUpdateField(fieldId, attr, value);
   };
 
   return {

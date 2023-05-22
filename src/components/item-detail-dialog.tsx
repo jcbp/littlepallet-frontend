@@ -14,15 +14,19 @@ const ItemDetailDialog: React.FC<Props> = ({
   item,
   onUpdateItemField,
 }) => {
+  const visibleFields = fields.filter(
+    (field) => field.type !== "options-list" || item.type === "options"
+  );
   return (
     <div className="my-8">
       {item &&
-        fields.map((field) => (
+        visibleFields.map((field) => (
           <div
             key={field._id}
-            className={clsx("mb-5 pb-1", {
+            className={clsx("mb-5 pb-1 ", {
               "flex items-center pb-2": field.type === "boolean",
-              "border-b border-gray-200": field.type !== "boolean",
+              "border-b border-gray-200":
+                field.type !== "boolean" && field.type !== "options-list",
             })}
           >
             <label className="text-sm text-gray-700">{field.name}</label>

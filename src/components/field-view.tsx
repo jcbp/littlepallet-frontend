@@ -3,6 +3,7 @@ import OptionsField from "./field-types/options-field";
 import TextField from "./field-types/text-field";
 import BooleanField from "./field-types/boolean-field";
 import TrafficLightField from "./field-types/traffic-light-field";
+import OptionsList from "./field-types/options-list";
 // import DateField from './field-types/date-field';
 // import LongTextField from './field-types/longText-field';
 // import MultilineTextField from './field-types/multilineText-field';
@@ -14,7 +15,6 @@ import TrafficLightField from "./field-types/traffic-light-field";
 // import RatingField from './field-types/rating-field';
 // import UserField from './field-types/user-field';
 // import ChipsField from './field-types/chips-field';
-// import OptionsListField from './field-types/optionsList-field';
 
 interface Props {
   field: Field;
@@ -34,6 +34,8 @@ const FieldView: React.FC<Props> = ({ field, value, onChange }) => {
       return (
         <TrafficLightField value={value} field={field} onChange={onChange} />
       );
+    case "options-list":
+      return <OptionsList value={value} field={field} onChange={onChange} />;
     // case 'date':
     //   return <DateField value={value} />;
     // case 'long-text':
@@ -56,8 +58,6 @@ const FieldView: React.FC<Props> = ({ field, value, onChange }) => {
     //   return <UserField value={value} />;
     // case 'chips':
     //   return <ChipsField value={value} />;
-    // case 'options-list':
-    //   return <OptionsListField value={value} options={field.options || []} />;
     default:
       return <TextField value={value} field={field} onChange={onChange} />;
   }

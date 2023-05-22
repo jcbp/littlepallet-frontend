@@ -1,4 +1,4 @@
-interface Option {
+export interface Option {
   [key: string]: string;
 }
 

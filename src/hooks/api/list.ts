@@ -2,9 +2,9 @@ import { useRequest } from "../use-request";
 import { List } from "../../types/list";
 import { apiEndpoints } from "../../api-endpoints";
 import { Item } from "../../types/item";
-import { useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { ListContext } from "../../context/list-context-provider";
-import { clamp } from "lodash";
+import { clamp, debounce } from "lodash";
 
 type ItemWithoutId = Omit<Item, "_id">;
 
@@ -42,26 +42,37 @@ export const useUpdateItemField = (listId: string) => {
     request: requestUpdateItemField,
   } = useRequest<Item>("PATCH");
 
+  const debouncedUpdateItemField = useCallback(
+    debounce(async (itemId: string, fieldId: string, value: any) => {
+      await requestUpdateItemField(
+        apiEndpoints.updateItemField(listId, itemId, fieldId),
+        {
+          value,
+        }
+      );
+    }, 700),
+    [listId, requestUpdateItemField]
+  );
+
   const updateItemField = async (
     itemId: string,
     fieldId: string,
-    value: any
+    value: any,
+    callback?: (item: Item) => void
   ) => {
-    const item = await requestUpdateItemField(
-      apiEndpoints.updateItemField(listId, itemId, fieldId),
-      {
-        value,
-      }
+    const list = getList(listId);
+    const updatedList = { ...list! };
+    const itemIndex = updatedList.items.findIndex(
+      (item) => item._id === itemId
     );
-    if (item) {
-      const list = getList(listId);
-      const updatedList = { ...list! };
-      const itemIndex = updatedList.items.findIndex(
-        (item) => item._id === itemId
-      );
-      updatedList.items[itemIndex] = item;
-      updateList(listId, updatedList);
+    const item = { ...updatedList.items[itemIndex] };
+    item[fieldId] = value;
+    updatedList.items[itemIndex] = item;
+    if (callback) {
+      callback(item);
     }
+    updateList(listId, updatedList);
+    debouncedUpdateItemField(itemId, fieldId, value);
   };
 
   return {

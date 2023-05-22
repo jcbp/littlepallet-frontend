@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import TableList from "../components/table-list";
-import { debounce } from "lodash";
 import Loader from "../components/loader";
 import ListEmptyState from "../components/empty-states/list-empty-state";
-import { builInListConfigFields } from "../built-in-tables/list-config-fields";
+import { builtInListConfig } from "../built-in-tables/list-config";
 import {
   useGetListConfig,
   useAddField,
@@ -25,7 +24,7 @@ const ListEdit = () => {
   const navigate = useNavigate();
   const { id = "" } = useParams();
   const { listConfig, loading, error } = useGetListConfig(id);
-  const { addField } = useAddField(id);
+  const { addField, creatingField } = useAddField(id);
   const { removeField } = useRemoveField(id);
   const { updateField } = useUpdateField(id);
   const { moveField } = useMoveField(id);
@@ -46,19 +45,24 @@ const ListEdit = () => {
 
   const list: List = {
     ...listConfig,
-    views: builInListConfigFields.views,
-    fields: builInListConfigFields.fields,
+    views: builtInListConfig.views,
+    fields: builtInListConfig.fields,
     items: listConfig.fields as unknown as Item[],
   };
 
   const visibleFields = getVisibleFields(list);
 
-  const handleUpdateItemField = debounce(
-    (fieldId: string, fieldAttribute: string, value: string) => {
-      updateField(fieldId, fieldAttribute, value);
-    },
-    700
-  );
+  const handleUpdateItemField = (
+    fieldId: string,
+    fieldAttribute: string,
+    value: string
+  ) => {
+    updateField(fieldId, fieldAttribute, value, (field) => {
+      if (currentItem) {
+        setCurrentItem(field as unknown as Item);
+      }
+    });
+  };
 
   const handleAddField = () => {
     addField(null, (newField) => {
@@ -101,7 +105,11 @@ const ListEdit = () => {
           <span className="text-gray-900">Editar</span>
         </h1>
 
-        <Button onClick={handleAddField}>
+        <Button
+          onClick={handleAddField}
+          disabled={creatingField}
+          className={creatingField ? "cursor-progress" : ""}
+        >
           <PlusIcon className="h-4 w-4 text-white" />
           Nuevo campo
         </Button>
