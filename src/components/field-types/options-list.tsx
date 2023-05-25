@@ -1,4 +1,4 @@
-import React, { FC, ChangeEvent } from "react";
+import React, { FC } from "react";
 import { Field, Option } from "../../types/field";
 import TableList from "../table-list";
 import { builtInOptions } from "../../built-in-tables/options";
@@ -34,8 +34,39 @@ const OptionsList: FC<Props> = ({ value, field, onChange }) => {
     onChange([...options, { _id: getNewId() }]);
   };
 
-  const handleNotImplemented = () => {
-    console.log("Not implemented");
+  const handleUpdateOption = (
+    optionId: string,
+    optionFieldId: string,
+    value: string
+  ) => {
+    const updatedOptions = [...options];
+    const optionIndex = updatedOptions.findIndex(
+      (option) => option._id === optionId
+    );
+    updatedOptions[optionIndex] = { ...updatedOptions[optionIndex] };
+    updatedOptions[optionIndex][optionFieldId] = value;
+    onChange(updatedOptions);
+  };
+
+  const handleRemoveOption = (optionId: string) => {
+    const updatedOptions = options.filter((option) => option._id !== optionId);
+    onChange(updatedOptions);
+  };
+
+  const handleMoveOption = (optionId: string, shift: number) => {
+    const optionIndex = options.findIndex((option) => option._id === optionId);
+    const newIndex = optionIndex + shift;
+
+    if (newIndex < 0 || newIndex >= options.length) {
+      // Invalid shift, do nothing
+      return;
+    }
+
+    const updatedOptions = [...options];
+    const [movedOption] = updatedOptions.splice(optionIndex, 1);
+    updatedOptions.splice(newIndex, 0, movedOption);
+
+    onChange(updatedOptions);
   };
 
   return (
@@ -46,9 +77,9 @@ const OptionsList: FC<Props> = ({ value, field, onChange }) => {
           // highlightColor={highlightColor}
           fields={list.fields}
           items={list.items}
-          onUpdateItemField={handleNotImplemented}
-          onRemoveItem={handleNotImplemented}
-          onMoveItem={handleNotImplemented}
+          onUpdateItemField={handleUpdateOption}
+          onRemoveItem={handleRemoveOption}
+          onMoveItem={handleMoveOption}
         />
       )}
       <Button onClick={handleAddOption} className="text-xs mt-2 ms-auto">
