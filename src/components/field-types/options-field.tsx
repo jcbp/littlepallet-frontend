@@ -1,7 +1,8 @@
-import React, { FC, ChangeEvent } from "react";
+import React, { FC } from "react";
 import { Field } from "../../types/field";
 import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import clsx from "clsx";
 
 interface Props {
   value: string;
@@ -20,23 +21,35 @@ const ColoredOptionsField: FC<Props> = ({ value, field, onChange }) => {
       : { text: item[0], value: item[0], color: item[1] ?? "" }
   );
 
-  const getSelectedOptionColor = (value: string) => {
+  const getSelectedOptionColor = (value: string): string | undefined => {
     const selectedOption = normalizedOptions?.find(
       (option) => option.value === value
     );
     return selectedOption && selectedOption.color;
   };
 
+  const selectedOptionColor = getSelectedOptionColor(
+    value || getDefaultValue(field)
+  );
+
   return (
     <Menu as="div" className="relative inline-block text-left w-full">
       <div>
-        <Menu.Button className="bg-gray-50 hover:bg-gray-100 rounded-lg mr-5 outline-none shadow-focus w-full">
+        <Menu.Button
+          className={clsx(
+            "rounded-lg mr-5 outline-none shadow-focus w-full",
+            !selectedOptionColor && "bg-gray-50 hover:bg-gray-100"
+          )}
+        >
           <span
-            className="flex items-center w-full px-3 py-1.5 rounded"
+            className={clsx(
+              "flex items-center w-full px-3 py-1.5 rounded-lg",
+              !!selectedOptionColor &&
+                "font-medium py-1 text-sm hover:opacity-80"
+            )}
             style={{
-              backgroundColor: getSelectedOptionColor(
-                value || getDefaultValue(field)
-              ),
+              backgroundColor: selectedOptionColor + "15",
+              color: selectedOptionColor,
             }}
           >
             {value || getDefaultValue(field)}
@@ -60,10 +73,15 @@ const ColoredOptionsField: FC<Props> = ({ value, field, onChange }) => {
                 {({ active }) => (
                   <button
                     className={`${
-                      active ? "bg-gray-100 text-gray-950 border-gray-200" : "text-gray-700 border-transparent"
+                      active
+                        ? "bg-gray-100 text-gray-950 border-gray-200"
+                        : "text-gray-700 border-transparent"
                     } flex items-center px-4 py-1 rounded border`}
                     style={{
-                      backgroundColor: active ? option.color : `${option.color}b0`,
+                      backgroundColor: active
+                        ? `${option.color}40`
+                        : `${option.color}20`,
+                      color: option.color,
                       margin: "0.25rem",
                       width: "calc(100% - 0.5rem)",
                     }}
