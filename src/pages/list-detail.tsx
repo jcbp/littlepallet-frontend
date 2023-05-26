@@ -84,9 +84,9 @@ const ListDetail = () => {
 
   return (
     <>
-      <div className="flex my-4 pt-4 pb-2 justify-between sticky top-[56px] bg-white z-20">
+      <div className="flex pt-4 pb-2 items-center justify-between sticky top-[56px] bg-white z-20">
         <h1 className="text-2xl">{list.name}</h1>
-        <span className="flex items-center">
+        <span className="flex">
           <button
             className="bg-gray-0 hover:bg-gray-100 p-1.5 m-1 rounded-full mr-3"
             onClick={handleConfigList}

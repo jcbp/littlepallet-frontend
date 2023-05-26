@@ -190,3 +190,36 @@ export const useMoveField = (listId: string) => {
     moveField,
   };
 };
+
+export const useUpdateList = (listId: string, debounceDelay: number) => {
+  const { listConfig, setListConfig } = useContext(ListConfigContext);
+
+  const {
+    loading,
+    error,
+    request: requestUpdateList,
+  } = useRequest<ListConfig>("PATCH");
+
+  const debouncedUpdateList = useCallback(
+    debounce(async (updates: Partial<ListConfig>) => {
+      await requestUpdateList(apiEndpoints.updateList(listId), updates);
+    }, debounceDelay),
+    [listId, requestUpdateList]
+  );
+
+  const updateList = (updates: Partial<ListConfig>) => {
+    if (listConfig) {
+      setListConfig({
+        ...listConfig,
+        ...updates,
+      });
+      debouncedUpdateList(updates);
+    }
+  };
+
+  return {
+    loading,
+    error,
+    updateList,
+  };
+};

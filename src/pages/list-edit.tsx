@@ -6,24 +6,29 @@ import ListEmptyState from "../components/empty-states/list-empty-state";
 import { builtInListConfig } from "../built-in-tables/list-config";
 import {
   useGetListConfig,
+  useUpdateList,
   useAddField,
   useRemoveField,
   useUpdateField,
   useMoveField,
 } from "../hooks/api/list-config";
 import { Item } from "../types/item";
-import { PlusIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, ArrowLeftIcon } from "@heroicons/react/24/solid";
 import Button from "../components/common/button";
 import { getVisibleFields } from "../helpers/list-config";
 import { useHighlightItem } from "../hooks/highlight-item";
 import { List } from "../types/list";
 import ModalDialog from "../components/common/modal-dialog";
 import ItemDetailDialog from "../components/item-detail-dialog";
+import clsx from "clsx";
+import InputText from "../components/common/input-text";
+import Fab from "../components/common/fab";
 
 const ListEdit = () => {
   const navigate = useNavigate();
   const { id = "" } = useParams();
   const { listConfig, loading, error } = useGetListConfig(id);
+  const { updateList } = useUpdateList(id, 700);
   const { addField, creatingField } = useAddField(id);
   const { removeField } = useRemoveField(id);
   const { updateField } = useUpdateField(id);
@@ -87,32 +92,41 @@ const ListEdit = () => {
     setCurrentItem(item);
   };
 
+  const handleUpdateListName = (name: string) => {
+    updateList({ name });
+  };
+
   const handleBackToList = () => {
     navigate(`/lists/${id}`);
   };
 
   return (
     <>
-      <span className="flex my-8 justify-between">
-        <h1 className="text-xl flex items-center">
-          <span
-            className="text-gray-500 cursor-pointer hover:bg-gray-100 px-2 rounded py-1 hover:text-gray-700"
-            onClick={handleBackToList}
-          >
-            {listConfig.name}
-          </span>
-          <ChevronRightIcon className="h-4 w-4 text-black mr-2" />
-          <span className="text-gray-900">Editar</span>
-        </h1>
-
-        <Button
-          onClick={handleAddField}
-          disabled={creatingField}
-          className={creatingField ? "cursor-progress" : ""}
-        >
-          <PlusIcon className="h-4 w-4 text-white" />
-          Nuevo campo
+      <div className="flex items-center pt-4">
+        <Button variant="light" onClick={handleBackToList}>
+          <ArrowLeftIcon className="h-4 w-4 text-black mr-2" />
+          <span className="hidden sm:inline">Volver</span>
         </Button>
+        <h1 className="text-2xl ml-4 text-gray-900">AJUSTES</h1>
+      </div>
+      <span className="flex mt-4 mb-9 justify-between items-end">
+        <div className="ml-2 xl:w-1/3">
+          <label className="flex text-sm font-medium text-gray-600">
+            Nombre de la lista
+          </label>
+          <InputText
+            value={listConfig.name}
+            onChange={handleUpdateListName}
+            className="bg-gray-100"
+          />
+        </div>
+        <Fab
+          text="Nuevo campo"
+          startIcon={PlusIcon}
+          disabled={creatingField}
+          onClick={handleAddField}
+          className={clsx(creatingField ? "cursor-progress" : "")}
+        />
       </span>
 
       <div className="pl-2">
