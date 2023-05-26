@@ -84,7 +84,7 @@ const ListDetail = () => {
 
   return (
     <>
-      <div className="flex pt-4 pb-2 items-center justify-between sticky top-[56px] bg-white z-20">
+      <div className="flex pt-4 pb-2 items-center justify-between sticky top-[51px] bg-white z-20">
         <h1 className="text-2xl">{list.name}</h1>
         <span className="flex">
           <button
