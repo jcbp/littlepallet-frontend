@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/littlepallet-frontend/static/css/main.f01e6b4d.css",
+    "main.js": "/littlepallet-frontend/static/js/main.53259d67.js",
+    "index.html": "/littlepallet-frontend/index.html",
+    "main.f01e6b4d.css.map": "/littlepallet-frontend/static/css/main.f01e6b4d.css.map",
+    "main.53259d67.js.map": "/littlepallet-frontend/static/js/main.53259d67.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f01e6b4d.css",
+    "static/js/main.53259d67.js"
+  ]
+}
