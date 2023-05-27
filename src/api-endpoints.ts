@@ -1,4 +1,5 @@
-const API_URL = "http://localhost:3001/api";
+// const API_URL = "http://localhost:3001/api";
+const API_URL = "https://littlepallet-api.up.railway.app/api";
 
 export const apiEndpoints = {
   login: () => `${API_URL}/user/login`,
