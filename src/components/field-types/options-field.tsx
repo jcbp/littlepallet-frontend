@@ -15,22 +15,26 @@ const getDefaultValue = (field: Field): string => {
 };
 
 const ColoredOptionsField: FC<Props> = ({ value, field, onChange }) => {
-  const normalizedOptions = field.options?.map((item) =>
-    item && item.value
+  if (!field.options || field.options.length === 0) {
+    return null;
+  }
+
+  const normalizedOptions = field.options.map((item) =>
+    item && item.text && item.value
       ? item
       : { text: item[0], value: item[0], color: item[1] ?? "" }
   );
 
-  const getSelectedOptionColor = (value: string): string | undefined => {
-    const selectedOption = normalizedOptions?.find(
-      (option) => option.value === value
+  const getSelectedOption = () => {
+    const currentValue = value || getDefaultValue(field);
+    return (
+      normalizedOptions.find((option) => option.value === currentValue) ??
+      normalizedOptions[0]
     );
-    return selectedOption && selectedOption.color;
   };
 
-  const selectedOptionColor = getSelectedOptionColor(
-    value || getDefaultValue(field)
-  );
+  const selectedOption = getSelectedOption();
+  const selectedOptionColor = selectedOption.color;
 
   return (
     <Menu as="div" className="relative inline-block text-left w-full">
@@ -52,7 +56,7 @@ const ColoredOptionsField: FC<Props> = ({ value, field, onChange }) => {
               color: selectedOptionColor,
             }}
           >
-            {value || getDefaultValue(field)}
+            {selectedOption.text}
             <ChevronDownIcon className="h-5 w-5 ml-auto" />
           </span>
         </Menu.Button>
