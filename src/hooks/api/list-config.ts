@@ -3,7 +3,7 @@ import { apiEndpoints } from "../../api-endpoints";
 import { useCallback, useContext, useEffect } from "react";
 import { Field } from "../../types/field";
 import { ListConfig } from "../../types/list-config";
-import { ListConfigContext } from "../../context/list-config-context-provider";
+import { ListConfigContext } from "../../context/list-config";
 import { clamp, debounce } from "lodash";
 
 type FieldWithoutId = Omit<Field, "_id">;

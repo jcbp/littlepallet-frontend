@@ -19,9 +19,9 @@ import AuthProvider from "./context/auth-provider";
 import { AuthContext } from "./context/auth-context";
 
 import "./index.css";
-import ListProvider from "./context/list-context-provider";
-import ListConfigProvider from "./context/list-config-context-provider";
-import ListsProvider from "./context/lists-context-provider";
+import ListProvider from "./context/list";
+import ListConfigProvider from "./context/list-config";
+import ListsProvider from "./context/lists";
 
 const CustomWrapper = ({ ...props }) => {
   const { authData } = useContext(AuthContext);

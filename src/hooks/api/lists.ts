@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { apiEndpoints } from "../../api-endpoints";
-import { ListsContext } from "../../context/lists-context-provider";
+import { ListsContext } from "../../context/lists";
 import { ListSummary } from "../../types/list-summary";
 import useRequest from "../use-request";
 

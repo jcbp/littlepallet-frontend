@@ -3,7 +3,7 @@ import { List } from "../../types/list";
 import { apiEndpoints } from "../../api-endpoints";
 import { Item } from "../../types/item";
 import { useCallback, useContext, useEffect } from "react";
-import { ListContext } from "../../context/list-context-provider";
+import { ListContext } from "../../context/list";
 import { clamp, debounce } from "lodash";
 
 type ItemWithoutId = Omit<Item, "_id">;
