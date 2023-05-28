@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 import clsx from "clsx";
@@ -105,6 +105,13 @@ const Sidebar: React.FC<SidebarProps> = ({
           </ul>
         </nav>
       </aside>
+
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-gray-800 bg-opacity-50 z-40"
+          onClick={toggleSidebar}
+        />
+      )}
 
       {children}
     </div>
