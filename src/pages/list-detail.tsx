@@ -13,7 +13,7 @@ import ListEmptyState from "../components/empty-states/list-empty-state";
 import Button from "../components/common/button";
 import { PlusIcon, Cog8ToothIcon } from "@heroicons/react/24/outline";
 import { useHighlightItem } from "../hooks/highlight-item";
-import { getVisibleFields } from "../helpers/list-config";
+import { useVisibilityFilter } from "../hooks/list";
 import ModalDialog from "../components/common/modal-dialog";
 import { Item } from "../types/item";
 import ItemDetailDialog from "../components/item-detail-dialog";
@@ -29,6 +29,7 @@ const ListDetail = () => {
   const { highlightedItemId, highlightColor, highlightItem } =
     useHighlightItem();
   const [currentItem, setCurrentItem] = useState<Item | null>(null);
+  const { getVisibleFields } = useVisibilityFilter();
 
   if (!list || loading || error) {
     return (

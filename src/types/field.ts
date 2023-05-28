@@ -22,11 +22,11 @@ export interface Field {
     | "user"
     | "chips"
     | "options-list";
-  // visible: string;
-  // section: string;
-  options?: Option[]; // Puede ser undefined
+  options?: Option[];
   defaultValue?: string | number | boolean | null;
-  help?: string; // Puede ser undefined
-  importance?: string; // Puede ser undefined
-  width?: string; // Puede ser undefined
+  help?: string;
+  importance?: string;
+  width?: string;
+  hidden?: boolean;
+  hiddenOnMobile?: boolean;
 }

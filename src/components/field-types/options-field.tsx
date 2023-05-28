@@ -80,7 +80,7 @@ const ColoredOptionsField: FC<Props> = ({ value, field, onChange }) => {
                       active
                         ? "bg-gray-100 text-gray-950 border-gray-200"
                         : "text-gray-700 border-transparent"
-                    } flex items-center px-4 py-1 rounded border`}
+                    } flex items-center px-4 py-1 rounded border text-left`}
                     style={{
                       backgroundColor: active
                         ? `${option.color}40`

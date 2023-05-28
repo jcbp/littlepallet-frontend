@@ -11,25 +11,6 @@ interface Filter {
   value: string;
 }
 
-type ViewSection = "none" | "title" | "summary" | "body";
-
-type View = {
-  [key: string]: {
-    section?: ViewSection;
-    hidden?: boolean;
-    breakdown?: boolean;
-    showTotal?: boolean;
-  };
-};
-
-type Views = {
-  itemView?: View;
-  tableView?: View;
-  cardView?: View;
-  boardView?: View;
-  overview?: View;
-};
-
 export interface List {
   _id: string;
   name: string;
@@ -41,7 +22,6 @@ export interface List {
   filterLastIndex?: number;
   conditions?: unknown[]; // No se especifica el tipo de datos en la respuesta
   filters?: Filter[];
-  views?: Views;
   category?: string;
   commentsEnabled?: boolean;
   users?: User[];

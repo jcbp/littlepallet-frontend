@@ -4,7 +4,6 @@ export const builtInOptions: ListConfig = {
   _id: "options",
   name: "Options",
   owner: "application",
-  views: {},
   fields: [
     {
       _id: "0",

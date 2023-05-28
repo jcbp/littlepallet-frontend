@@ -4,19 +4,6 @@ export const builtInListConfig: ListConfig = {
   _id: "list-config",
   name: "Fields configuration",
   owner: "application",
-  views: {
-    itemView: {
-      "name": { section: "title" },
-    },
-    tableView: {
-      "options": {
-        hidden: true,
-      },
-      "help": {
-        hidden: true,
-      },
-    },
-  },
   fields: [
     {
       _id: "name",
@@ -105,15 +92,29 @@ export const builtInListConfig: ListConfig = {
       type: "text",
     },
     {
+      _id: "hidden",
+      name: "Hidden",
+      type: "boolean",
+      defaultValue: false,
+    },
+    {
+      _id: "hiddenOnMobile",
+      name: "Hidden on mobile",
+      type: "boolean",
+      defaultValue: false,
+    },
+    {
       _id: "options",
       name: "Options",
       type: "options-list",
+      hidden: true,
       help: "Comma separated values",
     },
     {
       _id: "help",
       name: "Help text",
       type: "text",
+      hidden: true,
       help: "Provides a description about the field (it supports HTML markup)",
     },
   ],

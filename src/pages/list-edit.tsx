@@ -15,7 +15,7 @@ import {
 import { Item } from "../types/item";
 import { PlusIcon, ArrowLeftIcon } from "@heroicons/react/24/solid";
 import Button from "../components/common/button";
-import { getVisibleFields } from "../helpers/list-config";
+import { useVisibilityFilter } from "../hooks/list";
 import { useHighlightItem } from "../hooks/highlight-item";
 import { List } from "../types/list";
 import ModalDialog from "../components/common/modal-dialog";
@@ -36,6 +36,8 @@ const ListEdit = () => {
   const { highlightedItemId, highlightColor, highlightItem } =
     useHighlightItem();
   const [currentItem, setCurrentItem] = useState<Item | null>(null);
+  const { getVisibleFields } = useVisibilityFilter();
+
 
   if (!listConfig || loading || error) {
     return (
@@ -50,7 +52,6 @@ const ListEdit = () => {
 
   const list: List = {
     ...listConfig,
-    views: builtInListConfig.views,
     fields: builtInListConfig.fields,
     items: listConfig.fields as unknown as Item[],
   };

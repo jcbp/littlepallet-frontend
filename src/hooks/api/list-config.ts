@@ -127,7 +127,7 @@ export const useUpdateField = (listId: string) => {
       const fields = [...listConfig.fields];
       const itemIndex = fields.findIndex((field) => field._id === fieldId);
       const field = { ...fields[itemIndex] };
-      field[attr as keyof Field] = value;
+      field[attr as keyof Field] = value as never;
       fields[itemIndex] = field;
       if (callback) {
         callback(field);
