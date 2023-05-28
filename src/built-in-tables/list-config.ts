@@ -16,6 +16,7 @@ export const builtInListConfig: ListConfig = {
       _id: "type",
       name: "Type",
       type: "options",
+      hiddenOnMobile: true,
       options: [
         {
           value: "boolean",
@@ -90,24 +91,28 @@ export const builtInListConfig: ListConfig = {
       _id: "defaultValue",
       name: "Default value",
       type: "text",
+      hiddenOnMobile: true,
     },
     {
       _id: "hidden",
       name: "Hidden",
       type: "boolean",
       defaultValue: false,
+      hiddenOnMobile: true,
     },
     {
       _id: "hiddenOnMobile",
       name: "Hidden on mobile",
       type: "boolean",
       defaultValue: false,
+      hiddenOnMobile: true,
     },
     {
       _id: "options",
       name: "Options",
       type: "options-list",
       hidden: true,
+      hiddenOnMobile: true,
       help: "Comma separated values",
     },
     {
@@ -115,6 +120,7 @@ export const builtInListConfig: ListConfig = {
       name: "Help text",
       type: "text",
       hidden: true,
+      hiddenOnMobile: true,
       help: "Provides a description about the field (it supports HTML markup)",
     },
   ],
