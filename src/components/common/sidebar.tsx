@@ -68,7 +68,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex">
       {/* Sidebar */}
       <aside
         className={`${
