@@ -15,6 +15,7 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 import ModalDialog from "../components/common/modal-dialog";
 import CreateListDialog from "../components/create-list-dialog";
 import clsx from "clsx";
+import Fab from "../components/common/fab";
 
 const ListsIndex = () => {
   const navigate = useNavigate();
@@ -80,14 +81,12 @@ const ListsIndex = () => {
       <div className="flex my-1 pt-4 pb-2 justify-between items-center">
         <h1 className="text-xl font-semibold">Mis listas</h1>
         <span className="flex items-center">
-          <Button
+          <Fab
+            text="Nueva lista"
+            startIcon={PlusIcon}
             onClick={() => setIsModalOpen(true)}
-            disabled={false}
             className={clsx("sm:ps-2 sm:pe-4", false ? "cursor-progress" : "")}
-          >
-            <PlusIcon className="h-4 w-4 text-white" />
-            Nueva lista
-          </Button>
+          />
         </span>
       </div>
       <ListsGrid

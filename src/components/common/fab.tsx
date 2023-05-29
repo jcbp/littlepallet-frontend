@@ -36,7 +36,7 @@ const Fab: FC<Props> = ({
       "bg-blue-500/40 hover:bg-blue-500/40 text-gray-100 hover:text-gray-100":
         disabled,
       "py-1.5 px-3": !isMobile,
-      "fixed bottom-5 right-5 rounded-full p-3": isMobile,
+      "fixed bottom-5 right-5 rounded-full p-3 z-10": isMobile,
     },
     className
   );
