@@ -72,7 +72,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       {/* Sidebar */}
       <aside
         className={`${
-          isSidebarOpen ? "w-64" : collapseCompletely ? "w-0" : "w-16"
+          isSidebarOpen ? "w-72" : collapseCompletely ? "w-0" : "w-16"
         } fixed inset-y-0 left-0 bg-gray-900 text-white transition-width duration-300 ease-in-out transform z-50 overflow-y-auto`}
       >
         <div className="flex items-center justify-between p-4">
@@ -90,14 +90,14 @@ const Sidebar: React.FC<SidebarProps> = ({
             )}
           </button>
         </div>
-        <nav className="px-4 py-2">
+        <nav className="px-2 py-2">
           <ul className="space-y-2">
             {links.map((link, index) => (
               <SidebarLinkItem key={index} {...link} />
             ))}
           </ul>
         </nav>
-        <nav className="fixed bottom-0 left-0 right-0 bg-gray-900 text-white px-4 pb-6">
+        <nav className="fixed bottom-0 left-0 right-0 bg-gray-900 text-white px-2 pb-6">
           <ul className="space-y-2">
             {bottomLinks.map((link, index) => (
               <SidebarLinkItem key={index} {...link} />

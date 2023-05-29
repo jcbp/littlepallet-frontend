@@ -83,7 +83,7 @@ const ListDetail = () => {
   };
 
   const handleBack = () => {
-    navigate("/");
+    navigate(-1);
   };
 
   const handleConfigList = () => {

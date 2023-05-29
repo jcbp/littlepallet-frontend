@@ -10,14 +10,13 @@ import { ListSummary } from "../types/list-summary";
 import { useNavigate } from "react-router-dom";
 import ListsEmptyState from "../components/empty-states/lists-empty-state";
 import Loader from "../components/loader";
-import Button from "../components/common/button";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import ModalDialog from "../components/common/modal-dialog";
 import CreateListDialog from "../components/create-list-dialog";
 import clsx from "clsx";
 import Fab from "../components/common/fab";
 
-const ListsIndex = () => {
+const MyPrivateLists = () => {
   const navigate = useNavigate();
   const { lists, loading, error } = useGetLists();
   const { responseData: currentUser, loading: isUserLoading } =
@@ -25,9 +24,6 @@ const ListsIndex = () => {
   const { createList } = useCreateList();
   const { softDeleteList } = useSoftDeleteList();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const myLists: ListSummary[] = [];
-  const sharedByMe: ListSummary[] = [];
-  const sharedWithMe: ListSummary[] = [];
 
   const handleCreateList = (name: string) => {
     setIsModalOpen(false);
@@ -59,27 +55,16 @@ const ListsIndex = () => {
     );
   }
 
-  lists.forEach((list) => {
-    if (
-      (!list.users || !list.users.length) &&
-      list.owner === currentUser!.email
-    ) {
-      myLists.push(list);
-    } else if (
-      list.owner === currentUser!.email &&
-      list.users &&
-      list.users.length > 0
-    ) {
-      sharedByMe.push(list);
-    } else if (list.owner !== currentUser!.email) {
-      sharedWithMe.push(list);
-    }
+  const privateLists: ListSummary[] = lists.filter((list) => {
+    return (
+      list.owner === currentUser!.email && (!list.users || !list.users.length)
+    );
   });
 
   return (
     <>
       <div className="flex my-1 pt-4 pb-2 justify-between items-center">
-        <h1 className="text-xl font-semibold">Mis listas</h1>
+        <h1 className="text-xl font-semibold">Mis listas personales</h1>
         <span className="flex items-center">
           <Fab
             text="Nueva lista"
@@ -90,20 +75,7 @@ const ListsIndex = () => {
         </span>
       </div>
       <ListsGrid
-        lists={myLists}
-        onOpenList={handleOpenList}
-        onRemoveList={handleRemoveList}
-      />
-      <h1 className="text-xl font-semibold my-5">Listas compartidas por mí</h1>
-      <ListsGrid
-        lists={sharedByMe}
-        onOpenList={handleOpenList}
-        onRemoveList={handleRemoveList}
-      />
-      <h1 className="text-xl font-semibold my-5">Listas compartidas conmigo</h1>
-      <ListsGrid
-        lists={sharedWithMe}
-        showOwner={true}
+        lists={privateLists}
         onOpenList={handleOpenList}
         onRemoveList={handleRemoveList}
       />
@@ -119,4 +91,4 @@ const ListsIndex = () => {
   );
 };
 
-export default ListsIndex;
+export default MyPrivateLists;

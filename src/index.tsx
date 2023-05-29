@@ -12,7 +12,9 @@ import Layout from "./components/layout";
 import App from "./App";
 import LoginPage from "./pages/login";
 import NotFound from "./pages/not-found";
-import ListsIndex from "./pages/lists-index";
+import MyPrivateLists from "./pages/my-private-lists";
+import MySharedLists from "./pages/my-shared-lists";
+import ListsSharedWithMe from "./pages/lists-shared-with-me";
 import ListDetail from "./pages/list-detail";
 import ListEdit from "./pages/list-edit";
 import AuthProvider from "./context/auth-provider";
@@ -47,7 +49,9 @@ root.render(
                 <Route index element={<App />} />
                 <Route path="login" element={<LoginPage />} />
                 <Route path="lists" element={<CustomWrapper />}>
-                  <Route index element={<ListsIndex />} />
+                  <Route index element={<MyPrivateLists />} />
+                  <Route path="shared-by-me" element={<MySharedLists />} />
+                  <Route path="shared-with-me" element={<ListsSharedWithMe />} />
                   <Route path=":id" element={<ListDetail />} />
                   <Route path=":id/edit" element={<ListEdit />} />
                 </Route>

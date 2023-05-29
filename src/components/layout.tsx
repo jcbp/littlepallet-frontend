@@ -1,9 +1,11 @@
 import { useContext, useState } from "react";
-import { Outlet, Link, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/auth-context";
 import Sidebar from "./common/sidebar";
 import {
-  HomeIcon,
+  ListBulletIcon,
+  UsersIcon,
+  RectangleStackIcon,
   ArrowLeftOnRectangleIcon,
   Bars3Icon,
   UserCircleIcon,
@@ -48,7 +50,11 @@ const Layout = () => {
       <Sidebar
         isSidebarOpen={isSidebarOpen}
         toggleSidebar={toggleSidebar}
-        links={[{ text: "Inicio", icon: HomeIcon, to: "/" }]}
+        links={[
+          { text: "Mis listas personales", icon: ListBulletIcon, to: "/lists" },
+          { text: "Mis listas compartidas", icon: UsersIcon, to: "/lists/shared-by-me" },
+          { text: "Listas compartidas conmigo", icon: RectangleStackIcon, to: "/lists/shared-with-me" },
+        ]}
         bottomLinks={[
           {
             text: "Salir",
