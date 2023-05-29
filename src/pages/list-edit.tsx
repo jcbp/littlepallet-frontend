@@ -38,7 +38,6 @@ const ListEdit = () => {
   const [currentItem, setCurrentItem] = useState<Item | null>(null);
   const { getVisibleFields } = useVisibilityFilter();
 
-
   if (!listConfig || loading || error) {
     return (
       <Loader
@@ -103,12 +102,20 @@ const ListEdit = () => {
 
   return (
     <>
-      <div className="flex items-center pt-4">
-        <Button variant="light" onClick={handleBackToList}>
-          <ArrowLeftIcon className="h-4 w-4 text-black mr-2" />
-          <span className="hidden sm:inline">Volver</span>
-        </Button>
-        <h1 className="text-2xl ml-4 text-gray-900">AJUSTES</h1>
+      <div className="grid grid-cols-3 pt-5">
+        <div>
+          <Button
+            variant="light"
+            onClick={handleBackToList}
+            className="sm:ps-2 sm:pe-4"
+          >
+            <ArrowLeftIcon className="h-6 w-6 text-gray-800 sm:mr-2" />
+            <span className="hidden sm:inline">Volver</span>
+          </Button>
+        </div>
+        <div className="flex justify-center">
+          <h1 className="text-2xl ml-4 text-gray-900">Ajustes</h1>
+        </div>
       </div>
       <span className="flex mt-4 mb-9 justify-between items-end">
         <div className="ml-2 xl:w-1/3">

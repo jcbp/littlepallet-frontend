@@ -11,12 +11,15 @@ import TableList from "../components/table-list";
 import Loader from "../components/loader";
 import ListEmptyState from "../components/empty-states/list-empty-state";
 import Button from "../components/common/button";
-import { PlusIcon, Cog8ToothIcon } from "@heroicons/react/24/outline";
+import { Cog8ToothIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, ArrowLeftIcon } from "@heroicons/react/24/solid";
 import { useHighlightItem } from "../hooks/highlight-item";
 import { useVisibilityFilter } from "../hooks/list";
 import ModalDialog from "../components/common/modal-dialog";
 import { Item } from "../types/item";
 import ItemDetailDialog from "../components/item-detail-dialog";
+import Fab from "../components/common/fab";
+import clsx from "clsx";
 
 const ListDetail = () => {
   const navigate = useNavigate();
@@ -67,10 +70,6 @@ const ListDetail = () => {
     highlightItem(itemId, "red", removeItem);
   };
 
-  const handleConfigList = () => {
-    navigate(`/lists/${id}/edit`);
-  };
-
   const handleMoveItem = (itemId: string, shift: number) => {
     highlightItem(itemId, "red", () => {
       moveItem(itemId, shift, () => {
@@ -83,26 +82,51 @@ const ListDetail = () => {
     setCurrentItem(item);
   };
 
+  const handleBack = () => {
+    navigate("/");
+  };
+
+  const handleConfigList = () => {
+    navigate(`/lists/${id}/edit`);
+  };
+
   return (
     <>
-      <div className="flex pt-4 pb-2 items-center justify-between sticky top-[51px] bg-white z-20">
-        <h1 className="text-2xl">{list.name}</h1>
-        <span className="flex">
-          <button
-            className="bg-gray-0 hover:bg-gray-100 p-1.5 m-1 rounded-full mr-3"
-            onClick={handleConfigList}
-          >
-            <Cog8ToothIcon className="h-6 w-6 text-gray-800" />
-          </button>
-          <Button
-            onClick={handleAddItem}
-            disabled={addingItem}
-            className={addingItem ? "cursor-progress" : ""}
-          >
-            <PlusIcon className="h-4 w-4 text-white" />
-            Nuevo item
-          </Button>
-        </span>
+      <div className="pt-5 pb-5 sticky top-[51px] bg-white z-20">
+        <div className="grid grid-cols-6">
+          <div className="col-span-2 xl:col-span-1">
+            <Button
+              variant="light"
+              onClick={handleBack}
+              className="sm:ps-2 sm:pe-4"
+            >
+              <ArrowLeftIcon className="h-6 w-6 text-gray-800 sm:mr-2" />
+              <span className="hidden sm:inline">Volver</span>
+            </Button>
+          </div>
+          <div className="col-span-2 xl:col-span-4 flex justify-center">
+            <h1 className="text-2xl">{list.name}</h1>
+          </div>
+          <div className="col-span-2 xl:col-span-1 flex justify-end">
+            <Button
+              variant="light"
+              className="sm:mr-3"
+              onClick={handleConfigList}
+            >
+              <Cog8ToothIcon className="h-6 w-6 text-gray-800" />
+            </Button>
+            <Fab
+              text="Nuevo item"
+              startIcon={PlusIcon}
+              disabled={addingItem}
+              onClick={handleAddItem}
+              className={clsx(
+                "sm:ps-2 sm:pe-4",
+                addingItem ? "cursor-progress" : ""
+              )}
+            />
+          </div>
+        </div>
       </div>
       <div className="mb-48">
         <TableList
