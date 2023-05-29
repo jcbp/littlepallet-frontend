@@ -14,6 +14,7 @@ import Button from "../components/common/button";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import ModalDialog from "../components/common/modal-dialog";
 import CreateListDialog from "../components/create-list-dialog";
+import clsx from "clsx";
 
 const ListsIndex = () => {
   const navigate = useNavigate();
@@ -82,7 +83,7 @@ const ListsIndex = () => {
           <Button
             onClick={() => setIsModalOpen(true)}
             disabled={false}
-            className={false ? "cursor-progress" : ""}
+            className={clsx("sm:ps-2 sm:pe-4", false ? "cursor-progress" : "")}
           >
             <PlusIcon className="h-4 w-4 text-white" />
             Nueva lista
