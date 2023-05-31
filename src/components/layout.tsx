@@ -6,6 +6,8 @@ import {
   ListBulletIcon,
   UsersIcon,
   RectangleStackIcon,
+  DocumentTextIcon,
+  TrashIcon,
   ArrowLeftOnRectangleIcon,
   Bars3Icon,
   UserCircleIcon,
@@ -52,8 +54,18 @@ const Layout = () => {
         toggleSidebar={toggleSidebar}
         links={[
           { text: "Mis listas personales", icon: ListBulletIcon, to: "/lists" },
-          { text: "Mis listas compartidas", icon: UsersIcon, to: "/lists/shared-by-me" },
-          { text: "Listas compartidas conmigo", icon: RectangleStackIcon, to: "/lists/shared-with-me" },
+          {
+            text: "Mis listas compartidas",
+            icon: UsersIcon,
+            to: "/lists/shared-by-me",
+          },
+          {
+            text: "Listas compartidas conmigo",
+            icon: RectangleStackIcon,
+            to: "/lists/shared-with-me",
+          },
+          { text: "Plantillas", icon: DocumentTextIcon, to: "/templates" },
+          { text: "Listas eliminadas", icon: TrashIcon, to: "/trash" },
         ]}
         bottomLinks={[
           {

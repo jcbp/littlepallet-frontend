@@ -24,6 +24,8 @@ import "./index.css";
 import ListProvider from "./context/list";
 import ListConfigProvider from "./context/list-config";
 import ListsProvider from "./context/lists";
+import Templates from "./pages/templates";
+import Trash from "./pages/trash";
 
 const CustomWrapper = ({ ...props }) => {
   const { authData } = useContext(AuthContext);
@@ -54,6 +56,14 @@ root.render(
                   <Route path="shared-with-me" element={<ListsSharedWithMe />} />
                   <Route path=":id" element={<ListDetail />} />
                   <Route path=":id/edit" element={<ListEdit />} />
+                </Route>
+                <Route path="templates" element={<CustomWrapper />}>
+                  <Route index element={<Templates />} />
+                  <Route path=":id" element={<ListDetail />} />
+                  <Route path=":id/edit" element={<ListEdit />} />
+                </Route>
+                <Route path="trash" element={<CustomWrapper />}>
+                  <Route index element={<Trash />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />
               </Route>

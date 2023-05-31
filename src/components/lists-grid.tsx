@@ -5,7 +5,7 @@ import { ListSummary } from "../types/list-summary";
 type Props = {
   lists: ListSummary[];
   onOpenList: (list: ListSummary) => void;
-  onRemoveList: (list: ListSummary) => void;
+  onRemoveList?: (list: ListSummary) => void;
   showOwner?: boolean;
 };
 
@@ -23,8 +23,8 @@ const ListsGrid: React.FC<Props> = ({
             <ListCard
               list={list}
               showOwner={showOwner}
-              onOpenList={() => onOpenList(list)}
-              onRemoveList={() => onRemoveList(list)}
+              onOpenList={onOpenList}
+              onRemoveList={onRemoveList}
             />
           </div>
         ))}
