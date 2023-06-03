@@ -3,15 +3,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import TableList from "../components/table-list";
 import Loader from "../components/loader";
 import ListEmptyState from "../components/empty-states/list-empty-state";
-import { builtInListConfig } from "../built-in-tables/list-config";
+import { builtInListMetadata } from "../built-in-tables/list-metadata";
 import {
-  useGetListConfig,
+  useGetListMetadata,
   useUpdateList,
   useAddField,
   useRemoveField,
   useUpdateField,
   useMoveField,
-} from "../hooks/api/list-config";
+} from "../hooks/api/list-metadata";
 import { Item } from "../types/item";
 import { PlusIcon, ArrowLeftIcon } from "@heroicons/react/24/solid";
 import Button from "../components/common/button";
@@ -27,7 +27,7 @@ import Fab from "../components/common/fab";
 const ListEdit = () => {
   const navigate = useNavigate();
   const { id = "" } = useParams();
-  const { listConfig, loading, error } = useGetListConfig(id);
+  const { listMetadata, loading, error } = useGetListMetadata(id);
   const { updateList } = useUpdateList(id, 700);
   const { addField, creatingField } = useAddField(id);
   const { removeField } = useRemoveField(id);
@@ -38,21 +38,21 @@ const ListEdit = () => {
   const [currentItem, setCurrentItem] = useState<Item | null>(null);
   const { getVisibleFields } = useVisibilityFilter();
 
-  if (!listConfig || loading || error) {
+  if (!listMetadata || loading || error) {
     return (
       <Loader
         loading={loading}
         error={error}
-        isEmpty={!listConfig}
+        isEmpty={!listMetadata}
         emptyState={<ListEmptyState />}
       />
     );
   }
 
   const list: List = {
-    ...listConfig,
-    fields: builtInListConfig.fields,
-    items: listConfig.fields as unknown as Item[],
+    ...listMetadata,
+    fields: builtInListMetadata.fields,
+    items: listMetadata.fields as unknown as Item[],
   };
 
   const visibleFields = getVisibleFields(list);
@@ -123,7 +123,7 @@ const ListEdit = () => {
             Nombre de la lista
           </label>
           <InputText
-            value={listConfig.name}
+            value={listMetadata.name}
             onChange={handleUpdateListName}
             className="bg-gray-100"
           />

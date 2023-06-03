@@ -1,6 +1,6 @@
-import { ListConfig } from "../types/list-config";
+import { ListMetadata } from "../types/list-metadata";
 
-export const builtInListConfig: ListConfig = {
+export const builtInListMetadata: ListMetadata = {
   _id: "list-config",
   name: "Fields configuration",
   owner: "application",

@@ -2,38 +2,40 @@ import { useRequest } from "../use-request";
 import { apiEndpoints } from "../../api-endpoints";
 import { useCallback, useContext, useEffect } from "react";
 import { Field } from "../../types/field";
-import { ListConfig } from "../../types/list-config";
-import { ListConfigContext } from "../../context/list-config";
+import { ListMetadata } from "../../types/list-metadata";
+import { ListMetadataContext } from "../../context/list-metadata";
 import { clamp, debounce } from "lodash";
 
 type FieldWithoutId = Omit<Field, "_id">;
 
-export const useGetListConfig = (listId: string) => {
-  const { listConfig, setListConfig } = useContext(ListConfigContext);
+export const useGetListMetadata = (listId: string) => {
+  const { listMetadata, setListMetadata } = useContext(ListMetadataContext);
 
   const {
     loading,
-    error: errorFetchingListConfig,
-    request: fetchListConfig,
-  } = useRequest<ListConfig>("GET");
+    error: errorFetchingListMetadata,
+    request: fetchListMetadata,
+  } = useRequest<ListMetadata>("GET");
 
   useEffect(() => {
-    fetchListConfig(apiEndpoints.getListConfig(listId)).then((responseData) => {
-      if (responseData) {
-        setListConfig(responseData);
+    fetchListMetadata(apiEndpoints.getListMetadata(listId)).then(
+      (responseData) => {
+        if (responseData) {
+          setListMetadata(responseData);
+        }
       }
-    });
+    );
   }, [listId]);
 
   return {
-    listConfig,
+    listMetadata,
     loading,
-    error: errorFetchingListConfig,
+    error: errorFetchingListMetadata,
   };
 };
 
 export const useAddField = (listId: string) => {
-  const { listConfig, setListConfig } = useContext(ListConfigContext);
+  const { listMetadata, setListMetadata } = useContext(ListMetadataContext);
 
   const {
     loading: creatingField,
@@ -49,10 +51,10 @@ export const useAddField = (listId: string) => {
       apiEndpoints.createField(listId),
       field || {}
     );
-    if (listConfig && newField) {
-      setListConfig({
-        ...listConfig,
-        fields: [...listConfig.fields, newField],
+    if (listMetadata && newField) {
+      setListMetadata({
+        ...listMetadata,
+        fields: [...listMetadata.fields, newField],
       });
       if (callback) {
         callback(newField);
@@ -68,7 +70,7 @@ export const useAddField = (listId: string) => {
 };
 
 export const useRemoveField = (listId: string) => {
-  const { listConfig, setListConfig } = useContext(ListConfigContext);
+  const { listMetadata, setListMetadata } = useContext(ListMetadataContext);
 
   const {
     loading: deletingField,
@@ -80,12 +82,12 @@ export const useRemoveField = (listId: string) => {
     const deletedField = await requestDeleteField(
       apiEndpoints.deleteField(listId, fieldId)
     );
-    if (listConfig && deletedField) {
-      const updatedFields = listConfig.fields.filter(
+    if (listMetadata && deletedField) {
+      const updatedFields = listMetadata.fields.filter(
         (field) => field._id !== deletedField._id
       );
-      setListConfig({
-        ...listConfig,
+      setListMetadata({
+        ...listMetadata,
         fields: updatedFields,
       });
     }
@@ -99,7 +101,7 @@ export const useRemoveField = (listId: string) => {
 };
 
 export const useUpdateField = (listId: string) => {
-  const { listConfig, setListConfig } = useContext(ListConfigContext);
+  const { listMetadata, setListMetadata } = useContext(ListMetadataContext);
 
   const {
     loading: savingField,
@@ -123,8 +125,8 @@ export const useUpdateField = (listId: string) => {
     value: any,
     callback?: (field: Field) => void
   ) => {
-    if (listConfig) {
-      const fields = [...listConfig.fields];
+    if (listMetadata) {
+      const fields = [...listMetadata.fields];
       const itemIndex = fields.findIndex((field) => field._id === fieldId);
       const field = { ...fields[itemIndex] };
       field[attr as keyof Field] = value as never;
@@ -132,8 +134,8 @@ export const useUpdateField = (listId: string) => {
       if (callback) {
         callback(field);
       }
-      setListConfig({
-        ...listConfig,
+      setListMetadata({
+        ...listMetadata,
         fields: fields,
       });
     }
@@ -148,7 +150,7 @@ export const useUpdateField = (listId: string) => {
 };
 
 export const useMoveField = (listId: string) => {
-  const { listConfig, setListConfig } = useContext(ListConfigContext);
+  const { listMetadata, setListMetadata } = useContext(ListMetadataContext);
 
   const {
     loading,
@@ -161,22 +163,22 @@ export const useMoveField = (listId: string) => {
     shift: number,
     callback?: () => void
   ) => {
-    if (listConfig) {
-      const currentIndex = listConfig.fields.findIndex(
+    if (listMetadata) {
+      const currentIndex = listMetadata.fields.findIndex(
         (field) => field._id == fieldId
       );
-      const maxIndex = listConfig.fields.length - 1;
+      const maxIndex = listMetadata.fields.length - 1;
       const position = clamp(currentIndex + shift, 0, maxIndex);
 
       await requestMoveField(
         apiEndpoints.moveFieldAtPosition(listId, fieldId, position)
       );
 
-      const updatedListConfig = { ...listConfig };
-      const field = updatedListConfig.fields.splice(currentIndex, 1).pop();
+      const updatedListMetadata = { ...listMetadata };
+      const field = updatedListMetadata.fields.splice(currentIndex, 1).pop();
       if (field) {
-        updatedListConfig.fields.splice(position, 0, field);
-        setListConfig(updatedListConfig);
+        updatedListMetadata.fields.splice(position, 0, field);
+        setListMetadata(updatedListMetadata);
         if (callback) {
           callback();
         }
@@ -192,25 +194,25 @@ export const useMoveField = (listId: string) => {
 };
 
 export const useUpdateList = (listId: string, debounceDelay: number) => {
-  const { listConfig, setListConfig } = useContext(ListConfigContext);
+  const { listMetadata, setListMetadata } = useContext(ListMetadataContext);
 
   const {
     loading,
     error,
     request: requestUpdateList,
-  } = useRequest<ListConfig>("PATCH");
+  } = useRequest<ListMetadata>("PATCH");
 
   const debouncedUpdateList = useCallback(
-    debounce(async (updates: Partial<ListConfig>) => {
+    debounce(async (updates: Partial<ListMetadata>) => {
       await requestUpdateList(apiEndpoints.updateList(listId), updates);
     }, debounceDelay),
     [listId, requestUpdateList]
   );
 
-  const updateList = (updates: Partial<ListConfig>) => {
-    if (listConfig) {
-      setListConfig({
-        ...listConfig,
+  const updateList = (updates: Partial<ListMetadata>) => {
+    if (listMetadata) {
+      setListMetadata({
+        ...listMetadata,
         ...updates,
       });
       debouncedUpdateList(updates);

@@ -22,7 +22,7 @@ import { AuthContext } from "./context/auth-context";
 
 import "./index.css";
 import ListStoreProvider from "./context/list-store";
-import ListConfigProvider from "./context/list-config";
+import ListMetadataProvider from "./context/list-metadata";
 import ListsProvider from "./context/lists";
 import Templates from "./pages/templates";
 import Trash from "./pages/trash";
@@ -44,7 +44,7 @@ root.render(
   <AuthProvider>
     <ListsProvider>
       <ListStoreProvider>
-        <ListConfigProvider>
+        <ListMetadataProvider>
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Layout />}>
@@ -69,7 +69,7 @@ root.render(
               </Route>
             </Routes>
           </BrowserRouter>
-        </ListConfigProvider>
+        </ListMetadataProvider>
       </ListStoreProvider>
     </ListsProvider>
   </AuthProvider>
