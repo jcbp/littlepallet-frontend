@@ -21,7 +21,7 @@ import AuthProvider from "./context/auth-provider";
 import { AuthContext } from "./context/auth-context";
 
 import "./index.css";
-import ListProvider from "./context/list";
+import ListStoreProvider from "./context/list-store";
 import ListConfigProvider from "./context/list-config";
 import ListsProvider from "./context/lists";
 import Templates from "./pages/templates";
@@ -43,7 +43,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <AuthProvider>
     <ListsProvider>
-      <ListProvider>
+      <ListStoreProvider>
         <ListConfigProvider>
           <BrowserRouter>
             <Routes>
@@ -70,7 +70,7 @@ root.render(
             </Routes>
           </BrowserRouter>
         </ListConfigProvider>
-      </ListProvider>
+      </ListStoreProvider>
     </ListsProvider>
   </AuthProvider>
 );

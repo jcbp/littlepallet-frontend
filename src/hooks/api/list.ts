@@ -2,15 +2,16 @@ import { useRequest } from "../use-request";
 import { List } from "../../types/list";
 import { apiEndpoints } from "../../api-endpoints";
 import { Item } from "../../types/item";
-import { useCallback, useContext, useEffect } from "react";
-import { ListContext } from "../../context/list";
+import { useCallback, useEffect } from "react";
+import { useListDispatch, useListStore } from "../../context/list-store";
+import { ActionType } from "../../reducers/list-reducer";
 import { clamp, debounce } from "lodash";
 
 type ItemWithoutId = Omit<Item, "_id">;
 
 export const useGetList = (listId: string) => {
-  const { getList, updateList } = useContext(ListContext);
-  const list = getList(listId);
+  const dispatch = useListDispatch();
+  const { list } = useListStore();
 
   const {
     loading,
@@ -21,7 +22,10 @@ export const useGetList = (listId: string) => {
   useEffect(() => {
     fetchList(apiEndpoints.getList(listId)).then((responseData) => {
       if (responseData) {
-        updateList(listId, responseData);
+        dispatch({
+          type: ActionType.SetList,
+          payload: responseData,
+        });
       }
     });
   }, [listId]);
@@ -34,7 +38,8 @@ export const useGetList = (listId: string) => {
 };
 
 export const useUpdateItemField = (listId: string) => {
-  const { getList, updateList } = useContext(ListContext);
+  const dispatch = useListDispatch();
+    const { list } = useListStore();
 
   const {
     loading: savingItemField,
@@ -60,18 +65,17 @@ export const useUpdateItemField = (listId: string) => {
     value: any,
     callback?: (item: Item) => void
   ) => {
-    const list = getList(listId);
-    const updatedList = { ...list! };
-    const itemIndex = updatedList.items.findIndex(
-      (item) => item._id === itemId
-    );
-    const item = { ...updatedList.items[itemIndex] };
-    item[fieldId] = value;
-    updatedList.items[itemIndex] = item;
-    if (callback) {
-      callback(item);
+    dispatch({
+      type: ActionType.UpdateItemField,
+      payload: { itemId, fieldId, value },
+    });
+
+    const updatedItem = list!.items.find((item) => item._id === itemId);
+
+    if (callback && updatedItem) {
+      callback(updatedItem);
     }
-    updateList(listId, updatedList);
+
     debouncedUpdateItemField(itemId, fieldId, value);
   };
 
@@ -83,7 +87,7 @@ export const useUpdateItemField = (listId: string) => {
 };
 
 export const useAddItem = (listId: string) => {
-  const { getList, updateList } = useContext(ListContext);
+  const dispatch = useListDispatch();
 
   const {
     loading: addingItem,
@@ -96,14 +100,13 @@ export const useAddItem = (listId: string) => {
     callback?: (newItem: Item) => void
   ) => {
     const newItem = await requestAddItem(apiEndpoints.createItem(listId), item);
-    const list = getList(listId);
 
-    if (list && newItem) {
-      const updatedList = {
-        ...list,
-        items: [...list.items, newItem],
-      };
-      updateList(listId, updatedList);
+    if (newItem) {
+      dispatch({
+        type: ActionType.AddItem,
+        payload: newItem,
+      });
+
       if (callback) {
         callback(newItem);
       }
@@ -118,7 +121,7 @@ export const useAddItem = (listId: string) => {
 };
 
 export const useRemoveItem = (listId: string) => {
-  const { getList, updateList } = useContext(ListContext);
+  const dispatch = useListDispatch();
 
   const {
     loading: deletingItem,
@@ -127,21 +130,12 @@ export const useRemoveItem = (listId: string) => {
   } = useRequest<Item>("DELETE");
 
   const removeItem = async (itemId: string) => {
-    const deletedItem = await requestDeleteItem(
-      apiEndpoints.deleteItem(listId, itemId)
-    );
-    const list = getList(listId);
+    await requestDeleteItem(apiEndpoints.deleteItem(listId, itemId));
 
-    if (list && deletedItem) {
-      const updatedItems = list.items.filter(
-        (item) => item._id !== deletedItem._id
-      );
-      const updatedList = {
-        ...list,
-        items: updatedItems,
-      };
-      updateList(listId, updatedList);
-    }
+    dispatch({
+      type: ActionType.RemoveItem,
+      payload: itemId,
+    });
   };
 
   return {
@@ -152,7 +146,7 @@ export const useRemoveItem = (listId: string) => {
 };
 
 export const useMoveItem = (listId: string) => {
-  const { getList, updateList } = useContext(ListContext);
+  const dispatch = useListDispatch();
 
   const {
     loading,
@@ -165,25 +159,19 @@ export const useMoveItem = (listId: string) => {
     shift: number,
     callback?: () => void
   ) => {
-    const list = getList(listId);
-    if (list) {
-      const currentIndex = list.items.findIndex((item) => item._id == itemId);
-      const maxIndex = list.items.length - 1;
-      const position = clamp(currentIndex + shift, 0, maxIndex);
+    const position = clamp(shift, 0);
 
-      await requestMoveItem(
-        apiEndpoints.moveItemAtPosition(listId, itemId, position)
-      );
+    await requestMoveItem(
+      apiEndpoints.moveItemAtPosition(listId, itemId, position)
+    );
 
-      const updatedList = { ...list };
-      const item = updatedList.items.splice(currentIndex, 1).pop();
-      if (item) {
-        updatedList.items.splice(position, 0, item);
-        updateList(listId, updatedList);
-        if (callback) {
-          callback();
-        }
-      }
+    dispatch({
+      type: ActionType.MoveItem,
+      payload: { itemId, shift },
+    });
+
+    if (callback) {
+      callback();
     }
   };
 

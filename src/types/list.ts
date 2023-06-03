@@ -18,9 +18,7 @@ export interface List {
   fields: Field[];
   items: Item[];
   isTemplate?: boolean;
-  fieldLastIndex?: number;
-  filterLastIndex?: number;
-  conditions?: unknown[]; // No se especifica el tipo de datos en la respuesta
+  conditions?: unknown[];
   filters?: Filter[];
   category?: string;
   commentsEnabled?: boolean;
