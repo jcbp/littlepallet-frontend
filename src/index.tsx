@@ -22,7 +22,7 @@ import { AuthContext } from "./context/auth-context";
 
 import "./index.css";
 import ListStoreProvider from "./context/list-store";
-import ListMetadataProvider from "./context/list-metadata";
+import ListMetadataProvider from "./context/list-metadata-store";
 import ListsProvider from "./context/lists";
 import Templates from "./pages/templates";
 import Trash from "./pages/trash";

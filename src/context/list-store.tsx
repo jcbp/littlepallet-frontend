@@ -1,26 +1,28 @@
-import { ReactNode, createContext, useContext, useReducer } from "react";
-import listReducer, { initialState, Action } from "../reducers/list-reducer";
+import { ReactNode, createContext, useContext } from "react";
+import { useListReducer, ListStore, Action } from "../reducers/list-reducer";
 
-type ListStoreContextType = [typeof initialState, React.Dispatch<Action>];
+type ListStoreContextType = [ListStore, React.Dispatch<Action>];
 
-const ListStoreContext = createContext<ListStoreContextType>([initialState, () => {}]);
+const ListStoreContext = createContext<ListStoreContextType>([
+  { list: null },
+  () => {},
+]);
 
 interface Props {
   children?: ReactNode;
 }
 
 const ListStoreProvider: React.FC<Props> = ({ children }) => {
-  const listStore = useReducer(listReducer, initialState);
-
   return (
-    <ListStoreContext.Provider value={listStore}>
+    <ListStoreContext.Provider value={useListReducer()}>
       {children}
     </ListStoreContext.Provider>
   );
 };
 
-const useListStore = (): typeof initialState => useContext(ListStoreContext)[0];
-const useListDispatch = (): React.Dispatch<Action> => useContext(ListStoreContext)[1];
+const useListStore = (): ListStore => useContext(ListStoreContext)[0];
+const useListDispatch = (): React.Dispatch<Action> =>
+  useContext(ListStoreContext)[1];
 
 export { ListStoreContext, useListStore, useListDispatch };
 export default ListStoreProvider;

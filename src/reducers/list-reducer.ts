@@ -1,8 +1,9 @@
 import { List } from "../types/list";
 import { Item } from "../types/item";
 import { clamp } from "lodash";
+import { useReducer } from "react";
 
-type State = {
+export type ListStore = {
   list: List | null;
 };
 
@@ -24,11 +25,7 @@ export type Action =
       payload: { itemId: string; fieldId: string; value: any };
     };
 
-export const initialState: State = {
-  list: null,
-};
-
-const listReducer = (state: State, action: Action): State => {
+const listReducer = (state: ListStore, action: Action): ListStore => {
   switch (action.type) {
     case ActionType.SetList:
       return {
@@ -99,4 +96,10 @@ const listReducer = (state: State, action: Action): State => {
   }
 };
 
-export default listReducer;
+export const useListReducer = () => {
+  const initialState: ListStore = {
+    list: null,
+  };
+
+  return useReducer(listReducer, initialState);
+};

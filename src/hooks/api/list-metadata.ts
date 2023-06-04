@@ -1,15 +1,20 @@
 import { useRequest } from "../use-request";
 import { apiEndpoints } from "../../api-endpoints";
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { Field } from "../../types/field";
 import { ListMetadata } from "../../types/list-metadata";
-import { ListMetadataContext } from "../../context/list-metadata";
+import {
+  useListMetadataDispatch,
+  useListMetadataStore,
+} from "../../context/list-metadata-store";
 import { clamp, debounce } from "lodash";
+import { ActionType } from "../../reducers/list-metadata-reducer";
 
 type FieldWithoutId = Omit<Field, "_id">;
 
 export const useGetListMetadata = (listId: string) => {
-  const { listMetadata, setListMetadata } = useContext(ListMetadataContext);
+  const { listMetadata } = useListMetadataStore();
+  const dispatch = useListMetadataDispatch();
 
   const {
     loading,
@@ -21,7 +26,7 @@ export const useGetListMetadata = (listId: string) => {
     fetchListMetadata(apiEndpoints.getListMetadata(listId)).then(
       (responseData) => {
         if (responseData) {
-          setListMetadata(responseData);
+          dispatch({ type: ActionType.SetListMetadata, payload: responseData });
         }
       }
     );
@@ -35,7 +40,8 @@ export const useGetListMetadata = (listId: string) => {
 };
 
 export const useAddField = (listId: string) => {
-  const { listMetadata, setListMetadata } = useContext(ListMetadataContext);
+  const { listMetadata } = useListMetadataStore();
+  const dispatch = useListMetadataDispatch();
 
   const {
     loading: creatingField,
@@ -52,10 +58,7 @@ export const useAddField = (listId: string) => {
       field || {}
     );
     if (listMetadata && newField) {
-      setListMetadata({
-        ...listMetadata,
-        fields: [...listMetadata.fields, newField],
-      });
+      dispatch({ type: ActionType.AddField, payload: newField });
       if (callback) {
         callback(newField);
       }
@@ -70,7 +73,8 @@ export const useAddField = (listId: string) => {
 };
 
 export const useRemoveField = (listId: string) => {
-  const { listMetadata, setListMetadata } = useContext(ListMetadataContext);
+  const { listMetadata } = useListMetadataStore();
+  const dispatch = useListMetadataDispatch();
 
   const {
     loading: deletingField,
@@ -83,13 +87,7 @@ export const useRemoveField = (listId: string) => {
       apiEndpoints.deleteField(listId, fieldId)
     );
     if (listMetadata && deletedField) {
-      const updatedFields = listMetadata.fields.filter(
-        (field) => field._id !== deletedField._id
-      );
-      setListMetadata({
-        ...listMetadata,
-        fields: updatedFields,
-      });
+      dispatch({ type: ActionType.RemoveField, payload: fieldId });
     }
   };
 
@@ -101,7 +99,8 @@ export const useRemoveField = (listId: string) => {
 };
 
 export const useUpdateField = (listId: string) => {
-  const { listMetadata, setListMetadata } = useContext(ListMetadataContext);
+  const { listMetadata } = useListMetadataStore();
+  const dispatch = useListMetadataDispatch();
 
   const {
     loading: savingField,
@@ -126,18 +125,19 @@ export const useUpdateField = (listId: string) => {
     callback?: (field: Field) => void
   ) => {
     if (listMetadata) {
-      const fields = [...listMetadata.fields];
-      const itemIndex = fields.findIndex((field) => field._id === fieldId);
-      const field = { ...fields[itemIndex] };
-      field[attr as keyof Field] = value as never;
-      fields[itemIndex] = field;
-      if (callback) {
+      dispatch({
+        type: ActionType.UpdateField,
+        payload: {
+          fieldId,
+          updates: {
+            [attr as keyof Field]: value as never,
+          },
+        },
+      });
+      const field = listMetadata.fields.find((field) => field._id === fieldId);
+      if (callback && field) {
         callback(field);
       }
-      setListMetadata({
-        ...listMetadata,
-        fields: fields,
-      });
     }
     debouncedUpdateField(fieldId, attr, value);
   };
@@ -150,7 +150,8 @@ export const useUpdateField = (listId: string) => {
 };
 
 export const useMoveField = (listId: string) => {
-  const { listMetadata, setListMetadata } = useContext(ListMetadataContext);
+  const { listMetadata } = useListMetadataStore();
+  const dispatch = useListMetadataDispatch();
 
   const {
     loading,
@@ -174,14 +175,9 @@ export const useMoveField = (listId: string) => {
         apiEndpoints.moveFieldAtPosition(listId, fieldId, position)
       );
 
-      const updatedListMetadata = { ...listMetadata };
-      const field = updatedListMetadata.fields.splice(currentIndex, 1).pop();
-      if (field) {
-        updatedListMetadata.fields.splice(position, 0, field);
-        setListMetadata(updatedListMetadata);
-        if (callback) {
-          callback();
-        }
+      dispatch({ type: ActionType.MoveField, payload: { fieldId, position } });
+      if (callback) {
+        callback();
       }
     }
   };
@@ -194,7 +190,8 @@ export const useMoveField = (listId: string) => {
 };
 
 export const useUpdateList = (listId: string, debounceDelay: number) => {
-  const { listMetadata, setListMetadata } = useContext(ListMetadataContext);
+  const { listMetadata } = useListMetadataStore();
+  const dispatch = useListMetadataDispatch();
 
   const {
     loading,
@@ -211,9 +208,9 @@ export const useUpdateList = (listId: string, debounceDelay: number) => {
 
   const updateList = (updates: Partial<ListMetadata>) => {
     if (listMetadata) {
-      setListMetadata({
-        ...listMetadata,
-        ...updates,
+      dispatch({
+        type: ActionType.SetListMetadata,
+        payload: { ...listMetadata, ...updates },
       });
       debouncedUpdateList(updates);
     }
