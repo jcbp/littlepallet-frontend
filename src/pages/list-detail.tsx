@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   useGetList,
@@ -14,7 +14,7 @@ import Button from "../components/common/button";
 import { Cog8ToothIcon } from "@heroicons/react/24/outline";
 import { PlusIcon, ArrowLeftIcon } from "@heroicons/react/24/solid";
 import { useHighlightItem } from "../hooks/highlight-item";
-import { useVisibilityFilter } from "../hooks/list";
+import { useFieldsVisibility } from "../hooks/list";
 import ModalDialog from "../components/common/modal-dialog";
 import { Item } from "../types/item";
 import ItemDetailDialog from "../components/item-detail-dialog";
@@ -32,20 +32,7 @@ const ListDetail = () => {
   const { highlightedItemId, highlightColor, highlightItem } =
     useHighlightItem();
   const [currentItem, setCurrentItem] = useState<Item | null>(null);
-  const { getVisibleFields } = useVisibilityFilter();
-
-  if (!list || loading || error) {
-    return (
-      <Loader
-        loading={loading}
-        error={error}
-        isEmpty={!list}
-        emptyState={<ListEmptyState />}
-      />
-    );
-  }
-
-  const visibleFields = getVisibleFields(list);
+  const visibleFields = useFieldsVisibility(list);
 
   const handleUpdateItemField = (
     itemId: string,
@@ -91,70 +78,79 @@ const ListDetail = () => {
   };
 
   return (
-    <>
-      <div className="pt-5 pb-5 sticky top-[51px] bg-white z-20">
-        <div className="grid grid-cols-6">
-          <div className="col-span-2 xl:col-span-1">
-            <Button
-              variant="light"
-              onClick={handleBack}
-              className="sm:ps-2 sm:pe-4"
-            >
-              <ArrowLeftIcon className="h-6 w-6 text-gray-800 sm:mr-2" />
-              <span className="hidden sm:inline">Volver</span>
-            </Button>
+    <Loader
+      loading={loading}
+      error={error}
+      isEmpty={!list}
+      emptyState={<ListEmptyState />}
+    >
+      {list && (
+        <>
+          <div className="pt-5 pb-5 sticky top-[51px] bg-white z-20">
+            <div className="grid grid-cols-6">
+              <div className="col-span-2 xl:col-span-1">
+                <Button
+                  variant="light"
+                  onClick={handleBack}
+                  className="sm:ps-2 sm:pe-4"
+                >
+                  <ArrowLeftIcon className="h-6 w-6 text-gray-800 sm:mr-2" />
+                  <span className="hidden sm:inline">Volver</span>
+                </Button>
+              </div>
+              <div className="col-span-2 xl:col-span-4 flex justify-center">
+                <h1 className="text-2xl">{list.name}</h1>
+              </div>
+              <div className="col-span-2 xl:col-span-1 flex justify-end">
+                <Button
+                  variant="light"
+                  className="sm:mr-3"
+                  onClick={handleConfigList}
+                >
+                  <Cog8ToothIcon className="h-6 w-6 text-gray-800" />
+                </Button>
+                <Fab
+                  text="Nuevo item"
+                  startIcon={PlusIcon}
+                  disabled={addingItem}
+                  onClick={handleAddItem}
+                  className={clsx(
+                    "sm:ps-2 sm:pe-4",
+                    addingItem ? "cursor-progress" : ""
+                  )}
+                />
+              </div>
+            </div>
           </div>
-          <div className="col-span-2 xl:col-span-4 flex justify-center">
-            <h1 className="text-2xl">{list.name}</h1>
-          </div>
-          <div className="col-span-2 xl:col-span-1 flex justify-end">
-            <Button
-              variant="light"
-              className="sm:mr-3"
-              onClick={handleConfigList}
-            >
-              <Cog8ToothIcon className="h-6 w-6 text-gray-800" />
-            </Button>
-            <Fab
-              text="Nuevo item"
-              startIcon={PlusIcon}
-              disabled={addingItem}
-              onClick={handleAddItem}
-              className={clsx(
-                "sm:ps-2 sm:pe-4",
-                addingItem ? "cursor-progress" : ""
-              )}
+          <div className="mb-48">
+            <TableList
+              highlightItem={highlightedItemId}
+              highlightColor={highlightColor}
+              fields={visibleFields}
+              items={list.items}
+              onUpdateItemField={handleUpdateItemField}
+              onRemoveItem={handleRemoveItem}
+              onMoveItem={handleMoveItem}
+              onViewItem={handleViewItem}
             />
           </div>
-        </div>
-      </div>
-      <div className="mb-48">
-        <TableList
-          highlightItem={highlightedItemId}
-          highlightColor={highlightColor}
-          fields={visibleFields}
-          items={list.items}
-          onUpdateItemField={handleUpdateItemField}
-          onRemoveItem={handleRemoveItem}
-          onMoveItem={handleMoveItem}
-          onViewItem={handleViewItem}
-        />
-      </div>
 
-      <ModalDialog
-        title={`Ver item #${currentItem?._id}`}
-        isOpen={!!currentItem}
-        onClose={() => setCurrentItem(null)}
-      >
-        {currentItem && (
-          <ItemDetailDialog
-            fields={list.fields}
-            item={currentItem}
-            onUpdateItemField={handleUpdateItemField}
-          />
-        )}
-      </ModalDialog>
-    </>
+          <ModalDialog
+            title={`Ver item #${currentItem?._id}`}
+            isOpen={!!currentItem}
+            onClose={() => setCurrentItem(null)}
+          >
+            {currentItem && (
+              <ItemDetailDialog
+                fields={list.fields}
+                item={currentItem}
+                onUpdateItemField={handleUpdateItemField}
+              />
+            )}
+          </ModalDialog>
+        </>
+      )}
+    </Loader>
   );
 };
 

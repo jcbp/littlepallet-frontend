@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import TableList from "../components/table-list";
 import Loader from "../components/loader";
@@ -15,7 +15,7 @@ import {
 import { Item } from "../types/item";
 import { PlusIcon, ArrowLeftIcon } from "@heroicons/react/24/solid";
 import Button from "../components/common/button";
-import { useVisibilityFilter } from "../hooks/list";
+import { useFieldsVisibility } from "../hooks/list";
 import { useHighlightItem } from "../hooks/highlight-item";
 import { List } from "../types/list";
 import ModalDialog from "../components/common/modal-dialog";
@@ -36,26 +36,16 @@ const ListEdit = () => {
   const { highlightedItemId, highlightColor, highlightItem } =
     useHighlightItem();
   const [currentItem, setCurrentItem] = useState<Item | null>(null);
-  const { getVisibleFields } = useVisibilityFilter();
 
-  if (!listMetadata || loading || error) {
-    return (
-      <Loader
-        loading={loading}
-        error={error}
-        isEmpty={!listMetadata}
-        emptyState={<ListEmptyState />}
-      />
-    );
-  }
+  const list: List | null = listMetadata
+    ? {
+        ...listMetadata,
+        fields: builtInListMetadata.fields,
+        items: listMetadata.fields as unknown as Item[],
+      }
+    : null;
 
-  const list: List = {
-    ...listMetadata,
-    fields: builtInListMetadata.fields,
-    items: listMetadata.fields as unknown as Item[],
-  };
-
-  const visibleFields = getVisibleFields(list);
+  const visibleFields = useFieldsVisibility(list);
 
   const handleUpdateItemField = (
     fieldId: string,
@@ -101,69 +91,78 @@ const ListEdit = () => {
   };
 
   return (
-    <>
-      <div className="grid grid-cols-3 pt-5">
-        <div>
-          <Button
-            variant="light"
-            onClick={handleBackToList}
-            className="sm:ps-2 sm:pe-4"
+    <Loader
+      loading={loading}
+      error={error}
+      isEmpty={!listMetadata}
+      emptyState={<ListEmptyState />}
+    >
+      {listMetadata && list && (
+        <>
+          <div className="grid grid-cols-3 pt-5">
+            <div>
+              <Button
+                variant="light"
+                onClick={handleBackToList}
+                className="sm:ps-2 sm:pe-4"
+              >
+                <ArrowLeftIcon className="h-6 w-6 text-gray-800 sm:mr-2" />
+                <span className="hidden sm:inline">Volver</span>
+              </Button>
+            </div>
+            <div className="flex justify-center">
+              <h1 className="text-2xl ml-4 text-gray-900">Ajustes</h1>
+            </div>
+          </div>
+          <span className="flex mt-4 mb-9 justify-between items-end">
+            <div className="ml-2 xl:w-1/3">
+              <label className="flex text-sm font-medium text-gray-600">
+                Nombre de la lista
+              </label>
+              <InputText
+                value={listMetadata.name}
+                onChange={handleUpdateListName}
+                className="bg-gray-100"
+              />
+            </div>
+            <Fab
+              text="Nuevo campo"
+              startIcon={PlusIcon}
+              disabled={creatingField}
+              onClick={handleAddField}
+              className={clsx(creatingField ? "cursor-progress" : "")}
+            />
+          </span>
+
+          <div className="pl-2">
+            <TableList
+              highlightItem={highlightedItemId}
+              highlightColor={highlightColor}
+              fields={visibleFields}
+              items={list.items}
+              onUpdateItemField={handleUpdateItemField}
+              onRemoveItem={handleRemoveField}
+              onMoveItem={handleMoveField}
+              onViewItem={handleViewItem}
+            />
+          </div>
+
+          <ModalDialog
+            title={`Ver item #${currentItem?._id}`}
+            isOpen={!!currentItem}
+            onClose={() => setCurrentItem(null)}
           >
-            <ArrowLeftIcon className="h-6 w-6 text-gray-800 sm:mr-2" />
-            <span className="hidden sm:inline">Volver</span>
-          </Button>
-        </div>
-        <div className="flex justify-center">
-          <h1 className="text-2xl ml-4 text-gray-900">Ajustes</h1>
-        </div>
-      </div>
-      <span className="flex mt-4 mb-9 justify-between items-end">
-        <div className="ml-2 xl:w-1/3">
-          <label className="flex text-sm font-medium text-gray-600">
-            Nombre de la lista
-          </label>
-          <InputText
-            value={listMetadata.name}
-            onChange={handleUpdateListName}
-            className="bg-gray-100"
-          />
-        </div>
-        <Fab
-          text="Nuevo campo"
-          startIcon={PlusIcon}
-          disabled={creatingField}
-          onClick={handleAddField}
-          className={clsx(creatingField ? "cursor-progress" : "")}
-        />
-      </span>
-
-      <div className="pl-2">
-        <TableList
-          highlightItem={highlightedItemId}
-          highlightColor={highlightColor}
-          fields={visibleFields}
-          items={list.items}
-          onUpdateItemField={handleUpdateItemField}
-          onRemoveItem={handleRemoveField}
-          onMoveItem={handleMoveField}
-          onViewItem={handleViewItem}
-        />
-      </div>
-
-      <ModalDialog
-        title={`Ver item #${currentItem?._id}`}
-        isOpen={!!currentItem}
-        onClose={() => setCurrentItem(null)}
-      >
-        {currentItem && (
-          <ItemDetailDialog
-            fields={list.fields}
-            item={currentItem}
-            onUpdateItemField={handleUpdateItemField}
-          />
-        )}
-      </ModalDialog>
-    </>
+            {currentItem && (
+              <ItemDetailDialog
+                fields={list.fields}
+                item={currentItem}
+                onUpdateItemField={handleUpdateItemField}
+              />
+            )}
+          </ModalDialog>
+        </>
+      )}
+    </Loader>
   );
 };
 
