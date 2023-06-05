@@ -17,8 +17,7 @@ import MySharedLists from "./pages/my-shared-lists";
 import ListsSharedWithMe from "./pages/lists-shared-with-me";
 import ListDetail from "./pages/list-detail";
 import ListEdit from "./pages/list-edit";
-import AuthProvider from "./context/auth-provider";
-import { AuthContext } from "./context/auth-context";
+import AuthProvider, { AuthContext } from "./context/auth-context";
 
 import "./index.css";
 import ListStoreProvider from "./context/list-store";
@@ -26,6 +25,7 @@ import ListMetadataProvider from "./context/list-metadata-store";
 import ListsProvider from "./context/lists";
 import Templates from "./pages/templates";
 import Trash from "./pages/trash";
+import SignupPage from "./pages/signup";
 
 const CustomWrapper = ({ ...props }) => {
   const { authData } = useContext(AuthContext);
@@ -50,6 +50,7 @@ root.render(
               <Route path="/" element={<Layout />}>
                 <Route index element={<App />} />
                 <Route path="login" element={<LoginPage />} />
+                <Route path="signup" element={<SignupPage />} />
                 <Route path="lists" element={<CustomWrapper />}>
                   <Route index element={<MyPrivateLists />} />
                   <Route path="shared-by-me" element={<MySharedLists />} />

@@ -3,12 +3,12 @@ const API_URL = "https://littlepallet-api.up.railway.app/api";
 
 export const apiEndpoints = {
   login: () => `${API_URL}/user/login`,
+  signup: () => `${API_URL}/user`,
+  updateUser: (id: string) => `${API_URL}/user/${id}`,
   getCurrentUser: () => `${API_URL}/user/current`,
   getLists: () => `${API_URL}/list`,
   getList: (id: string) => `${API_URL}/list/${id}`,
   getListMetadata: (id: string) => `${API_URL}/list/${id}/config`,
-  createUser: () => `${API_URL}/user`,
-  updateUser: (id: string) => `${API_URL}/user/${id}`,
   addUserToList: (listId: string) => `${API_URL}/list/${listId}/user`,
   updateUserInList: (listId: string, userId: string) =>
     `${API_URL}/list/${listId}/user/${userId}`,

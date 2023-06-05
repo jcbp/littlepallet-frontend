@@ -30,7 +30,7 @@ const CreateListDialog: React.FC<Props> = ({ onCreateList }) => {
           />
         </div>
       </div>
-      <Button onClick={() => onCreateList(name)} className="ms-auto">
+      <Button onClick={() => onCreateList(name)} className="ms-auto px-4">
         Crear lista
       </Button>
     </>

@@ -3,12 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../context/auth-context";
 import Button from "../components/common/button";
 
-function LoginPage() {
-  const { login } = useAuthContext();
+function SignupPage() {
+  const { signup } = useAuthContext();
   const navigate = useNavigate();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setName(e.target.value);
+  }
 
   function handleEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
     setEmail(e.target.value);
@@ -18,19 +23,19 @@ function LoginPage() {
     setPassword(e.target.value);
   }
 
-  function handleGoToSignupPage(e: React.MouseEvent<HTMLAnchorElement>) {
+  function handleGoToLoginPage(e: React.MouseEvent<HTMLAnchorElement>) {
     e.preventDefault();
-    navigate("/signup");
+    navigate("/login");
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     try {
-      await login({ email, password });
+      await signup({ name, email, password });
       navigate("/lists");
     } catch (error) {
-      setError("Email o contraseña incorrectos");
+      setError("Error al crear la cuenta");
     }
   }
 
@@ -39,10 +44,31 @@ function LoginPage() {
       <div className="max-w-md w-full space-y-8 mt-[-200px] border border-gray-200 rounded-lg px-4 sm:px-6 lg:px-8 py-12">
         <div>
           <h1 className="text-3xl font-bold text-center text-black text-opacity-75">
-            Iniciar sesión
+            Registro
           </h1>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div>
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Nombre
+            </label>
+            <div className="mt-1">
+              <input
+                id="name"
+                name="name"
+                type="text"
+                autoComplete="name"
+                required
+                className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                value={name}
+                onChange={handleNameChange}
+              />
+            </div>
+          </div>
+
           <div>
             <label
               htmlFor="email"
@@ -76,7 +102,7 @@ function LoginPage() {
                 id="password"
                 name="password"
                 type="password"
-                autoComplete="current-password"
+                autoComplete="new-password"
                 required
                 className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                 value={password}
@@ -92,14 +118,14 @@ function LoginPage() {
               <a
                 href="#"
                 className="font-medium text-gray-900 hover:underline"
-                onClick={handleGoToSignupPage}
+                onClick={handleGoToLoginPage}
               >
-                Aún no tengo una cuenta. Quiero registrarme.
+                Ya tengo una cuenta. Ir al inicio de sesión.
               </a>
             </div>
           </div>
           <Button type="submit" className="!block w-full text-center">
-            Iniciar sesión
+            Registrarse
           </Button>
         </form>
       </div>
@@ -107,4 +133,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default SignupPage;
