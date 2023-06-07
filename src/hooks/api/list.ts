@@ -39,7 +39,6 @@ export const useGetList = (listId: string) => {
 
 export const useUpdateItemField = (listId: string) => {
   const dispatch = useListDispatch();
-    const { list } = useListStore();
 
   const {
     loading: savingItemField,
@@ -62,20 +61,12 @@ export const useUpdateItemField = (listId: string) => {
   const updateItemField = async (
     itemId: string,
     fieldId: string,
-    value: any,
-    callback?: (item: Item) => void
+    value: any
   ) => {
     dispatch({
       type: ActionType.UpdateItemField,
       payload: { itemId, fieldId, value },
     });
-
-    const updatedItem = list!.items.find((item) => item._id === itemId);
-
-    if (callback && updatedItem) {
-      callback(updatedItem);
-    }
-
     debouncedUpdateItemField(itemId, fieldId, value);
   };
 

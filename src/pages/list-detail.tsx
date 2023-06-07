@@ -31,7 +31,7 @@ const ListDetail = () => {
   const { updateItemField } = useUpdateItemField(id);
   const { highlightedItemId, highlightColor, highlightItem } =
     useHighlightItem();
-  const [currentItem, setCurrentItem] = useState<Item | null>(null);
+  const [currentItemId, setCurrentItemId] = useState<string | null>(null);
   const visibleFields = useFieldsVisibility(list);
 
   const handleUpdateItemField = (
@@ -39,11 +39,7 @@ const ListDetail = () => {
     fieldId: string,
     value: string
   ) => {
-    updateItemField(itemId, fieldId, value, (item) => {
-      if (currentItem) {
-        setCurrentItem(item);
-      }
-    });
+    updateItemField(itemId, fieldId, value);
   };
 
   const handleAddItem = () => {
@@ -66,7 +62,7 @@ const ListDetail = () => {
   };
 
   const handleViewItem = (item: Item) => {
-    setCurrentItem(item);
+    setCurrentItemId(item._id);
   };
 
   const handleBack = () => {
@@ -76,6 +72,12 @@ const ListDetail = () => {
   const handleConfigList = () => {
     navigate(`/lists/${id}/edit`);
   };
+
+  const currentItem = useMemo<Item | undefined>(() => {
+    return currentItemId
+      ? list?.items.find((item) => item._id === currentItemId)
+      : undefined;
+  }, [list, currentItemId]);
 
   return (
     <Loader
@@ -136,9 +138,9 @@ const ListDetail = () => {
           </div>
 
           <ModalDialog
-            title={`Ver item #${currentItem?._id}`}
-            isOpen={!!currentItem}
-            onClose={() => setCurrentItem(null)}
+            title={`Ver item #${currentItemId}`}
+            isOpen={!!currentItemId}
+            onClose={() => setCurrentItemId(null)}
           >
             {currentItem && (
               <ItemDetailDialog

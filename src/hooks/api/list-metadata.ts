@@ -99,7 +99,6 @@ export const useRemoveField = (listId: string) => {
 };
 
 export const useUpdateField = (listId: string) => {
-  const { listMetadata } = useListMetadataStore();
   const dispatch = useListMetadataDispatch();
 
   const {
@@ -118,27 +117,16 @@ export const useUpdateField = (listId: string) => {
     [listId, requestUpdateField]
   );
 
-  const updateField = async (
-    fieldId: string,
-    attr: string,
-    value: any,
-    callback?: (field: Field) => void
-  ) => {
-    if (listMetadata) {
-      dispatch({
-        type: ActionType.UpdateField,
-        payload: {
-          fieldId,
-          updates: {
-            [attr as keyof Field]: value as never,
-          },
+  const updateField = async (fieldId: string, attr: string, value: any) => {
+    dispatch({
+      type: ActionType.UpdateField,
+      payload: {
+        fieldId,
+        updates: {
+          [attr as keyof Field]: value as never,
         },
-      });
-      const field = listMetadata.fields.find((field) => field._id === fieldId);
-      if (callback && field) {
-        callback(field);
-      }
-    }
+      },
+    });
     debouncedUpdateField(fieldId, attr, value);
   };
 
