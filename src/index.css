@@ -2,9 +2,6 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-td {
-  height: 46px;
-}
 .hide-dropdown-icon .dropdown-toggle::after {
   display: none !important;
 }

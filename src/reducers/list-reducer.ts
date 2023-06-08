@@ -18,7 +18,7 @@ export enum ActionType {
 export type Action =
   | { type: ActionType.SetList; payload: List }
   | { type: ActionType.AddItem; payload: Item }
-  | { type: ActionType.RemoveItem; payload: Item['_id'] }
+  | { type: ActionType.RemoveItem; payload: Item["_id"] }
   | { type: ActionType.MoveItem; payload: { itemId: string; shift: number } }
   | {
       type: ActionType.UpdateItemField;

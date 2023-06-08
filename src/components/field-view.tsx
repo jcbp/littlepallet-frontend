@@ -1,12 +1,12 @@
 import { Field } from "../types/field";
 import OptionsField from "./field-types/options-field";
 import TextField from "./field-types/text-field";
+import MultilineTextField from "./field-types/multiline-text-field";
 import BooleanField from "./field-types/boolean-field";
 import TrafficLightField from "./field-types/traffic-light-field";
 import OptionsList from "./field-types/options-list";
 // import DateField from './field-types/date-field';
 // import LongTextField from './field-types/longText-field';
-// import MultilineTextField from './field-types/multilineText-field';
 // import ComboListField from './field-types/comboList-field';
 // import TimeField from './field-types/time-field';
 // import ColorField from './field-types/color-field';
@@ -26,6 +26,10 @@ const FieldView: React.FC<Props> = ({ field, value, onChange }) => {
   switch (field.type) {
     case "text":
       return <TextField value={value} field={field} onChange={onChange} />;
+    case "multiline-text":
+      return (
+        <MultilineTextField value={value} field={field} onChange={onChange} />
+      );
     case "options":
       return <OptionsField value={value} field={field} onChange={onChange} />;
     case "boolean":
