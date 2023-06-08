@@ -2,7 +2,7 @@ import { useRequest } from "../use-request";
 import { List } from "../../types/list";
 import { apiEndpoints } from "../../api-endpoints";
 import { Item } from "../../types/item";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useListDispatch, useListStore } from "../../context/list-store";
 import { ActionType } from "../../reducers/list-reducer";
 import { clamp, debounce } from "lodash";
@@ -58,6 +58,9 @@ export const useUpdateItemField = (listId: string) => {
     [listId, requestUpdateItemField]
   );
 
+  const currentItemId = useRef("");
+  const currentFieldId = useRef("");
+
   const updateItemField = async (
     itemId: string,
     fieldId: string,
@@ -67,6 +70,15 @@ export const useUpdateItemField = (listId: string) => {
       type: ActionType.UpdateItemField,
       payload: { itemId, fieldId, value },
     });
+
+    if (
+      itemId !== currentItemId.current ||
+      fieldId !== currentFieldId.current
+    ) {
+      debouncedUpdateItemField.flush();
+      currentItemId.current = itemId;
+      currentFieldId.current = fieldId;
+    }
     debouncedUpdateItemField(itemId, fieldId, value);
   };
 

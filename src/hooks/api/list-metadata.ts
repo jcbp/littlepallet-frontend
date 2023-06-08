@@ -1,6 +1,6 @@
 import { useRequest } from "../use-request";
 import { apiEndpoints } from "../../api-endpoints";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Field } from "../../types/field";
 import { ListMetadata } from "../../types/list-metadata";
 import {
@@ -117,6 +117,9 @@ export const useUpdateField = (listId: string) => {
     [listId, requestUpdateField]
   );
 
+  const currentFieldId = useRef("");
+  const currentAttribute = useRef("");
+
   const updateField = async (fieldId: string, attr: string, value: any) => {
     dispatch({
       type: ActionType.UpdateField,
@@ -127,6 +130,15 @@ export const useUpdateField = (listId: string) => {
         },
       },
     });
+
+    if (
+      fieldId !== currentFieldId.current ||
+      attr !== currentAttribute.current
+    ) {
+      debouncedUpdateField.flush();
+      currentFieldId.current = fieldId;
+      currentAttribute.current = attr;
+    }
     debouncedUpdateField(fieldId, attr, value);
   };
 
