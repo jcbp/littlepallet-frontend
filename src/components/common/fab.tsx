@@ -48,7 +48,7 @@ const Fab: FC<Props> = ({
       ) : (
         <>
           {StartIcon && renderIcon(StartIcon)}
-          {text}
+          <span className="px-1">{text}</span>
           {EndIcon && renderIcon(EndIcon)}
         </>
       )}

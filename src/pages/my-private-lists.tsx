@@ -70,7 +70,7 @@ const MyPrivateLists = () => {
             text="Nueva lista"
             startIcon={PlusIcon}
             onClick={() => setIsModalOpen(true)}
-            className={clsx("sm:ps-2 sm:pe-4", false ? "cursor-progress" : "")}
+            className={clsx(false ? "cursor-progress" : "")}
           />
         </span>
       </div>

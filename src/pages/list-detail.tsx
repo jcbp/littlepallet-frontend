@@ -116,10 +116,7 @@ const ListDetail = () => {
                   startIcon={PlusIcon}
                   disabled={addingItem}
                   onClick={handleAddItem}
-                  className={clsx(
-                    "sm:ps-2 sm:pe-4",
-                    addingItem ? "cursor-progress" : ""
-                  )}
+                  className={clsx(addingItem ? "cursor-progress" : "")}
                 />
               </div>
             </div>
