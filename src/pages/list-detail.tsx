@@ -14,7 +14,6 @@ import Button from "../components/common/button";
 import { Cog8ToothIcon } from "@heroicons/react/24/outline";
 import { PlusIcon, ArrowLeftIcon } from "@heroicons/react/24/solid";
 import { useHighlightItem } from "../hooks/highlight-item";
-import { useFieldsVisibility } from "../hooks/list";
 import ModalDialog from "../components/common/modal-dialog";
 import { Item } from "../types/item";
 import ItemDetailDialog from "../components/item-detail-dialog";
@@ -32,7 +31,6 @@ const ListDetail = () => {
   const { highlightedItemId, highlightColor, highlightItem } =
     useHighlightItem();
   const [currentItemId, setCurrentItemId] = useState<string | null>(null);
-  const visibleFields = useFieldsVisibility(list);
 
   const handleUpdateItemField = (
     itemId: string,
@@ -125,7 +123,7 @@ const ListDetail = () => {
             <TableList
               highlightItem={highlightedItemId}
               highlightColor={highlightColor}
-              fields={visibleFields}
+              fields={list.fields}
               items={list.items}
               onUpdateItemField={handleUpdateItemField}
               onRemoveItem={handleRemoveItem}

@@ -15,7 +15,6 @@ import {
 import { Item } from "../types/item";
 import { PlusIcon, ArrowLeftIcon } from "@heroicons/react/24/solid";
 import Button from "../components/common/button";
-import { useFieldsVisibility } from "../hooks/list";
 import { useHighlightItem } from "../hooks/highlight-item";
 import { List } from "../types/list";
 import ModalDialog from "../components/common/modal-dialog";
@@ -44,8 +43,6 @@ const ListEdit = () => {
         items: listMetadata.fields as unknown as Item[],
       }
     : null;
-
-  const visibleFields = useFieldsVisibility(list);
 
   const handleUpdateItemField = (
     fieldId: string,
@@ -140,7 +137,7 @@ const ListEdit = () => {
             <TableList
               highlightItem={highlightedItemId}
               highlightColor={highlightColor}
-              fields={visibleFields}
+              fields={list.fields}
               items={list.items}
               onUpdateItemField={handleUpdateItemField}
               onRemoveItem={handleRemoveField}

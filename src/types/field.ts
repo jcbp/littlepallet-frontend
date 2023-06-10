@@ -2,26 +2,28 @@ export interface Option {
   [key: string]: string;
 }
 
+export type FieldType =
+  | "boolean"
+  | "date"
+  | "text"
+  | "long-text"
+  | "multiline-text"
+  | "options"
+  | "combo-list"
+  | "time"
+  | "color"
+  | "color-picker"
+  | "traffic-light"
+  | "number"
+  | "rating"
+  | "user"
+  | "chips"
+  | "options-list";
+
 export interface Field {
   _id: string;
   name: string;
-  type:
-    | "boolean"
-    | "date"
-    | "text"
-    | "long-text"
-    | "multiline-text"
-    | "options"
-    | "combo-list"
-    | "time"
-    | "color"
-    | "color-picker"
-    | "traffic-light"
-    | "number"
-    | "rating"
-    | "user"
-    | "chips"
-    | "options-list";
+  type: FieldType;
   options?: Option[];
   defaultValue?: string | number | boolean | null;
   help?: string;
