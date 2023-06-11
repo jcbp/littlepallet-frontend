@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import ReactDOM from "react-dom/client";
 import {
-  BrowserRouter,
+  HashRouter,
   Routes,
   Route,
   useLocation,
@@ -45,7 +45,7 @@ root.render(
     <ListsProvider>
       <ListStoreProvider>
         <ListMetadataProvider>
-          <BrowserRouter>
+          <HashRouter>
             <Routes>
               <Route path="/" element={<Layout />}>
                 <Route index element={<App />} />
@@ -69,7 +69,7 @@ root.render(
                 <Route path="*" element={<NotFound />} />
               </Route>
             </Routes>
-          </BrowserRouter>
+          </HashRouter>
         </ListMetadataProvider>
       </ListStoreProvider>
     </ListsProvider>
