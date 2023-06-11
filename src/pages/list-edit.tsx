@@ -98,7 +98,7 @@ const ListEdit = () => {
     >
       {listMetadata && list && (
         <>
-          <div className="grid grid-cols-3 pt-5">
+          <div className="flex items-center pt-5">
             <div>
               <Button
                 variant="light"
@@ -114,8 +114,8 @@ const ListEdit = () => {
             </div>
           </div>
           <span className="flex mt-4 mb-9 justify-between items-end">
-            <div className="ml-2 xl:w-1/3">
-              <label className="flex text-sm font-medium text-gray-600">
+            <div className="sm:flex items-center ml-2">
+              <label className="whitespace-nowrap text-sm font-medium text-gray-800 me-3">
                 Nombre de la lista
               </label>
               <InputText
@@ -137,6 +137,7 @@ const ListEdit = () => {
             <TableList
               highlightItem={highlightedItemId}
               highlightColor={highlightColor}
+              stickyHeadTop="50px"
               fields={list.fields}
               items={list.items}
               onUpdateItemField={handleUpdateItemField}

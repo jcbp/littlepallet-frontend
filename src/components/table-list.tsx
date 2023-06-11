@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { CSSProperties, useCallback, useMemo } from "react";
 import { useIsMobile } from "../hooks/mobile";
 import { Field } from "../types/field";
 import { Item } from "../types/item";
@@ -12,7 +12,8 @@ interface ListCardProps {
   items: Item[];
   highlightItem?: string | null;
   highlightColor?: "green" | "red";
-  onUpdateItemField: (itemId: string, fieldId: string, value: string) => void;
+  stickyHeadTop?: string;
+  onUpdateItemField: (itemId: string, fieldId: string, value: any) => void;
   onRemoveItem: (itemId: string) => void;
   onMoveItem: (itemId: string, shift: number) => void;
   onViewItem?: (item: Item) => void;
@@ -21,28 +22,37 @@ interface ListCardProps {
 const TableList: React.FC<ListCardProps> = ({
   fields,
   items,
+  highlightItem,
+  highlightColor,
+  stickyHeadTop,
   onUpdateItemField,
   onRemoveItem,
   onMoveItem,
   onViewItem,
-  highlightItem,
-  highlightColor,
 }) => {
   const { isMobile } = useIsMobile();
 
   const formatId = useCallback((id: string) => {
-    const paddedNum = String(id).padStart(3, String.fromCharCode(160)); // 160 es el código decimal para "&nbsp;"
+    // 160 es el código decimal para "&nbsp;"
+    const paddedNum = String(id).padStart(3, String.fromCharCode(160));
     return paddedNum;
   }, []);
 
   const { visibleFields, hasHiddenContent } = useFieldsVisibility(fields);
+
+  const thPosition = useMemo<CSSProperties>(() => {
+    return stickyHeadTop ? { position: "sticky", top: stickyHeadTop } : {};
+  }, [stickyHeadTop]);
 
   return (
     <table className="table-auto w-full">
       <thead>
         <tr>
           {!isMobile && (
-            <th className="border-b border-slate-200 pb-3 pl-3.5 text-left text-gray-500 w-[58px]">
+            <th
+              className="border-b border-slate-200 pb-3 pl-3.5 text-left text-gray-500 w-[58px]"
+              style={thPosition}
+            >
               <HashtagIcon className="h-4 w-4 text-gray-500" />
             </th>
           )}
@@ -50,11 +60,12 @@ const TableList: React.FC<ListCardProps> = ({
             <th
               key={field._id}
               className="border-b border-slate-200 pb-3 text-left ps-0.5"
+              style={thPosition}
             >
               {field.name}
             </th>
           ))}
-          <th className="border-b border-slate-200"></th>
+          <th className="border-b border-slate-200" style={thPosition}></th>
         </tr>
       </thead>
       <tbody>

@@ -10,15 +10,15 @@ import {
 import TableList from "../components/table-list";
 import Loader from "../components/loader";
 import ListEmptyState from "../components/empty-states/list-empty-state";
-import Button from "../components/common/button";
-import { Cog8ToothIcon } from "@heroicons/react/24/outline";
-import { PlusIcon, ArrowLeftIcon } from "@heroicons/react/24/solid";
 import { useHighlightItem } from "../hooks/highlight-item";
 import ModalDialog from "../components/common/modal-dialog";
 import { Item } from "../types/item";
 import ItemDetailDialog from "../components/item-detail-dialog";
-import Fab from "../components/common/fab";
-import clsx from "clsx";
+import Filters from "../components/list-detail/filters";
+import Subhead from "../components/list-detail/subhead";
+import { Field } from "../types/field";
+import { ItemsFilter, useFilteredItems } from "../hooks/table-list";
+import { useIsMobile } from "../hooks/mobile";
 
 const ListDetail = () => {
   const navigate = useNavigate();
@@ -31,11 +31,14 @@ const ListDetail = () => {
   const { highlightedItemId, highlightColor, highlightItem } =
     useHighlightItem();
   const [currentItemId, setCurrentItemId] = useState<string | null>(null);
+  const [isFiltersActive, setIsFiltersActive] = useState<boolean>(false);
+  const [filter, setFilter] = useState<ItemsFilter | null>(null);
+  const { isMobile } = useIsMobile();
 
   const handleUpdateItemField = (
     itemId: string,
     fieldId: string,
-    value: string
+    value: any
   ) => {
     updateItemField(itemId, fieldId, value);
   };
@@ -71,11 +74,21 @@ const ListDetail = () => {
     navigate(`/lists/${id}/edit`);
   };
 
+  const handleToggleFilters = () => {
+    setIsFiltersActive(!isFiltersActive);
+  };
+
+  const handleFilterChange = (field: Field, value: any) => {
+    setFilter({ field, value });
+  };
+
   const currentItem = useMemo<Item | undefined>(() => {
     return currentItemId
       ? list?.items.find((item) => item._id === currentItemId)
       : undefined;
   }, [list, currentItemId]);
+
+  const items = useFilteredItems(list, filter);
 
   return (
     <Loader
@@ -86,45 +99,29 @@ const ListDetail = () => {
     >
       {list && (
         <>
-          <div className="pt-5 pb-5 sticky top-[51px] bg-white z-20">
-            <div className="grid grid-cols-6">
-              <div className="col-span-2 xl:col-span-1">
-                <Button
-                  variant="light"
-                  onClick={handleBack}
-                  className="sm:ps-2 sm:pe-4"
-                >
-                  <ArrowLeftIcon className="h-6 w-6 text-gray-800 sm:mr-2" />
-                  <span className="hidden sm:inline">Volver</span>
-                </Button>
-              </div>
-              <div className="col-span-2 xl:col-span-4 flex justify-center">
-                <h1 className="text-2xl">{list.name}</h1>
-              </div>
-              <div className="col-span-2 xl:col-span-1 flex justify-end">
-                <Button
-                  variant="light"
-                  className="sm:mr-3"
-                  onClick={handleConfigList}
-                >
-                  <Cog8ToothIcon className="h-6 w-6 text-gray-800" />
-                </Button>
-                <Fab
-                  text="Nuevo item"
-                  startIcon={PlusIcon}
-                  disabled={addingItem}
-                  onClick={handleAddItem}
-                  className={clsx(addingItem ? "cursor-progress" : "")}
-                />
-              </div>
-            </div>
+          <div className="pt-5 pb-1 sticky top-[51px] bg-white z-20">
+            <Subhead
+              title={list.name}
+              disableAddItem={addingItem}
+              isFiltersActive={isFiltersActive}
+              onClickBackBtn={handleBack}
+              onClickConfigBtn={handleConfigList}
+              onAddItem={handleAddItem}
+              onToggleFilters={handleToggleFilters}
+            />
+            {isFiltersActive && (
+              <Filters fields={list.fields} onChange={handleFilterChange} />
+            )}
           </div>
           <div className="mb-48">
             <TableList
               highlightItem={highlightedItemId}
               highlightColor={highlightColor}
+              stickyHeadTop={
+                isFiltersActive ? (isMobile ? "258px" : "183px") : "127px"
+              }
               fields={list.fields}
-              items={list.items}
+              items={items}
               onUpdateItemField={handleUpdateItemField}
               onRemoveItem={handleRemoveItem}
               onMoveItem={handleMoveItem}
