@@ -73,6 +73,10 @@ export const useFilteredItems = (
         return normalizedFieldValue === normalizedFilterValue;
       }
 
+      if (filter.field.type === "boolean") {
+        return !!fieldValue === !!filter.value;
+      }
+
       return fieldValue === filter.value;
     });
   }, [list, filter]);
