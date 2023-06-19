@@ -1,6 +1,8 @@
 import FieldView from "../field-view";
 import { Field } from "../../types/field";
 import { useState } from "react";
+import Button from "../common/button";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 interface Props {
   fields: Field[];
@@ -31,6 +33,13 @@ const Filters: React.FC<Props> = ({ fields, onChange }) => {
     }
   };
 
+  const handleClearFilter = () => {
+    if (currentField) {
+      setFilterValue("");
+      onChange(currentField, "");
+    }
+  };
+
   return (
     <div className="sm:flex items-center px-4 py-3 rounded-md sm:h-14 border-none bg-gray-100 border-gray-200">
       <label className="whitespace-nowrap text-sm font-medium me-3">
@@ -47,13 +56,22 @@ const Filters: React.FC<Props> = ({ fields, onChange }) => {
         ))}
       </select>
       {currentField && (
-        <div className="w-full sm:w-72 sm:ms-3 mt-2 sm:mt-0 border border-gray-200 bg-white rounded-lg">
-          <FieldView
-            field={currentField}
-            value={filterValue}
-            onChange={handleChangeValue}
-          />
-        </div>
+          <div className="flex items-center w-full sm:w-72 sm:ms-3 mt-2 sm:mt-0 border border-gray-200 bg-white rounded-lg child-shadow-focus h-[38px]">
+            <FieldView
+              field={currentField}
+              value={filterValue}
+              onChange={handleChangeValue}
+            />
+            <div className="ms-auto rounded-r-lg px-1">
+              <Button
+                variant="light"
+                className="bg-transparent"
+                onClick={handleClearFilter}
+              >
+                <XMarkIcon className="h-5 w-5 text-gray-800" />
+              </Button>
+            </div>
+          </div>
       )}
     </div>
   );

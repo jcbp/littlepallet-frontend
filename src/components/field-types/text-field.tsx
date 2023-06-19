@@ -15,7 +15,7 @@ const TextField: FC<Props> = ({ value, field, onChange }) => {
   return (
     <input
       type="text"
-      className="rounded-md px-2 py-1.5 mr-2 outline-none shadow-focus w-full"
+      className="rounded-md px-2 py-1.5 outline-none shadow-focus w-full"
       value={value ?? ""}
       placeholder={`- ${field.name} -`}
       onChange={handleChange}

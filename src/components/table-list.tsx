@@ -83,7 +83,7 @@ const TableList: React.FC<ListCardProps> = ({
             )}
             {visibleFields.map((field) => (
               <td key={field._id} className="border-b border-slate-200 ps-0.5">
-                <div className="flex items-center h-full">
+                <div className="flex items-center h-full pe-2">
                   <FieldView
                     field={field}
                     value={item[field._id]}

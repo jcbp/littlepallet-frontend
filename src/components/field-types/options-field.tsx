@@ -49,7 +49,7 @@ const ColoredOptionsField: FC<Props> = ({ value, field, onChange }) => {
             className={clsx(
               "flex items-center w-full px-3 py-1.5 rounded-lg",
               !!selectedOptionColor &&
-                "font-medium py-1 text-sm hover:opacity-80"
+                "font-medium py-2 text-sm hover:opacity-80"
             )}
             style={{
               backgroundColor: selectedOptionColor + "15",

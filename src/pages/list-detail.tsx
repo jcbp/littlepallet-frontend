@@ -75,7 +75,11 @@ const ListDetail = () => {
   };
 
   const handleToggleFilters = () => {
-    setIsFiltersActive(!isFiltersActive);
+    const isActive = !isFiltersActive;
+    setIsFiltersActive(isActive);
+    if (!isActive) {
+      setFilter(null);
+    }
   };
 
   const handleFilterChange = (field: Field, value: any) => {

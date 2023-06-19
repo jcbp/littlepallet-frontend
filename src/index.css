@@ -98,3 +98,11 @@ table thead th {
   animation-name: highlightAnimationRed;
   animation-duration: 0.8s;
 }
+
+.child-shadow-focus * {
+  box-shadow: none !important;
+}
+.child-shadow-focus:focus-within {
+  border-color: transparent;
+  box-shadow: 0 0 3px rgb(106, 170, 243);
+}

@@ -30,7 +30,7 @@ const MultilineTextField: FC<Props> = ({ value, field, onChange }) => {
     <textarea
       ref={textareaRef}
       onInput={updateHeight}
-      className="rounded-md px-2 py-1.5 mr-2 outline-none shadow-focus w-full"
+      className="rounded-md px-2 py-1.5 outline-none shadow-focus w-full"
       value={value ?? ""}
       placeholder={`- ${field.name} -`}
       onChange={handleChange}
