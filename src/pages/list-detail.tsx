@@ -116,10 +116,9 @@ const ListDetail = () => {
               onClickConfigBtn={handleConfigList}
               onAddItem={handleAddItem}
               onToggleFilters={handleToggleFilters}
-            />
-            {isFiltersActive && (
+            >
               <Filters fields={list.fields} onChange={handleFilterChange} />
-            )}
+            </Subhead>
           </div>
           <div className="mb-48">
             <TableList
