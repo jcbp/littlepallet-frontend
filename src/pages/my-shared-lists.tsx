@@ -40,7 +40,7 @@ const MySharedLists = () => {
 
   return (
     <>
-      <h1 className="text-xl font-semibold my-5">Mis listas compartidas</h1>
+      <h1 className="text-xl font-semibold my-5">Listas compartidas por mí</h1>
       <ListsGrid
         lists={sharedLists}
         onOpenList={handleOpenList}

@@ -148,7 +148,7 @@ const ListEdit = () => {
           </div>
 
           <ModalDialog
-            title={`Ver item #${currentItemId}`}
+            title={`Item #${currentItemId}`}
             isOpen={!!currentItemId}
             onClose={() => setCurrentItemId(null)}
           >

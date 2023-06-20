@@ -55,7 +55,11 @@ const Sidebar: React.FC<SidebarProps> = ({
     return (
       <li>
         {to ? (
-          <NavLink to={to} className={itemClasses}>
+          <NavLink
+            to={to}
+            className={itemClasses}
+            onClick={() => toggleSidebar()}
+          >
             {itemContent}
           </NavLink>
         ) : (

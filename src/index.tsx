@@ -16,6 +16,7 @@ import MyPrivateLists from "./pages/my-private-lists";
 import MySharedLists from "./pages/my-shared-lists";
 import ListsSharedWithMe from "./pages/lists-shared-with-me";
 import ListDetail from "./pages/list-detail";
+import TemplateDetail from "./pages/template-detail";
 import ListEdit from "./pages/list-edit";
 import AuthProvider, { AuthContext } from "./context/auth-context";
 
@@ -60,8 +61,7 @@ root.render(
                 </Route>
                 <Route path="templates" element={<CustomWrapper />}>
                   <Route index element={<Templates />} />
-                  <Route path=":id" element={<ListDetail />} />
-                  <Route path=":id/edit" element={<ListEdit />} />
+                  <Route path=":id" element={<TemplateDetail />} />
                 </Route>
                 <Route path="trash" element={<CustomWrapper />}>
                   <Route index element={<Trash />} />

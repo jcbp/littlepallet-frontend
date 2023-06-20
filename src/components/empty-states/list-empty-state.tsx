@@ -10,7 +10,7 @@ const ListEmptyState = () => {
           No se puede mostrar la lista
         </h3>
         <p className="text-sm text-gray-500 mt-2">
-          Asegúrate de que la lista exista y tengas permisos para verla
+          Asegurate de que la lista exista y tengas permisos para verla
         </p>
       </div>
     </div>

@@ -19,6 +19,7 @@ import Subhead from "../components/list-detail/subhead";
 import { Field } from "../types/field";
 import { ItemsFilter, useFilteredItems } from "../hooks/table-list";
 import { useIsMobile } from "../hooks/mobile";
+import { useCurrentUser } from "../hooks/api/user";
 
 const ListDetail = () => {
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ const ListDetail = () => {
   const [isFiltersActive, setIsFiltersActive] = useState<boolean>(false);
   const [filter, setFilter] = useState<ItemsFilter | null>(null);
   const { isMobile } = useIsMobile();
+  const { responseData: currentUser } = useCurrentUser();
 
   const handleUpdateItemField = (
     itemId: string,
@@ -98,7 +100,9 @@ const ListDetail = () => {
     <Loader
       loading={loading}
       error={error}
-      isEmpty={!list}
+      isEmpty={
+        !list || !!(list.isTemplate && list.owner !== currentUser?.email)
+      }
       emptyState={<ListEmptyState />}
     >
       {list && (
@@ -134,7 +138,7 @@ const ListDetail = () => {
           </div>
 
           <ModalDialog
-            title={`Ver item #${currentItemId}`}
+            title={`Item #${currentItemId}`}
             isOpen={!!currentItemId}
             onClose={() => setCurrentItemId(null)}
           >

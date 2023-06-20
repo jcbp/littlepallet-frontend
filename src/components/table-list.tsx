@@ -14,8 +14,8 @@ interface ListCardProps {
   highlightColor?: "green" | "red";
   stickyHeadTop?: string;
   onUpdateItemField: (itemId: string, fieldId: string, value: any) => void;
-  onRemoveItem: (itemId: string) => void;
-  onMoveItem: (itemId: string, shift: number) => void;
+  onRemoveItem?: (itemId: string) => void;
+  onMoveItem?: (itemId: string, shift: number) => void;
   onViewItem?: (item: Item) => void;
 }
 
@@ -59,7 +59,7 @@ const TableList: React.FC<ListCardProps> = ({
           {visibleFields.map((field) => (
             <th
               key={field._id}
-              className="border-b border-slate-200 pb-3 text-left ps-0.5"
+              className="border-b border-slate-200 pb-3 text-left ps-0.5 pe-2"
               style={thPosition}
             >
               {field.name}
@@ -107,15 +107,17 @@ const TableList: React.FC<ListCardProps> = ({
                     )}
                   </button>
                 )}
-                <ItemMenu
-                  onRemoveItem={() => onRemoveItem(item._id)}
-                  onMoveUp={() => {
-                    onMoveItem(item._id, -1);
-                  }}
-                  onMoveDown={() => {
-                    onMoveItem(item._id, 1);
-                  }}
-                />
+                {onRemoveItem && onMoveItem && (
+                  <ItemMenu
+                    onRemoveItem={() => onRemoveItem(item._id)}
+                    onMoveUp={() => {
+                      onMoveItem(item._id, -1);
+                    }}
+                    onMoveDown={() => {
+                      onMoveItem(item._id, 1);
+                    }}
+                  />
+                )}
               </div>
             </td>
           </tr>

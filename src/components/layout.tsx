@@ -53,9 +53,9 @@ const Layout = () => {
         isSidebarOpen={isSidebarOpen}
         toggleSidebar={toggleSidebar}
         links={[
-          { text: "Mis listas personales", icon: ListBulletIcon, to: "/lists" },
+          { text: "Mis listas", icon: ListBulletIcon, to: "/lists" },
           {
-            text: "Mis listas compartidas",
+            text: "Listas compartidas por mí",
             icon: UsersIcon,
             to: "/lists/shared-by-me",
           },
