@@ -13,7 +13,7 @@ export const builtInOptions: ListMetadata = {
     {
       _id: "1",
       name: "Color",
-      type: "color-picker",
+      type: "color",
     },
   ],
 };
