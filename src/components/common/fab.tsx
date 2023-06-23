@@ -24,10 +24,10 @@ const Fab: FC<Props> = ({
 
   const renderIcon = (
     Icon: React.ComponentType<React.SVGProps<SVGSVGElement>> | undefined
-  ) => Icon && <Icon className="h-6 w-6" />;
+  ) => Icon && <Icon className="h-5 w-5" />;
 
   const buttonClasses = clsx(
-    "rounded-full flex items-center",
+    "rounded-full flex items-center text-sm",
     {
       "bg-gray-50 hover:bg-gray-200 text-black":
         !disabled && variant === "light",
@@ -36,7 +36,7 @@ const Fab: FC<Props> = ({
       "bg-blue-500/40 hover:bg-blue-500/40 text-gray-100 hover:text-gray-100":
         disabled,
       "py-1.5 px-3": !isMobile,
-      "fixed bottom-5 right-5 rounded-full p-3 z-10": isMobile,
+      "fixed bottom-8 right-5 rounded-full p-3 z-10": isMobile,
     },
     className
   );

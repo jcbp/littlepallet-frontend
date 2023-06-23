@@ -64,7 +64,7 @@ const MyPrivateLists = () => {
   return (
     <>
       <div className="flex my-1 pt-4 pb-2 justify-between items-center">
-        <h1 className="text-xl font-semibold">Mis listas</h1>
+        <h1 className="text-2xl font-light text-gray-900">Mis listas</h1>
         <span className="flex items-center">
           <Fab
             text="Nueva lista"

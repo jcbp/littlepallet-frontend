@@ -65,7 +65,7 @@ const Filters: React.FC<Props> = ({ fields, onChange }) => {
             <div className="ms-auto rounded-r-lg px-1">
               <Button
                 variant="light"
-                className="bg-transparent"
+                className="!w-8 !h-8 !min-w-0 border-0 bg-transparent"
                 onClick={handleClearFilter}
               >
                 <XMarkIcon className="h-5 w-5 text-gray-800" />

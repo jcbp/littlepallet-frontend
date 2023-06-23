@@ -103,14 +103,14 @@ const ListEdit = () => {
               <Button
                 variant="light"
                 onClick={handleBackToList}
-                className="sm:ps-2 sm:pe-4"
+                startIcon={ArrowLeftIcon}
+                className="sm:px-3"
               >
-                <ArrowLeftIcon className="h-6 w-6 text-gray-800 sm:mr-2" />
-                <span className="hidden sm:inline">Volver</span>
+                <span className="hidden sm:inline sm:ms-2 sm:pe-1">Volver</span>
               </Button>
             </div>
             <div className="flex justify-center">
-              <h1 className="text-2xl ml-4 text-gray-900">Ajustes</h1>
+              <h1 className="text-2xl ml-4 font-light text-gray-900">Ajustes</h1>
             </div>
           </div>
           <span className="flex mt-4 mb-9 justify-between items-end">

@@ -28,7 +28,7 @@ const Templates = () => {
 
   return (
     <>
-      <h1 className="text-xl font-semibold my-5">Plantillas</h1>
+      <h1 className="text-2xl font-light text-gray-900 my-5">Plantillas</h1>
       <ListsGrid lists={templates ?? []} onOpenList={handleOpenTemplate} />
     </>
   );
