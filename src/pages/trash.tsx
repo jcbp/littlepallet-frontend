@@ -11,8 +11,8 @@ import ModalDialog from "../components/common/modal-dialog";
 
 const Trash = () => {
   const navigate = useNavigate();
-  const { responseData: trashedLists, loading, error } = useGetTrashedLists();
-  const { hardDeleteList } = useHardDeleteList();
+  const { data: trashedLists, isLoading: loading, error } = useGetTrashedLists();
+  const { mutate: hardDeleteList } = useHardDeleteList();
   const [listToRemove, setListToRemove] = useState<ListSummary | null>(null);
 
   const handleOpenList = (template: ListSummary) => {
@@ -27,8 +27,6 @@ const Trash = () => {
     if (listToRemove) {
       hardDeleteList(listToRemove._id);
       setListToRemove(null);
-      // TODO: actualizar el estado del listado de listas
-      // (pendiente del refactor de usar un reducer para mutar el estado de las listas)
     }
   };
 
@@ -36,7 +34,7 @@ const Trash = () => {
     return (
       <Loader
         loading={loading}
-        error={error}
+        error={error ? error.message : null}
         isEmpty={!trashedLists || trashedLists.length === 0}
         emptyState={<>EmptyState - No hay listas en la papelera</>}
       />

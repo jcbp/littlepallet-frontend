@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ReactDOM from "react-dom/client";
 import {
   HashRouter,
@@ -38,11 +39,14 @@ const CustomWrapper = ({ ...props }) => {
   );
 };
 
+const queryClient = new QueryClient();
+
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  <AuthProvider>
+  <QueryClientProvider client={queryClient}>
+    <AuthProvider>
     <ListsProvider>
       <ListStoreProvider>
         <ListMetadataProvider>
@@ -73,5 +77,6 @@ root.render(
         </ListMetadataProvider>
       </ListStoreProvider>
     </ListsProvider>
-  </AuthProvider>
+    </AuthProvider>
+  </QueryClientProvider>
 );
