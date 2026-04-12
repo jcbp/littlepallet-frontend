@@ -4,14 +4,14 @@ import { ListSummary } from "../types/list-summary";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/loader";
 import {
-  useGetDeletedLists,
+  useGetTrashedLists,
   useHardDeleteList,
-} from "../hooks/api/deleted-lists";
+} from "../hooks/api/trashed-lists";
 import ModalDialog from "../components/common/modal-dialog";
 
 const Trash = () => {
   const navigate = useNavigate();
-  const { responseData: trashedLists, loading, error } = useGetDeletedLists();
+  const { responseData: trashedLists, loading, error } = useGetTrashedLists();
   const { hardDeleteList } = useHardDeleteList();
   const [listToRemove, setListToRemove] = useState<ListSummary | null>(null);
 
@@ -37,15 +37,15 @@ const Trash = () => {
       <Loader
         loading={loading}
         error={error}
-        isEmpty={!trashedLists}
-        emptyState={<>EmptyState - No hay listas eliminadas para mostrar</>}
+        isEmpty={!trashedLists || trashedLists.length === 0}
+        emptyState={<>EmptyState - No hay listas en la papelera</>}
       />
     );
   }
 
   return (
     <>
-      <h1 className="text-xl font-semibold my-5">Listas eliminadas</h1>
+      <h1 className="text-xl font-semibold my-5">Papelera</h1>
       <ListsGrid
         lists={trashedLists ?? []}
         onOpenList={handleOpenList}

@@ -2,11 +2,11 @@ import { apiEndpoints } from "../../api-endpoints";
 import { ListSummary } from "../../types/list-summary";
 import useRequest from "../use-request";
 
-export const useGetDeletedLists = () => {
+export const useGetTrashedLists = () => {
   return useRequest<ListSummary[]>(
     "GET",
     { requiresAuth: true },
-    apiEndpoints.getDeletedLists()
+    apiEndpoints.getTrashedLists()
   );
 };
 
