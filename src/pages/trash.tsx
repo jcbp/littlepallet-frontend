@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ListsGrid from "../components/lists-grid";
 import { ListSummary } from "../types/list-summary";
 import { useNavigate } from "react-router-dom";
@@ -7,21 +7,29 @@ import {
   useGetDeletedLists,
   useHardDeleteList,
 } from "../hooks/api/deleted-lists";
+import ModalDialog from "../components/common/modal-dialog";
 
 const Trash = () => {
   const navigate = useNavigate();
-  const { responseData: deletedLists, loading, error } = useGetDeletedLists();
+  const { responseData: trashedLists, loading, error } = useGetDeletedLists();
   const { hardDeleteList } = useHardDeleteList();
+  const [listToRemove, setListToRemove] = useState<ListSummary | null>(null);
 
   const handleOpenList = (template: ListSummary) => {
     navigate(`/lists/${template._id}`);
   };
 
   const handleRemoveList = (list: ListSummary) => {
-    // TODO: agregar confirmación antes de eliminar
-    hardDeleteList(list._id);
-    // TODO: actualizar el estado del listado de listas
-    // (pendiente del refactor de usar un reducer para mutar el estado de las listas)
+    setListToRemove(list);
+  };
+
+  const confirmRemoveList = () => {
+    if (listToRemove) {
+      hardDeleteList(listToRemove._id);
+      setListToRemove(null);
+      // TODO: actualizar el estado del listado de listas
+      // (pendiente del refactor de usar un reducer para mutar el estado de las listas)
+    }
   };
 
   if (loading || error) {
@@ -29,7 +37,7 @@ const Trash = () => {
       <Loader
         loading={loading}
         error={error}
-        isEmpty={!deletedLists}
+        isEmpty={!trashedLists}
         emptyState={<>EmptyState - No hay listas eliminadas para mostrar</>}
       />
     );
@@ -39,10 +47,37 @@ const Trash = () => {
     <>
       <h1 className="text-xl font-semibold my-5">Listas eliminadas</h1>
       <ListsGrid
-        lists={deletedLists ?? []}
+        lists={trashedLists ?? []}
         onOpenList={handleOpenList}
         onRemoveList={handleRemoveList}
       />
+      <ModalDialog
+        isOpen={!!listToRemove}
+        onClose={() => setListToRemove(null)}
+        title="Eliminar lista permanentemente"
+      >
+        <div className="mt-2">
+          <p className="text-sm text-gray-500">
+            ¿Estás seguro que deseas eliminar la lista <strong>{listToRemove?.name}</strong> de forma permanente? Esta acción no se puede deshacer.
+          </p>
+        </div>
+        <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+          <button
+            type="button"
+            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors duration-200"
+            onClick={confirmRemoveList}
+          >
+            Eliminar
+          </button>
+          <button
+            type="button"
+            className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 sm:mt-0 sm:w-auto sm:text-sm transition-colors duration-200"
+            onClick={() => setListToRemove(null)}
+          >
+            Cancelar
+          </button>
+        </div>
+      </ModalDialog>
     </>
   );
 };
