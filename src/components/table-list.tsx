@@ -4,7 +4,7 @@ import { Field } from "../types/field";
 import { Item } from "../types/item";
 import FieldView from "./field-view";
 import ItemMenu from "./item-menu";
-import { MagnifyingGlassIcon, HashtagIcon, ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, HashtagIcon, ChevronUpIcon, ChevronDownIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useFieldsVisibility } from "../hooks/table-list";
 import { sortItems, SortDirection } from "../helpers/sort";
 
@@ -149,6 +149,15 @@ const TableList: React.FC<ListCardProps> = ({
                       onMoveItem(item._id, 1);
                     }}
                   />
+                )}
+                {onRemoveItem && !onMoveItem && (
+                  <button
+                    className="text-red-500 hover:text-red-700 hover:bg-red-50 p-1.5 m-1 rounded-full transition-colors"
+                    onClick={() => onRemoveItem(item._id)}
+                    title="Eliminar"
+                  >
+                    <TrashIcon className="w-5 h-5" />
+                  </button>
                 )}
               </div>
             </td>

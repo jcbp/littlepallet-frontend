@@ -1,5 +1,6 @@
 import { List } from "../types/list";
 import { Item } from "../types/item";
+import { User } from "../types/user";
 import { clamp } from "lodash";
 import { useReducer } from "react";
 
@@ -13,6 +14,9 @@ export enum ActionType {
   RemoveItem,
   MoveItem,
   UpdateItemField,
+  AddUser,
+  UpdateUser,
+  RemoveUser,
 }
 
 export type Action =
@@ -23,7 +27,10 @@ export type Action =
   | {
       type: ActionType.UpdateItemField;
       payload: { itemId: string; fieldId: string; value: any };
-    };
+    }
+  | { type: ActionType.AddUser; payload: User }
+  | { type: ActionType.UpdateUser; payload: User }
+  | { type: ActionType.RemoveUser; payload: string };
 
 const listReducer = (state: ListStore, action: Action): ListStore => {
   switch (action.type) {
@@ -88,6 +95,44 @@ const listReducer = (state: ListStore, action: Action): ListStore => {
         return {
           ...state,
           list: updatedList,
+        };
+      }
+      return state;
+    case ActionType.AddUser:
+      if (state.list) {
+        return {
+          ...state,
+          list: {
+            ...state.list,
+            users: [...(state.list.users || []), action.payload],
+          },
+        };
+      }
+      return state;
+    case ActionType.UpdateUser:
+      if (state.list) {
+        const updatedUsers = (state.list.users || []).map((user) => 
+          user._id === action.payload._id ? action.payload : user
+        );
+        return {
+          ...state,
+          list: {
+            ...state.list,
+            users: updatedUsers,
+          },
+        };
+      }
+      return state;
+    case ActionType.RemoveUser:
+      if (state.list) {
+        return {
+          ...state,
+          list: {
+            ...state.list,
+            users: (state.list.users || []).filter(
+              (user) => user._id.toString() !== action.payload.toString()
+            ),
+          },
         };
       }
       return state;

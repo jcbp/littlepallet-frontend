@@ -1,6 +1,6 @@
 import Button from "../common/button";
 import { Cog8ToothIcon, FunnelIcon } from "@heroicons/react/24/outline";
-import { PlusIcon, ArrowLeftIcon } from "@heroicons/react/24/solid";
+import { PlusIcon, ArrowLeftIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 import clsx from "clsx";
 import Fab from "../common/fab";
 
@@ -12,6 +12,7 @@ interface Props {
   onClickConfigBtn: (value: any) => void;
   onAddItem: (value: any) => void;
   onToggleFilters: (value: any) => void;
+  onClickShareBtn: () => void;
   children: React.ReactNode;
 }
 
@@ -23,6 +24,7 @@ const Subhead: React.FC<Props> = ({
   onClickConfigBtn,
   onAddItem,
   onToggleFilters,
+  onClickShareBtn,
   children,
 }) => {
   return (
@@ -55,6 +57,13 @@ const Subhead: React.FC<Props> = ({
                 isFiltersActive ? "text-blue-900" : "text-gray-800"
               )}
             />
+          </Button>
+          <Button
+            variant="light"
+            className="sm:mr-3"
+            onClick={onClickShareBtn}
+          >
+            <UserPlusIcon className="h-5 w-5 text-gray-800" />
           </Button>
           <Button
             variant="light"

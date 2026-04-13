@@ -1,5 +1,5 @@
-// const API_URL = "http://localhost:3001/api";
-const API_URL = "https://littlepallet-api.up.railway.app/api";
+const API_URL = "http://localhost:3001/api";
+// const API_URL = "https://littlepallet-api.up.railway.app/api";
 
 export const apiEndpoints = {
   login: () => `${API_URL}/user/login`,
@@ -18,7 +18,7 @@ export const apiEndpoints = {
     `${API_URL}/list/${listId}/item/${itemId}/comment`,
   createItemCommentWithImage: (listId: string, itemId: string) =>
     `${API_URL}/list/${listId}/item/${itemId}/comment/image`,
-  getDeletedLists: () => `${API_URL}/list/trash`,
+  getTrashedLists: () => `${API_URL}/list/trash`,
   createList: () => `${API_URL}/list`,
   createListFromAnother: (id: string) => `${API_URL}/list/from/${id}`,
   updateList: (id: string) => `${API_URL}/list/${id}`,

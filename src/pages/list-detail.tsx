@@ -16,6 +16,7 @@ import { Item } from "../types/item";
 import ItemDetailDialog from "../components/item-detail-dialog";
 import Filters from "../components/list-detail/filters";
 import Subhead from "../components/list-detail/subhead";
+import ShareListModal from "../components/list-detail/share-list-modal";
 import { Field } from "../types/field";
 import { ItemsFilter, useFilteredItems } from "../hooks/table-list";
 import { useIsMobile } from "../hooks/mobile";
@@ -33,6 +34,7 @@ const ListDetail = () => {
     useHighlightItem();
   const [currentItemId, setCurrentItemId] = useState<string | null>(null);
   const [isFiltersActive, setIsFiltersActive] = useState<boolean>(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false);
   const [filter, setFilter] = useState<ItemsFilter | null>(null);
   const { isMobile } = useIsMobile();
   const { responseData: currentUser } = useCurrentUser();
@@ -76,6 +78,10 @@ const ListDetail = () => {
     navigate(`/lists/${id}/edit`);
   };
 
+  const handleShareList = () => {
+    setIsShareModalOpen(true);
+  };
+
   const handleToggleFilters = () => {
     const isActive = !isFiltersActive;
     setIsFiltersActive(isActive);
@@ -114,6 +120,7 @@ const ListDetail = () => {
               isFiltersActive={isFiltersActive}
               onClickBackBtn={handleBack}
               onClickConfigBtn={handleConfigList}
+              onClickShareBtn={handleShareList}
               onAddItem={handleAddItem}
               onToggleFilters={handleToggleFilters}
             >
@@ -149,6 +156,12 @@ const ListDetail = () => {
               />
             )}
           </ModalDialog>
+
+          <ShareListModal
+            isOpen={isShareModalOpen}
+            onClose={() => setIsShareModalOpen(false)}
+            list={list}
+          />
         </>
       )}
     </Loader>
