@@ -1,46 +1,55 @@
-# Getting Started with Create React App
+# LittlePallet - Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+LittlePallet is a collaborative application for creating and managing highly configurable lists, with customizable fields, data types, and interface controls. This repository contains the frontend, focused on providing a fluid and responsive experience to create, manage, share, and view lists.
 
-## Available Scripts
+## 🚀 Features
 
-In the project directory, you can run:
+- **Collaborative Management**: Create, edit, and share lists with other users easily.
+- **Access and Role Management**: Update roles, permissions, and remove users from shared lists directly.
+- **Interactive Interface**: Agile user experience (UX) and real-time interfaces thanks to the implementation of optimistic updates (Optimistic UI) for an instant feel, handling race conditions and input hydration.
+- **Dynamic Tables**: Column sorting and customized views for effective management of data tables (`TableList`).
+- **Responsive Design**: Modern and mobile-friendly interface using Tailwind CSS.
 
-### `npm start`
+## 🛠️ Technologies and Dependencies
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- **Core Framework**: [React 18](https://reactjs.org/) (Create React App)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Routing**: [React Router v6](https://reactrouter.com/)
+- **HTTP Requests and Async State**: [React Query v5 (TanStack)](https://tanstack.com/query/latest) along with `axios`.
+- **Styles and Design**: [Tailwind CSS](https://tailwindcss.com/)
+- **UI Components & Gestures**: [@headlessui/react](https://headlessui.com/) and [@heroicons/react](https://heroicons.com/) for accessible components and unified iconography.
+- **Utilities**: `clsx` (conditional CSS classes) and `lodash`.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 📦 Installation and Usage
 
-### `npm test`
+Make sure to have [Node.js](https://nodejs.org/) (v16 or higher is recommended) installed in your local environment.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. **Clone the repository:**
+   ```bash
+   git clone git@github.com:jcbp/littlepallet-frontend.git
+   cd littlepallet-frontend
+   ```
 
-### `npm run build`
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3. **Run in Development environment:**
+   ```bash
+   npm start
+   ```
+   The application will run in development mode. Open [http://localhost:3000](http://localhost:3000) to view it in the browser. The page will reload automatically when saving changes.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## ⚙️ Available Commands
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- `npm start`: Starts the local development server.
+- `npm test`: Runs the interactive test environment (Jest).
+- `npm run build`: Compiles the application optimized for production inside the `build` folder.
+- `npm run deploy`: Pushes the temporary branch to `gh-pages` for a quick deployment, pre-configured in `package.json`.
 
-### `npm run eject`
+## 📝 For Developers
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **Requests and API Integration**: Calls to endpoints should be handled with `react-query` and its Hooks to automate caching, temporary loading states, and maintain consistency.
+- **Optimistic Updates (Optimistic UI)**: If you are working on views like "Share List Modal" (`ShareListModal`), always prioritize fast visual updates locally (`onMutate`) performing a rollback if an error occurs, instead of blocking the user waiting for HTTP response.
+- **Visual Standards**: Exclusively use Tailwind CSS utility classes for styling. Functions like `clsx` are used to conditionally group styles. Base accessible components from Headless UI should be used for dialogs (modals), transitions, dropdowns, etc.
