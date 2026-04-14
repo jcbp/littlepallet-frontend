@@ -43,10 +43,9 @@ const TableList: React.FC<ListCardProps> = ({
 
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: SortDirection } | null>(null);
 
-  const sortedItems = useMemo(() => {
-    if (!sortConfig) return items;
-    return sortItems(items, sortConfig.key, sortConfig.direction);
-  }, [items, sortConfig]);
+  const sortedItems = sortConfig
+    ? sortItems(items, sortConfig.key, sortConfig.direction)
+    : items;
 
   const requestSort = (key: string) => {
     let direction: SortDirection = 'asc';
