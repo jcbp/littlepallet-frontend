@@ -5,18 +5,21 @@ import {
   ArrowUpIcon,
   ArrowDownIcon,
   TrashIcon,
+  ArrowsUpDownIcon,
 } from "@heroicons/react/24/outline";
 
 interface ItemMenuProps {
   onRemoveItem: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
+  onMoveToPosition: () => void;
 }
 
 const ItemMenu: React.FC<ItemMenuProps> = ({
   onRemoveItem,
   onMoveUp,
   onMoveDown,
+  onMoveToPosition,
 }) => {
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -64,6 +67,20 @@ const ItemMenu: React.FC<ItemMenuProps> = ({
                 >
                   <ArrowDownIcon className="h-4 w-4 mr-2 text-gray-500" />
                   Mover hacia abajo
+                </button>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <button
+                  onClick={onMoveToPosition}
+                  className={`${
+                    active ? "bg-gray-100 text-gray-900" : "text-gray-700"
+                  } flex w-full items-center px-4 py-2 text-sm`}
+                  role="menuitem"
+                >
+                  <ArrowsUpDownIcon className="h-4 w-4 mr-2 text-gray-500" />
+                  Mover a posición...
                 </button>
               )}
             </Menu.Item>

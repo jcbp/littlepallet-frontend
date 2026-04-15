@@ -31,7 +31,7 @@ const ListEdit = () => {
   const { addField, creatingField } = useAddField(id);
   const { removeField } = useRemoveField(id);
   const { updateField } = useUpdateField(id);
-  const { moveField } = useMoveField(id);
+  const { moveField, moveFieldToPosition } = useMoveField(id);
   const { highlightedItemId, highlightColor, highlightItem } =
     useHighlightItem();
   const [currentItemId, setCurrentItemId] = useState<string | null>(null);
@@ -66,6 +66,14 @@ const ListEdit = () => {
   const handleMoveField = (fieldId: string, shift: number) => {
     highlightItem(fieldId, "red", () => {
       moveField(fieldId, shift, () => {
+        highlightItem(fieldId, "green");
+      });
+    });
+  };
+
+  const handleMoveFieldToPosition = (fieldId: string, position: number) => {
+    highlightItem(fieldId, "red", () => {
+      moveFieldToPosition(fieldId, position, () => {
         highlightItem(fieldId, "green");
       });
     });
@@ -143,6 +151,7 @@ const ListEdit = () => {
               onUpdateItemField={handleUpdateItemField}
               onRemoveItem={handleRemoveField}
               onMoveItem={handleMoveField}
+              onMoveItemToPosition={handleMoveFieldToPosition}
               onViewItem={handleViewItem}
             />
           </div>

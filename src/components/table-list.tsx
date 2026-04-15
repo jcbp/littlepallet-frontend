@@ -4,6 +4,7 @@ import { Field } from "../types/field";
 import { Item } from "../types/item";
 import FieldView from "./field-view";
 import ItemMenu from "./item-menu";
+import MoveItemModal from "./move-item-modal";
 import { MagnifyingGlassIcon, HashtagIcon, ChevronUpIcon, ChevronDownIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useFieldsVisibility } from "../hooks/table-list";
 import { sortItems, SortDirection } from "../helpers/sort";
@@ -17,6 +18,7 @@ interface ListCardProps {
   onUpdateItemField: (itemId: string, fieldId: string, value: any) => void;
   onRemoveItem?: (itemId: string) => void;
   onMoveItem?: (itemId: string, shift: number) => void;
+  onMoveItemToPosition?: (itemId: string, position: number) => void;
   onViewItem?: (item: Item) => void;
 }
 
@@ -29,9 +31,11 @@ const TableList: React.FC<ListCardProps> = ({
   onUpdateItemField,
   onRemoveItem,
   onMoveItem,
+  onMoveItemToPosition,
   onViewItem,
 }) => {
   const { isMobile } = useIsMobile();
+  const [moveTargetItemId, setMoveTargetItemId] = useState<string | null>(null);
 
   const formatId = useCallback((id: string) => {
     // 160 es el código decimal para "&nbsp;"
@@ -60,6 +64,7 @@ const TableList: React.FC<ListCardProps> = ({
   }, [stickyHeadTop]);
 
   return (
+    <>
     <table className="table-auto w-full">
       <thead>
         <tr>
@@ -147,6 +152,11 @@ const TableList: React.FC<ListCardProps> = ({
                     onMoveDown={() => {
                       onMoveItem(item._id, 1);
                     }}
+                    onMoveToPosition={() => {
+                      if (onMoveItemToPosition) {
+                        setMoveTargetItemId(item._id);
+                      }
+                    }}
                   />
                 )}
                 {onRemoveItem && !onMoveItem && (
@@ -164,6 +174,19 @@ const TableList: React.FC<ListCardProps> = ({
         ))}
       </tbody>
     </table>
+
+    <MoveItemModal
+      isOpen={!!moveTargetItemId}
+      itemId={moveTargetItemId}
+      onClose={() => setMoveTargetItemId(null)}
+      onConfirm={(position) => {
+        if (moveTargetItemId && onMoveItemToPosition) {
+          onMoveItemToPosition(moveTargetItemId, position);
+        }
+        setMoveTargetItemId(null);
+      }}
+    />
+    </>
   );
 };
 

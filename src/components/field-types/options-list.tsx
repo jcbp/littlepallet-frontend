@@ -69,6 +69,18 @@ const OptionsList: FC<Props> = ({ value, field, onChange }) => {
     onChange(updatedOptions);
   };
 
+  const handleMoveOptionToPosition = (optionId: string, position: number) => {
+    const optionIndex = options.findIndex((option) => option._id === optionId);
+    if (optionIndex === -1) return;
+
+    const clampedPosition = Math.max(0, Math.min(position, options.length - 1));
+    const updatedOptions = [...options];
+    const [movedOption] = updatedOptions.splice(optionIndex, 1);
+    updatedOptions.splice(clampedPosition, 0, movedOption);
+
+    onChange(updatedOptions);
+  };
+
   return (
     <div className="ps-2 pt-1">
       {options.length > 0 && (
@@ -80,6 +92,7 @@ const OptionsList: FC<Props> = ({ value, field, onChange }) => {
           onUpdateItemField={handleUpdateOption}
           onRemoveItem={handleRemoveOption}
           onMoveItem={handleMoveOption}
+          onMoveItemToPosition={handleMoveOptionToPosition}
         />
       )}
       <Button onClick={handleAddOption} className="text-xs mt-2 ms-auto">

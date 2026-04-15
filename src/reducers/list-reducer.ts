@@ -17,6 +17,7 @@ export enum ActionType {
   AddUser,
   UpdateUser,
   RemoveUser,
+  MoveItemToPosition,
 }
 
 export type Action =
@@ -30,7 +31,11 @@ export type Action =
     }
   | { type: ActionType.AddUser; payload: User }
   | { type: ActionType.UpdateUser; payload: User }
-  | { type: ActionType.RemoveUser; payload: string };
+  | { type: ActionType.RemoveUser; payload: string }
+  | {
+      type: ActionType.MoveItemToPosition;
+      payload: { itemId: string; position: number };
+    };
 
 const listReducer = (state: ListStore, action: Action): ListStore => {
   switch (action.type) {
@@ -75,6 +80,25 @@ const listReducer = (state: ListStore, action: Action): ListStore => {
         const item = updatedList.items.splice(currentIndex, 1).pop();
         if (item) {
           updatedList.items.splice(position, 0, item);
+        }
+        return {
+          ...state,
+          list: updatedList,
+        };
+      }
+      return state;
+    case ActionType.MoveItemToPosition:
+      if (state.list) {
+        const { itemId, position } = action.payload;
+        const currentIndex = state.list.items.findIndex(
+          (item) => item._id === itemId
+        );
+        const maxIndex = state.list.items.length - 1;
+        const clampedPosition = clamp(position, 0, maxIndex);
+        const updatedList = { ...state.list };
+        const item = updatedList.items.splice(currentIndex, 1).pop();
+        if (item) {
+          updatedList.items.splice(clampedPosition, 0, item);
         }
         return {
           ...state,

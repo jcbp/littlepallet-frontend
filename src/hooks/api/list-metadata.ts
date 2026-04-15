@@ -182,10 +182,31 @@ export const useMoveField = (listId: string) => {
     }
   };
 
+  const moveFieldToPosition = async (
+    fieldId: string,
+    position: number,
+    callback?: () => void
+  ) => {
+    if (listMetadata) {
+      const maxIndex = listMetadata.fields.length - 1;
+      const targetPosition = clamp(position, 0, maxIndex);
+
+      await requestMoveField(
+        apiEndpoints.moveFieldAtPosition(listId, fieldId, targetPosition)
+      );
+
+      dispatch({ type: ActionType.MoveField, payload: { fieldId, position: targetPosition } });
+      if (callback) {
+        callback();
+      }
+    }
+  };
+
   return {
     loading,
     error,
     moveField,
+    moveFieldToPosition,
   };
 };
 

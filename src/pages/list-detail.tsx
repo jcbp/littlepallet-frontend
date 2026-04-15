@@ -28,7 +28,7 @@ const ListDetail = () => {
   const { list, loading, error } = useGetList(id);
   const { addItem, addingItem } = useAddItem(id);
   const { removeItem } = useRemoveItem(id);
-  const { moveItem } = useMoveItem(id);
+  const { moveItem, moveItemToPosition } = useMoveItem(id);
   const { updateItemField } = useUpdateItemField(id);
   const { highlightedItemId, highlightColor, highlightItem } =
     useHighlightItem();
@@ -61,6 +61,14 @@ const ListDetail = () => {
   const handleMoveItem = (itemId: string, shift: number) => {
     highlightItem(itemId, "red", () => {
       moveItem(itemId, shift, () => {
+        highlightItem(itemId, "green");
+      });
+    });
+  };
+
+  const handleMoveItemToPosition = (itemId: string, position: number) => {
+    highlightItem(itemId, "red", () => {
+      moveItemToPosition(itemId, position, () => {
         highlightItem(itemId, "green");
       });
     });
@@ -139,6 +147,7 @@ const ListDetail = () => {
               onUpdateItemField={handleUpdateItemField}
               onRemoveItem={handleRemoveItem}
               onMoveItem={handleMoveItem}
+              onMoveItemToPosition={handleMoveItemToPosition}
               onViewItem={handleViewItem}
             />
           </div>

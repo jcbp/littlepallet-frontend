@@ -178,9 +178,31 @@ export const useMoveItem = (listId: string) => {
     }
   };
 
+  const moveItemToPosition = async (
+    itemId: string,
+    position: number,
+    callback?: () => void
+  ) => {
+    const targetPosition = Math.max(0, position);
+
+    await requestMoveItem(
+      apiEndpoints.moveItemAtPosition(listId, itemId, targetPosition)
+    );
+
+    dispatch({
+      type: ActionType.MoveItemToPosition,
+      payload: { itemId, position: targetPosition },
+    });
+
+    if (callback) {
+      callback();
+    }
+  };
+
   return {
     loading,
     error,
     moveItem,
+    moveItemToPosition,
   };
 };
