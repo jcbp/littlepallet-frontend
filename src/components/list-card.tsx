@@ -11,6 +11,7 @@ interface ListCardProps {
   list: ListSummary;
   onOpenList: (list: ListSummary) => void;
   onRemoveList?: (list: ListSummary) => void;
+  onRestoreList?: (list: ListSummary) => void;
   showOwner: boolean;
 }
 
@@ -18,6 +19,7 @@ const ListCard: React.FC<ListCardProps> = ({
   list,
   onOpenList,
   onRemoveList,
+  onRestoreList,
   showOwner,
 }) => {
   const ownerName = list.owner ? list.owner.split("@")[0] : null;
@@ -30,7 +32,12 @@ const ListCard: React.FC<ListCardProps> = ({
       <div className="bg-white rounded-t-lg py-2 px-3">
         <div className="flex items-center justify-between pb-1 ps-1 mb-3 border-b border-gray-200">
           <h3 className="text-gray-900 font-medium text-base">{list.name}</h3>
-          {onRemoveList && <ListMenu onRemoveList={() => onRemoveList(list)} />}
+          {onRemoveList && (
+            <ListMenu
+              onRemoveList={() => onRemoveList(list)}
+              onRestoreList={onRestoreList ? () => onRestoreList(list) : undefined}
+            />
+          )}
         </div>
         <div className="flex flex-col px-1">
           {showOwner && ownerName && (

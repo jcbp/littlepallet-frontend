@@ -1,12 +1,17 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
-import { EllipsisVerticalIcon, TrashIcon } from "@heroicons/react/24/outline";
+import {
+  EllipsisVerticalIcon,
+  TrashIcon,
+  ArrowUturnLeftIcon,
+} from "@heroicons/react/24/outline";
 
 interface Props {
   onRemoveList: () => void;
+  onRestoreList?: () => void;
 }
 
-const ListMenu: React.FC<Props> = ({ onRemoveList }) => {
+const ListMenu: React.FC<Props> = ({ onRemoveList, onRestoreList }) => {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <Menu.Button
@@ -33,6 +38,25 @@ const ListMenu: React.FC<Props> = ({ onRemoveList }) => {
             aria-orientation="vertical"
             aria-labelledby="options-menu"
           >
+            {onRestoreList && (
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onRestoreList();
+                    }}
+                    className={`${
+                      active ? "bg-gray-100 text-gray-900" : "text-gray-700"
+                    } flex w-full items-center px-4 py-2 text-sm`}
+                    role="menuitem"
+                  >
+                    <ArrowUturnLeftIcon className="h-4 w-4 mr-2 text-green-500" />
+                    Restaurar
+                  </button>
+                )}
+              </Menu.Item>
+            )}
             <Menu.Item>
               {({ active }) => (
                 <button

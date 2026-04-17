@@ -6,6 +6,7 @@ import Loader from "../components/loader";
 import {
   useGetTrashedLists,
   useHardDeleteList,
+  useRestoreList,
 } from "../hooks/api/trashed-lists";
 import ModalDialog from "../components/common/modal-dialog";
 
@@ -13,6 +14,7 @@ const Trash = () => {
   const navigate = useNavigate();
   const { data: trashedLists, isLoading: loading, error } = useGetTrashedLists();
   const { mutate: hardDeleteList } = useHardDeleteList();
+  const { mutate: restoreList } = useRestoreList();
   const [listToRemove, setListToRemove] = useState<ListSummary | null>(null);
 
   const handleOpenList = (template: ListSummary) => {
@@ -21,6 +23,10 @@ const Trash = () => {
 
   const handleRemoveList = (list: ListSummary) => {
     setListToRemove(list);
+  };
+
+  const handleRestoreList = (list: ListSummary) => {
+    restoreList(list._id);
   };
 
   const confirmRemoveList = () => {
@@ -48,6 +54,7 @@ const Trash = () => {
         lists={trashedLists ?? []}
         onOpenList={handleOpenList}
         onRemoveList={handleRemoveList}
+        onRestoreList={handleRestoreList}
       />
       <ModalDialog
         isOpen={!!listToRemove}

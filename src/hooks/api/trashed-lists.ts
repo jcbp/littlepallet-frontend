@@ -39,3 +39,21 @@ export const useHardDeleteList = () => {
     },
   });
 };
+
+export const useRestoreList = () => {
+  const { authData } = useContext(AuthContext);
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      await axios.patch(apiEndpoints.restoreList(id), null, {
+        headers: { Authorization: authData.token ?? "" },
+      });
+    },
+    onSuccess: () => {
+      // Refrescar la papelera y la lista de listas activas
+      queryClient.invalidateQueries({ queryKey: ["trashed-lists"] });
+      queryClient.invalidateQueries({ queryKey: ["lists"] });
+    },
+  });
+};

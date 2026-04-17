@@ -23,6 +23,7 @@ export const apiEndpoints = {
   createListFromAnother: (id: string) => `${API_URL}/list/from/${id}`,
   updateList: (id: string) => `${API_URL}/list/${id}`,
   softDeleteList: (id: string) => `${API_URL}/list/${id}/soft-delete`,
+  restoreList: (id: string) => `${API_URL}/list/${id}/restore`,
   hardDeleteList: (id: string) => `${API_URL}/list/${id}`,
   updateListViewById: (id: string) => `${API_URL}/list/${id}/view`,
   createTemplate: (listId: string) => `${API_URL}/template/from/${listId}`,

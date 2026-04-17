@@ -6,6 +6,7 @@ type Props = {
   lists: ListSummary[];
   onOpenList: (list: ListSummary) => void;
   onRemoveList?: (list: ListSummary) => void;
+  onRestoreList?: (list: ListSummary) => void;
   showOwner?: boolean;
 };
 
@@ -13,6 +14,7 @@ const ListsGrid: React.FC<Props> = ({
   lists,
   onOpenList,
   onRemoveList,
+  onRestoreList,
   showOwner = false,
 }) => {
   return (
@@ -25,6 +27,7 @@ const ListsGrid: React.FC<Props> = ({
               showOwner={showOwner}
               onOpenList={onOpenList}
               onRemoveList={onRemoveList}
+              onRestoreList={onRestoreList}
             />
           </div>
         ))}
