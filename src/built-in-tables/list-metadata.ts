@@ -71,12 +71,12 @@ export const builtInListMetadata: ListMetadata = {
           text: "Calificación de estrellas",
         },
         {
-          value: "user",
-          text: "Usuarios",
-        },
-        {
           value: "chips",
           text: "Etiquetas",
+        },
+        {
+          value: "user",
+          text: "Usuario",
         },
       ],
       defaultValue: "text",

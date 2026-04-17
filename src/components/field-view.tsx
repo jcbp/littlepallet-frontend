@@ -16,8 +16,7 @@ import ColorField from "./field-types/color-field";
 // import ColorPickerField from './field-types/colorPicker-field';
 // import NumberField from './field-types/number-field';
 // import RatingField from './field-types/rating-field';
-// import UserField from './field-types/user-field';
-// import ChipsField from './field-types/chips-field';
+import UserField from "./field-types/user-field";
 
 interface Props {
   field: Field;
@@ -49,6 +48,8 @@ const FieldView: React.FC<Props> = ({ field, value, onChange }) => {
       );
     case "options-list":
       return <OptionsList value={value} field={field} onChange={onChange} />;
+    case "user":
+      return <UserField value={value} field={field} onChange={onChange} />;
     default:
       return <TextField value={value} field={field} onChange={onChange} />;
   }
