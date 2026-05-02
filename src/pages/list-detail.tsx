@@ -48,10 +48,28 @@ const ListDetail = () => {
   };
 
   const handleAddItem = () => {
-    addItem({}, (newItem) => {
+    addItem({}, undefined, (newItem) => {
       window.scrollTo(0, document.body.scrollHeight);
       highlightItem(newItem._id, "green");
     });
+  };
+
+  const handleAddItemBefore = (itemId: string) => {
+    const index = list?.items.findIndex((item) => item._id === itemId) ?? -1;
+    if (index !== -1) {
+      addItem({}, index, (newItem) => {
+        highlightItem(newItem._id, "green");
+      });
+    }
+  };
+
+  const handleAddItemAfter = (itemId: string) => {
+    const index = list?.items.findIndex((item) => item._id === itemId) ?? -1;
+    if (index !== -1) {
+      addItem({}, index + 1, (newItem) => {
+        highlightItem(newItem._id, "green");
+      });
+    }
   };
 
   const handleRemoveItem = (itemId: string) => {
@@ -148,6 +166,8 @@ const ListDetail = () => {
               onRemoveItem={handleRemoveItem}
               onMoveItem={handleMoveItem}
               onMoveItemToPosition={handleMoveItemToPosition}
+              onAddItemBefore={handleAddItemBefore}
+              onAddItemAfter={handleAddItemAfter}
               onViewItem={handleViewItem}
             />
           </div>

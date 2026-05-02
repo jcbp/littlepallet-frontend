@@ -100,14 +100,19 @@ export const useAddItem = (listId: string) => {
 
   const addItem = async (
     item: ItemWithoutId = {},
+    position?: number,
     callback?: (newItem: Item) => void
   ) => {
-    const newItem = await requestAddItem(apiEndpoints.createItem(listId), item);
+    const endpoint = position !== undefined
+      ? apiEndpoints.createItemAtPosition(listId, position.toString())
+      : apiEndpoints.createItem(listId);
+
+    const newItem = await requestAddItem(endpoint, item);
 
     if (newItem) {
       dispatch({
         type: ActionType.AddItem,
-        payload: newItem,
+        payload: { item: newItem, position },
       });
 
       if (callback) {

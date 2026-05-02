@@ -22,7 +22,7 @@ export enum ActionType {
 
 export type Action =
   | { type: ActionType.SetList; payload: List }
-  | { type: ActionType.AddItem; payload: Item }
+  | { type: ActionType.AddItem; payload: { item: Item; position?: number } }
   | { type: ActionType.RemoveItem; payload: Item["_id"] }
   | { type: ActionType.MoveItem; payload: { itemId: string; shift: number } }
   | {
@@ -46,11 +46,18 @@ const listReducer = (state: ListStore, action: Action): ListStore => {
       };
     case ActionType.AddItem:
       if (state.list) {
+        const { item, position } = action.payload;
+        const newItems = [...state.list.items];
+        if (position !== undefined) {
+          newItems.splice(position, 0, item);
+        } else {
+          newItems.push(item);
+        }
         return {
           ...state,
           list: {
             ...state.list,
-            items: [...state.list.items, action.payload],
+            items: newItems,
           },
         };
       }

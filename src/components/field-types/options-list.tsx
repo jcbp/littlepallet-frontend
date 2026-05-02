@@ -34,6 +34,24 @@ const OptionsList: FC<Props> = ({ value, field, onChange }) => {
     onChange([...options, { _id: getNewId() }]);
   };
 
+  const handleAddOptionBefore = (optionId: string) => {
+    const index = options.findIndex((option) => option._id === optionId);
+    if (index !== -1) {
+      const newOptions = [...options];
+      newOptions.splice(index, 0, { _id: getNewId() });
+      onChange(newOptions);
+    }
+  };
+
+  const handleAddOptionAfter = (optionId: string) => {
+    const index = options.findIndex((option) => option._id === optionId);
+    if (index !== -1) {
+      const newOptions = [...options];
+      newOptions.splice(index + 1, 0, { _id: getNewId() });
+      onChange(newOptions);
+    }
+  };
+
   const handleUpdateOption = (
     optionId: string,
     optionFieldId: string,
@@ -93,6 +111,8 @@ const OptionsList: FC<Props> = ({ value, field, onChange }) => {
           onRemoveItem={handleRemoveOption}
           onMoveItem={handleMoveOption}
           onMoveItemToPosition={handleMoveOptionToPosition}
+          onAddItemBefore={handleAddOptionBefore}
+          onAddItemAfter={handleAddOptionAfter}
         />
       )}
       <Button onClick={handleAddOption} className="text-xs mt-2 ms-auto">

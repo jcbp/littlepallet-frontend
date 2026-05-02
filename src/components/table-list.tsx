@@ -19,6 +19,8 @@ interface ListCardProps {
   onRemoveItem?: (itemId: string) => void;
   onMoveItem?: (itemId: string, shift: number) => void;
   onMoveItemToPosition?: (itemId: string, position: number) => void;
+  onAddItemBefore?: (itemId: string) => void;
+  onAddItemAfter?: (itemId: string) => void;
   onViewItem?: (item: Item) => void;
 }
 
@@ -32,6 +34,8 @@ const TableList: React.FC<ListCardProps> = ({
   onRemoveItem,
   onMoveItem,
   onMoveItemToPosition,
+  onAddItemBefore,
+  onAddItemAfter,
   onViewItem,
 }) => {
   const { isMobile } = useIsMobile();
@@ -155,6 +159,16 @@ const TableList: React.FC<ListCardProps> = ({
                     onMoveToPosition={() => {
                       if (onMoveItemToPosition) {
                         setMoveTargetItemId(item._id);
+                      }
+                    }}
+                    onAddBefore={() => {
+                      if (onAddItemBefore) {
+                        onAddItemBefore(item._id);
+                      }
+                    }}
+                    onAddAfter={() => {
+                      if (onAddItemAfter) {
+                        onAddItemAfter(item._id);
                       }
                     }}
                   />

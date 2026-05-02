@@ -53,10 +53,28 @@ const ListEdit = () => {
   };
 
   const handleAddField = () => {
-    addField(null, (newField) => {
+    addField(null, undefined, (newField) => {
       window.scrollTo(0, document.body.scrollHeight);
       highlightItem(newField._id, "green");
     });
+  };
+
+  const handleAddFieldBefore = (fieldId: string) => {
+    const index = listMetadata?.fields.findIndex((f) => f._id === fieldId) ?? -1;
+    if (index !== -1) {
+      addField(null, index, (newField) => {
+        highlightItem(newField._id, "green");
+      });
+    }
+  };
+
+  const handleAddFieldAfter = (fieldId: string) => {
+    const index = listMetadata?.fields.findIndex((f) => f._id === fieldId) ?? -1;
+    if (index !== -1) {
+      addField(null, index + 1, (newField) => {
+        highlightItem(newField._id, "green");
+      });
+    }
   };
 
   const handleRemoveField = (fieldId: string) => {
@@ -152,6 +170,8 @@ const ListEdit = () => {
               onRemoveItem={handleRemoveField}
               onMoveItem={handleMoveField}
               onMoveItemToPosition={handleMoveFieldToPosition}
+              onAddItemBefore={handleAddFieldBefore}
+              onAddItemAfter={handleAddFieldAfter}
               onViewItem={handleViewItem}
             />
           </div>

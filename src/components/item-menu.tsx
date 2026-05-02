@@ -6,6 +6,7 @@ import {
   ArrowDownIcon,
   TrashIcon,
   ArrowsUpDownIcon,
+  PlusIcon,
 } from "@heroicons/react/24/outline";
 
 interface ItemMenuProps {
@@ -13,6 +14,8 @@ interface ItemMenuProps {
   onMoveUp: () => void;
   onMoveDown: () => void;
   onMoveToPosition: () => void;
+  onAddBefore: () => void;
+  onAddAfter: () => void;
 }
 
 const ItemMenu: React.FC<ItemMenuProps> = ({
@@ -20,6 +23,8 @@ const ItemMenu: React.FC<ItemMenuProps> = ({
   onMoveUp,
   onMoveDown,
   onMoveToPosition,
+  onAddBefore,
+  onAddAfter,
 }) => {
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -42,6 +47,35 @@ const ItemMenu: React.FC<ItemMenuProps> = ({
             aria-orientation="vertical"
             aria-labelledby="options-menu"
           >
+            <Menu.Item>
+              {({ active }) => (
+                <button
+                  onClick={onAddBefore}
+                  className={`${
+                    active ? "bg-gray-100 text-gray-900" : "text-gray-700"
+                  } flex w-full items-center px-4 py-2 text-sm`}
+                  role="menuitem"
+                >
+                  <PlusIcon className="h-4 w-4 mr-2 text-gray-500" />
+                  Agregar arriba
+                </button>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <button
+                  onClick={onAddAfter}
+                  className={`${
+                    active ? "bg-gray-100 text-gray-900" : "text-gray-700"
+                  } flex w-full items-center px-4 py-2 text-sm`}
+                  role="menuitem"
+                >
+                  <PlusIcon className="h-4 w-4 mr-2 text-gray-500" />
+                  Agregar abajo
+                </button>
+              )}
+            </Menu.Item>
+            <div className="border-t border-gray-100 my-1"></div>
             <Menu.Item>
               {({ active }) => (
                 <button
@@ -84,6 +118,7 @@ const ItemMenu: React.FC<ItemMenuProps> = ({
                 </button>
               )}
             </Menu.Item>
+            <div className="border-t border-gray-100 my-1"></div>
             <Menu.Item>
               {({ active }) => (
                 <button

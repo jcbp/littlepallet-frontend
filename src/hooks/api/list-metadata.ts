@@ -51,14 +51,17 @@ export const useAddField = (listId: string) => {
 
   const addField = async (
     field?: FieldWithoutId | null,
+    position?: number,
     callback?: (newField: Field) => void
   ) => {
-    const newField = await requestAddField(
-      apiEndpoints.createField(listId),
-      field || {}
-    );
+    const endpoint = position !== undefined
+      ? apiEndpoints.createFieldAtPosition(listId, position.toString())
+      : apiEndpoints.createField(listId);
+
+    const newField = await requestAddField(endpoint, field || {});
+
     if (listMetadata && newField) {
-      dispatch({ type: ActionType.AddField, payload: newField });
+      dispatch({ type: ActionType.AddField, payload: { field: newField, position } });
       if (callback) {
         callback(newField);
       }

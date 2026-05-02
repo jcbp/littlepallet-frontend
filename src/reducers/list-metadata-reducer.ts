@@ -13,7 +13,7 @@ export enum ActionType {
 
 export type Action =
   | { type: ActionType.SetListMetadata; payload: ListMetadata }
-  | { type: ActionType.AddField; payload: Field }
+  | { type: ActionType.AddField; payload: { field: Field; position?: number } }
   | { type: ActionType.RemoveField; payload: string }
   | {
       type: ActionType.UpdateField;
@@ -40,11 +40,18 @@ const reducer = (
       };
     case ActionType.AddField:
       if (state.listMetadata) {
+        const { field, position } = action.payload;
+        const newFields = [...state.listMetadata.fields];
+        if (position !== undefined) {
+          newFields.splice(position, 0, field);
+        } else {
+          newFields.push(field);
+        }
         return {
           ...state,
           listMetadata: {
             ...state.listMetadata,
-            fields: [...state.listMetadata.fields, action.payload],
+            fields: newFields,
           },
         };
       }
