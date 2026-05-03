@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   useGetList,
@@ -21,6 +21,10 @@ import { Field } from "../types/field";
 import { ItemsFilter, useFilteredItems } from "../hooks/table-list";
 import { useIsMobile } from "../hooks/mobile";
 import { useCurrentUser } from "../hooks/api/user";
+import StatusBar, {
+  StatusBarMessage,
+  StatusBarMessageType,
+} from "../components/list-detail/status-bar";
 
 const ListDetail = () => {
   const navigate = useNavigate();
@@ -29,15 +33,36 @@ const ListDetail = () => {
   const { addItem, addingItem } = useAddItem(id);
   const { removeItem } = useRemoveItem(id);
   const { moveItem, moveItemToPosition } = useMoveItem(id);
-  const { updateItemField } = useUpdateItemField(id);
   const { highlightedItemId, highlightColor, highlightItem } =
     useHighlightItem();
   const [currentItemId, setCurrentItemId] = useState<string | null>(null);
   const [isFiltersActive, setIsFiltersActive] = useState<boolean>(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false);
   const [filter, setFilter] = useState<ItemsFilter | null>(null);
+  const [statusBarMessage, setStatusBarMessage] = useState<StatusBarMessage | null>(null);
   const { isMobile } = useIsMobile();
   const { responseData: currentUser } = useCurrentUser();
+
+  const showStatusBarMessage = useCallback((type: StatusBarMessageType) => {
+    setStatusBarMessage({
+      type,
+      text:
+        type === "success" ? "Guardado" : "Error al guardar los cambios",
+    });
+  }, []);
+
+  const handleSaveItemFieldSuccess = useCallback(() => {
+    showStatusBarMessage("success");
+  }, [showStatusBarMessage]);
+
+  const handleSaveItemFieldError = useCallback(() => {
+    showStatusBarMessage("error");
+  }, [showStatusBarMessage]);
+
+  const { updateItemField } = useUpdateItemField(id, {
+    onSuccess: handleSaveItemFieldSuccess,
+    onError: handleSaveItemFieldError,
+  });
 
   const handleUpdateItemField = (
     itemId: string,
@@ -152,13 +177,14 @@ const ListDetail = () => {
             >
               <Filters fields={list.fields} onChange={handleFilterChange} />
             </Subhead>
+            <StatusBar message={statusBarMessage} />
           </div>
           <div className="mb-48">
             <TableList
               highlightItem={highlightedItemId}
               highlightColor={highlightColor}
               stickyHeadTop={
-                isFiltersActive ? (isMobile ? "258px" : "183px") : "127px"
+                isFiltersActive ? (isMobile ? "278px" : "203px") : "147px"
               }
               fields={list.fields}
               items={items}

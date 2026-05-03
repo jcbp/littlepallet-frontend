@@ -37,7 +37,15 @@ export const useGetList = (listId: string) => {
   };
 };
 
-export const useUpdateItemField = (listId: string) => {
+interface UseUpdateItemFieldOptions {
+  onSuccess?: () => void;
+  onError?: () => void;
+}
+
+export const useUpdateItemField = (
+  listId: string,
+  { onSuccess, onError }: UseUpdateItemFieldOptions = {}
+) => {
   const dispatch = useListDispatch();
 
   const {
@@ -48,14 +56,21 @@ export const useUpdateItemField = (listId: string) => {
 
   const debouncedUpdateItemField = useCallback(
     debounce(async (itemId: string, fieldId: string, value: any) => {
-      await requestUpdateItemField(
+      const updatedItem = await requestUpdateItemField(
         apiEndpoints.updateItemField(listId, itemId, fieldId),
         {
           value,
         }
       );
+
+      if (updatedItem) {
+        onSuccess?.();
+        return;
+      }
+
+      onError?.();
     }, 700),
-    [listId, requestUpdateItemField]
+    [listId, onError, onSuccess, requestUpdateItemField]
   );
 
   const currentItemId = useRef("");
@@ -81,6 +96,12 @@ export const useUpdateItemField = (listId: string) => {
     }
     debouncedUpdateItemField(itemId, fieldId, value);
   };
+
+  useEffect(() => {
+    return () => {
+      debouncedUpdateItemField.cancel();
+    };
+  }, [debouncedUpdateItemField]);
 
   return {
     savingItemField,
