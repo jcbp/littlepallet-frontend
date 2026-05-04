@@ -43,6 +43,10 @@ export const builtInListMetadata: ListMetadata = {
           text: "Números",
         },
         {
+          value: "money",
+          text: "Dinero",
+        },
+        {
           value: "color",
           text: "Color",
         },

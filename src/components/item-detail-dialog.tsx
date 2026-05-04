@@ -15,7 +15,10 @@ const ItemDetailDialog: React.FC<Props> = ({
   onUpdateItemField,
 }) => {
   const visibleFields = fields.filter(
-    (field) => field.type !== "options-list" || item.type === "options"
+    (field) =>
+      field.type !== "options-list" ||
+      item.type === "options" ||
+      item.type === "money"
   );
   return (
     <div className="my-8">

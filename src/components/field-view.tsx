@@ -8,6 +8,7 @@ import OptionsList from "./field-types/options-list";
 import DateField from "./field-types/date-field";
 import NumberField from "./field-types/number-field";
 import ColorField from "./field-types/color-field";
+import MoneyField from "./field-types/money-field";
 // import DateField from './field-types/date-field';
 // import LongTextField from './field-types/longText-field';
 // import ComboListField from './field-types/comboList-field';
@@ -32,6 +33,8 @@ const FieldView: React.FC<Props> = ({ field, value, onChange }) => {
       return <DateField value={value} field={field} onChange={onChange} />;
     case "number":
       return <NumberField value={value} field={field} onChange={onChange} />;
+    case "money":
+      return <MoneyField value={value} field={field} onChange={onChange} />;
     case "color":
       return <ColorField value={value} field={field} onChange={onChange} />;
     case "multiline-text":

@@ -73,6 +73,22 @@ export const useFilteredItems = (
         return normalizedFieldValue === normalizedFilterValue;
       }
 
+      if (filter.field.type === "money") {
+        const normalizedFieldValue =
+          fieldValue && typeof fieldValue === "object"
+            ? fieldValue.value
+            : fieldValue;
+        const normalizedFilterValue =
+          filter.value && typeof filter.value === "object"
+            ? filter.value.value
+            : filter.value;
+
+        return (
+          !normalizedFilterValue ||
+          normalizedFieldValue === normalizedFilterValue
+        );
+      }
+
       if (filter.field.type === "boolean") {
         return !!fieldValue === !!filter.value;
       }

@@ -14,6 +14,7 @@ export type FieldType =
   | "color"
   | "color-picker"
   | "traffic-light"
+  | "money"
   | "number"
   | "rating"
   | "user"

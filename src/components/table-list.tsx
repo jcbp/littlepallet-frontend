@@ -8,6 +8,12 @@ import MoveItemModal from "./move-item-modal";
 import { MagnifyingGlassIcon, HashtagIcon, ChevronUpIcon, ChevronDownIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useFieldsVisibility } from "../hooks/table-list";
 import { sortItems, SortDirection } from "../helpers/sort";
+import {
+  getFieldHeaderAlignClassName,
+  getFieldHeaderContentClassName,
+  getFieldHeaderDisplayConfig,
+  getFieldHeaderStyle,
+} from "../helpers/field-display";
 
 interface ListCardProps {
   fields: Field[];
@@ -81,30 +87,41 @@ const TableList: React.FC<ListCardProps> = ({
               <HashtagIcon className="h-4 w-4 text-gray-500" />
             </th>
           )}
-          {visibleFields.map((field) => (
-            <th
-              key={field._id}
-              className="border-b border-slate-200 pb-3 text-left ps-0.5 pe-2 cursor-pointer hover:text-slate-700 transition-colors select-none"
-              style={thPosition}
-              onClick={() => requestSort(field._id)}
-            >
-              <div className="flex items-center gap-1 group">
-                {field.name}
-                <span className="text-slate-400 group-hover:text-slate-600">
-                  {sortConfig?.key === field._id ? (
-                    sortConfig.direction === 'asc' ? (
-                      <ChevronUpIcon className="h-4 w-4" />
+          {visibleFields.map((field) => {
+            const headerConfig = getFieldHeaderDisplayConfig(field);
+            const headerAlign = headerConfig.align ?? "left";
+
+            return (
+              <th
+                key={field._id}
+                className={`border-b border-slate-200 pb-3 ps-0.5 cursor-pointer hover:text-slate-700 transition-colors select-none ${getFieldHeaderAlignClassName(
+                  headerAlign
+                )}`}
+                style={getFieldHeaderStyle(headerConfig, thPosition)}
+                onClick={() => requestSort(field._id)}
+              >
+                <div
+                  className={`flex w-full items-center gap-1 group ${getFieldHeaderContentClassName(
+                    headerAlign
+                  )}`}
+                >
+                  {field.name}
+                  <span className="text-slate-400 group-hover:text-slate-600">
+                    {sortConfig?.key === field._id ? (
+                      sortConfig.direction === 'asc' ? (
+                        <ChevronUpIcon className="h-4 w-4" />
+                      ) : (
+                        <ChevronDownIcon className="h-4 w-4" />
+                      )
                     ) : (
-                      <ChevronDownIcon className="h-4 w-4" />
-                    )
-                  ) : (
-                    // Placeholder space to prevent layout shift on hover
-                    <span className="w-4 inline-block" />
-                  )}
-                </span>
-              </div>
-            </th>
-          ))}
+                      // Placeholder space to prevent layout shift on hover
+                      <span className="w-4 inline-block" />
+                    )}
+                  </span>
+                </div>
+              </th>
+            );
+          })}
           <th className="border-b border-slate-200" style={thPosition}></th>
         </tr>
       </thead>
@@ -123,7 +140,7 @@ const TableList: React.FC<ListCardProps> = ({
             )}
             {visibleFields.map((field) => (
               <td key={field._id} className="border-b border-slate-200 ps-0.5">
-                <div className="flex items-center h-full pe-2">
+                <div className="flex min-w-0 items-center h-full pe-2">
                   <FieldView
                     field={field}
                     value={item[field._id]}
