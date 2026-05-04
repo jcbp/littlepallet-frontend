@@ -8,6 +8,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isActive?: boolean;
   startIcon?: React.ComponentType;
   endIcon?: React.ComponentType;
+  tooltip?: string;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -19,6 +20,7 @@ const Button: React.FC<ButtonProps> = ({
   isActive,
   startIcon: StartIcon,
   endIcon: EndIcon,
+  tooltip,
   ...rest
 }) => {
   const renderIcon = (
@@ -41,7 +43,7 @@ const Button: React.FC<ButtonProps> = ({
   );
 
   return (
-    <button className={buttonClasses} {...rest}>
+    <button className={buttonClasses} title={tooltip} {...rest}>
       {StartIcon && renderIcon(StartIcon)}
       {children}
       {EndIcon && renderIcon(EndIcon)}
